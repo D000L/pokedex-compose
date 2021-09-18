@@ -2,12 +2,12 @@ package com.doool.pokedex.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class Pokemon(
+data class PokemonEntity(
   val name : String,
   val height : Int,
   val weight : Int,
   val sprites: Sprites,
-  val stats : List<Stat>,
+  val stats : List<StatEntity>,
   val order : Int
 )
 
@@ -16,8 +16,8 @@ data class Sprites(
   @SerializedName("back_default") val backDefault : String
 )
 
-data class Stat(
-  @SerializedName("base_stat") val stat : Int,
+data class StatEntity(
+  @SerializedName("base_stat") val amount : Int,
   val effort : Int,
   @SerializedName("stat") val info : StatInfo
 )
