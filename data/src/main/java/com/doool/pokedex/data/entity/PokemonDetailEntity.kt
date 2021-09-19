@@ -1,9 +1,15 @@
 package com.doool.pokedex.data.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.doool.pokedex.data.dao.PokemonDetailConverter
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "pokemon_detail")
+@TypeConverters(PokemonDetailConverter::class)
 data class PokemonDetailEntity(
-  val name: String,
+  @PrimaryKey val name: String,
   val height: Int,
   val weight: Int,
   val sprites: Sprites,
