@@ -1,11 +1,20 @@
 package com.doool.pokedex.data.service
 
+import com.doool.pokedex.data.entity.ListItem
+import com.doool.pokedex.data.entity.PokemonDetailEntity
 import com.doool.pokedex.data.entity.PokemonEntity
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface PokeApiService {
 
-  @GET("/api/v2/pokemon/{id}")
-  suspend fun getPokemon(@Path("id") id: Int): PokemonEntity
+  @GET("/api/v2/pokemon")
+  suspend fun getPokemonList(
+    @Query("offset") offset: Int = 0,
+    @Query("limit") limit: Int = 20
+  ): ListItem<PokemonEntity>
+
+  @GET("/api/v2/pokemon/{name}")
+  suspend fun getPokemon(@Path("name") name: String): PokemonDetailEntity
 }

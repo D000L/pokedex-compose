@@ -3,7 +3,7 @@
     package="com.doool.pokedex">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    
+
     <application
         android:name=".PokedexApplication"/>
 

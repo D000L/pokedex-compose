@@ -17,13 +17,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-  private val viewModel : PokemonViewModel by viewModels<PokemonViewModel>()
+//  private val viewModel : PokemonViewModel by viewModels<PokemonViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
       PokedexTheme {
-        PokemonScreen(viewModel)
+        PokemonScreen()
       }
     }
   }
