@@ -5,7 +5,7 @@ import com.doool.pokedex.domain.model.PokemonDetail
 
 interface PokemonRepository {
 
-  suspend fun getPokemonList(offset: Int, countPerPage: Int = 5): List<Pokemon>
+  suspend fun getPokemonList(offset: Int, countPerPage: Int = 20): List<Pokemon>
 
   suspend fun getPokemonDetail(name: String): PokemonDetail
 }

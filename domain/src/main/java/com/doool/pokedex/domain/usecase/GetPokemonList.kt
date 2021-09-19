@@ -4,7 +4,7 @@ import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
-class LoadPokemonList @Inject constructor(private val pokemonRepository: PokemonRepository) {
+class GetPokemonList @Inject constructor(private val pokemonRepository: PokemonRepository) {
 
   suspend operator fun invoke(id: Int): Result<List<Pokemon>> {
     return try {

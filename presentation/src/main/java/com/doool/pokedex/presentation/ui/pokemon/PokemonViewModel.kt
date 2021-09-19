@@ -1,26 +1,19 @@
 package com.doool.pokedex.presentation.ui.pokemon
 
 import androidx.lifecycle.ViewModel
-import com.doool.pokedex.domain.usecase.GetPokemon
-import com.doool.pokedex.domain.usecase.LoadPokemonList
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import com.doool.pokedex.domain.usecase.GetPokemonList
+import com.doool.pokedex.presentation.paging.PokemonPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
-  private val getPokemon: GetPokemon,
-  private val loadPokemonList: LoadPokemonList
+  private val getPokemonList: GetPokemonList
 ) : ViewModel() {
 
-  val pokemonList = flow {
-    val result = loadPokemonList(0)
-    result.fold({
-      emit(it.mapNotNull {
-        getPokemon(it.name).getOrNull()
-      })
-    }, {
-      it
-    })
-  }
+  val pokemonList = Pager(PagingConfig(20, prefetchDistance = 10)) {
+    PokemonPagingSource(getPokemonList)
+  }.flow
 }
