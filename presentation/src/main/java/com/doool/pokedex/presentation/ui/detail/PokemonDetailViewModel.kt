@@ -28,8 +28,6 @@ class PokemonDetailViewModel @Inject constructor(
   val pokemon : Flow<PokemonDetail> = pokemonName.transformLatest {
     getPokemon(it).fold({
       emit(it)
-    },{
-
-    })
+    },{})
   }
 }

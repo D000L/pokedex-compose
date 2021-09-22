@@ -14,6 +14,7 @@ data class PokemonDetailEntity(
   val weight: Int,
   val sprites: Sprites,
   val stats: List<StatEntity>,
+  val types: List<TypeEntity>,
   val order: Int
 )
 
@@ -31,4 +32,14 @@ data class StatEntity(
 data class StatInfo(
   val name: String,
   @SerializedName("url") val statInfoUrl: String,
+)
+
+data class TypeEntity(
+  val slot : Int,
+  val type : Type
+)
+
+data class Type(
+ val name : String,
+ val url : String
 )

@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.doool.pokedex.data.entity.Sprites
 import com.doool.pokedex.data.entity.StatEntity
 import com.doool.pokedex.data.entity.StatInfo
+import com.doool.pokedex.data.entity.TypeEntity
 import com.doool.pokedex.domain.model.Stat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -35,6 +36,20 @@ class PokemonDetailConverter {
   fun toStatList(value: String): List<StatEntity> {
     val gson = Gson()
     val type = object : TypeToken<List<StatEntity>>() {}.type
+    return gson.fromJson(value, type)
+  }
+
+  @TypeConverter
+  fun fromTypeList(value:List<TypeEntity>): String {
+    val gson = Gson()
+    val type = object : TypeToken<List<TypeEntity>>() {}.type
+    return gson.toJson(value, type)
+  }
+
+  @TypeConverter
+  fun toTypeList(value: String): List<TypeEntity> {
+    val gson = Gson()
+    val type = object : TypeToken<List<TypeEntity>>() {}.type
     return gson.fromJson(value, type)
   }
 
