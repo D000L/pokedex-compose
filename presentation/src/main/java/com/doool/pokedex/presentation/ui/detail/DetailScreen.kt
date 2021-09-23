@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.model.Stat
 import com.doool.pokedex.domain.model.Type
 
@@ -26,16 +27,20 @@ fun DetailScreen(
 ) {
 
   val pokemon by pokemonViewModel.pokemon.collectAsState(null)
+  val pokemonSpecies by pokemonViewModel.pokemonSpecies.collectAsState(null)
 
-  pokemon?.let {
-    Detail(pokemon = it)
+  pokemon?.let { detail ->
+    pokemonSpecies?.let { species ->
+      Detail(pokemon = detail, pokemonSpecies = species)
+    }
   }
 }
 
 @Composable
-fun Detail(pokemon: PokemonDetail) {
+fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
   Column {
     PokemonInfo(pokemon)
+    Description(pokemonSpecies)
     Stats(stats = pokemon.stats)
   }
 }
@@ -55,6 +60,11 @@ fun PokemonInfo(pokemon: PokemonDetail){
       contentDescription = null
     )
   }
+}
+
+@Composable
+fun Description(pokemonSpecies: PokemonSpecies){
+  Text(text = pokemonSpecies.flavorText.first())
 }
 
 @Composable

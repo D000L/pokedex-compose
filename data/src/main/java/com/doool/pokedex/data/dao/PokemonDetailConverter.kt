@@ -5,7 +5,6 @@ import com.doool.pokedex.data.entity.Sprites
 import com.doool.pokedex.data.entity.StatEntity
 import com.doool.pokedex.data.entity.StatInfo
 import com.doool.pokedex.data.entity.TypeEntity
-import com.doool.pokedex.domain.model.Stat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -26,7 +25,7 @@ class PokemonDetailConverter {
   }
 
   @TypeConverter
-  fun fromStatList(value:List<StatEntity>): String {
+  fun fromStatList(value: List<StatEntity>): String {
     val gson = Gson()
     val type = object : TypeToken<List<StatEntity>>() {}.type
     return gson.toJson(value, type)
@@ -40,7 +39,7 @@ class PokemonDetailConverter {
   }
 
   @TypeConverter
-  fun fromTypeList(value:List<TypeEntity>): String {
+  fun fromTypeList(value: List<TypeEntity>): String {
     val gson = Gson()
     val type = object : TypeToken<List<TypeEntity>>() {}.type
     return gson.toJson(value, type)

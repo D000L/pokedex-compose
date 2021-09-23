@@ -44,9 +44,9 @@ fun App() {
       PokemonScreen(navigateDetail = navActions::navigateDetail)
     }
     composable(
-      route = "${NavDestination.Detail.name}/{${PokemonDetailViewModel.POKEMON_NAME}}",
-      arguments = listOf(navArgument(PokemonDetailViewModel.POKEMON_NAME) {
-        type = NavType.StringType
+      route = "${NavDestination.Detail.name}/{${PokemonDetailViewModel.POKEMON_ID}}",
+      arguments = listOf(navArgument(PokemonDetailViewModel.POKEMON_ID) {
+        type = NavType.IntType
       })
     ) {
       DetailScreen(navigateBack = navActions::navigateBack)
@@ -59,7 +59,7 @@ class NavActions(private val navController: NavController) {
     navController.navigateUp()
   }
 
-  fun navigateDetail(pokemonName: String) {
-    navController.navigate("${NavDestination.Detail.name}/$pokemonName")
+  fun navigateDetail(id: Int) {
+    navController.navigate("${NavDestination.Detail.name}/$id")
   }
 }

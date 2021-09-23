@@ -25,7 +25,7 @@ import com.doool.pokedex.domain.model.Pokemon
 @Composable
 fun PokemonScreen(
   pokemonViewModel: PokemonViewModel = hiltViewModel(),
-  navigateDetail: (String) -> Unit
+  navigateDetail: (Int) -> Unit
 ) {
 
   val pokemonList = pokemonViewModel.pokemonList.collectAsLazyPagingItems()
@@ -34,7 +34,7 @@ fun PokemonScreen(
 }
 
 @Composable
-fun PokemonList(list: LazyPagingItems<Pokemon>, navigateDetail: (String) -> Unit) {
+fun PokemonList(list: LazyPagingItems<Pokemon>, navigateDetail: (Int) -> Unit) {
   LazyColumn() {
     items(list) {
       it?.let { Pokemon(pokemon = it, onClick = navigateDetail) }
@@ -43,13 +43,13 @@ fun PokemonList(list: LazyPagingItems<Pokemon>, navigateDetail: (String) -> Unit
 }
 
 @Composable
-fun Pokemon(pokemon: Pokemon, onClick: (String) -> Unit) {
+fun Pokemon(pokemon: Pokemon, onClick: (Int) -> Unit) {
 
   Surface(
     Modifier
       .fillMaxWidth()
       .wrapContentHeight()
-      .clickable { onClick(pokemon.name) }) {
+      .clickable { onClick(pokemon.id) }) {
     Row(
       modifier = Modifier
         .padding(horizontal = 20.dp, vertical = 6.dp)

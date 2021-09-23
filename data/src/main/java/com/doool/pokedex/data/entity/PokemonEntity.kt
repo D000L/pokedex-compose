@@ -10,8 +10,8 @@ data class PokemonEntity(
   val name: String,
   val url: String
 ) {
-  private val index
-    get() = INDEX_REGEX.find(url)?.groupValues?.getOrNull(1) ?: 0
+  val index
+    get() = INDEX_REGEX.find(url)?.groupValues?.getOrNull(1)?.toInt() ?: 0
 
   val imageUrl
     get() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${index}.png"

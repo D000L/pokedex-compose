@@ -6,9 +6,9 @@ import javax.inject.Inject
 
 class GetPokemon @Inject constructor(private val pokemonRepository: PokemonRepository) {
 
-  suspend operator fun invoke(name: String): Result<PokemonDetail> {
+  suspend operator fun invoke(id: Int): Result<PokemonDetail> {
     return try {
-      Result.success(pokemonRepository.getPokemonDetail(name))
+      Result.success(pokemonRepository.getPokemonDetail(id))
     } catch (e: Throwable) {
       Result.failure(e)
     }

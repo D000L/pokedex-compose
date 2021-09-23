@@ -9,7 +9,8 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "pokemon_detail")
 @TypeConverters(PokemonDetailConverter::class)
 data class PokemonDetailEntity(
-  @PrimaryKey val name: String,
+  @PrimaryKey val id: Int,
+  val name: String,
   val height: Int,
   val weight: Int,
   val sprites: Sprites,
@@ -35,11 +36,11 @@ data class StatInfo(
 )
 
 data class TypeEntity(
-  val slot : Int,
-  val type : Type
+  val slot: Int,
+  val type: Type
 )
 
 data class Type(
- val name : String,
- val url : String
+  val name: String,
+  val url: String
 )

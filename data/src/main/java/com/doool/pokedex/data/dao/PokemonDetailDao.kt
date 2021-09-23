@@ -9,8 +9,8 @@ import com.doool.pokedex.data.entity.PokemonDetailEntity
 @Dao
 interface PokemonDetailDao {
 
-  @Query("SELECT * FROM pokemon_detail WHERE name = :name")
-  suspend fun getPokemonDetail(name: String): PokemonDetailEntity?
+  @Query("SELECT * FROM pokemon_detail WHERE id = :id")
+  suspend fun getPokemonDetail(id: Int): PokemonDetailEntity?
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertPokemonDetail(pokemonDetail: PokemonDetailEntity)
