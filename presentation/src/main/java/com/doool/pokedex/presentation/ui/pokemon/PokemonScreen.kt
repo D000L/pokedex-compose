@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -84,7 +83,10 @@ fun Search(doSearch: (String) -> Unit) {
       SearchLayout(
         showHint = query.isEmpty(),
         onClickSearch = searchAndKeyboardHide,
-        onClickClear = { query = "" },
+        onClickClear = {
+          query = ""
+          searchAndKeyboardHide()
+        },
         textField = it
       )
     })
