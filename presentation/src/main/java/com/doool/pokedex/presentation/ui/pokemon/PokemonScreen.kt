@@ -1,5 +1,6 @@
 package com.doool.pokedex.presentation.ui.pokemon
 
+import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,6 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
@@ -23,8 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
@@ -40,40 +47,71 @@ fun PokemonScreen(
   val pokemonList by pokemonViewModel.pokemonList.collectAsState(initial = emptyList())
 
   Column(Modifier.padding(horizontal = 20.dp)) {
-    SearchUI(pokemonViewModel::search)
+    Search(pokemonViewModel::search)
     PokemonList(list = pokemonList, navigateDetail)
   }
 }
 
 @Composable
-fun SearchUI(doSearch: (String) -> Unit) {
+fun Search(doSearch: (String) -> Unit) {
   var query by remember { mutableStateOf("") }
+  val focus = LocalFocusManager.current
+
+  val searchAndKeyboardHide by rememberUpdatedState {
+    doSearch(query)
+    focus.clearFocus()
+  }
 
   BasicTextField(
     modifier = Modifier
       .height(40.dp)
       .fillMaxWidth()
-      .border(1.dp, Color.Gray, RoundedCornerShape(26.dp)),
+      .border(1.dp, Color.Gray, RoundedCornerShape(26.dp))
+      .onPreviewKeyEvent {
+        if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+          searchAndKeyboardHide()
+          true
+        } else false
+      },
     value = query,
     onValueChange = { query = it },
     singleLine = true,
+    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+    keyboardActions = KeyboardActions {
+      searchAndKeyboardHide()
+    },
     decorationBox = {
-      Row(
-        Modifier.padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Box(Modifier.weight(1f)) {
-          if (query.isEmpty()) Text("Let's go pokemon")
-          it()
-        }
-        IconButton(onClick = { query = "" }) {
-          Icon(imageVector = Icons.Default.Clear, contentDescription = null)
-        }
-        IconButton(onClick = { doSearch(query) }) {
-          Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        }
-      }
+      SearchLayout(
+        showHint = query.isEmpty(),
+        onClickSearch = searchAndKeyboardHide,
+        onClickClear = { query = "" },
+        textField = it
+      )
     })
+}
+
+@Composable
+fun SearchLayout(
+  showHint: Boolean,
+  onClickSearch: () -> Unit,
+  onClickClear: () -> Unit,
+  textField: @Composable () -> Unit
+) {
+  Row(
+    Modifier.padding(horizontal = 20.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Box(Modifier.weight(1f)) {
+      if (showHint) Text("Let's go pokemon")
+      textField()
+    }
+    IconButton(onClick = onClickClear) {
+      Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+    }
+    IconButton(onClick = onClickSearch) {
+      Icon(imageVector = Icons.Default.Search, contentDescription = null)
+    }
+  }
 }
 
 @Composable
