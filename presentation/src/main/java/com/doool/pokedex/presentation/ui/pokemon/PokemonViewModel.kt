@@ -2,10 +2,13 @@ package com.doool.pokedex.presentation.ui.pokemon
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.usecase.DownloadAllData
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,11 +18,20 @@ class PokemonViewModel @Inject constructor(
   private val downloadAllData: DownloadAllData
 ) : ViewModel() {
 
-  val pokemonList = getPokemonList()
+  private val searchQuery = MutableStateFlow<String?>(null)
+  val pokemonList: Flow<List<PokemonDetail>> = searchQuery.flatMapLatest {
+    getPokemonList(it)
+  }
 
   init {
-   viewModelScope.launch {
-     downloadAllData()
-   }
+    viewModelScope.launch {
+      downloadAllData()
+    }
+  }
+
+  fun search(query: String) {
+    viewModelScope.launch {
+      searchQuery.emit(query)
+    }
   }
 }

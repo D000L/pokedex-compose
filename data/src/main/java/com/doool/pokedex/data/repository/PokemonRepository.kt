@@ -29,7 +29,13 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override fun getAllPokemon(): Flow<List<PokemonDetail>> {
-    return pokemonDetailDao.getPokemonDetail().map {
+    return pokemonDetailDao.getAllPokemon().map {
+      it.map { it.toModel() }
+    }
+  }
+
+  override fun getPokemon(query: String): Flow<List<PokemonDetail>> {
+    return pokemonDetailDao.getPokemon(query).map {
       it.map { it.toModel() }
     }
   }
