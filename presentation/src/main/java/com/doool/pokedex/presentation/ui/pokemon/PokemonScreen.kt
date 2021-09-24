@@ -5,22 +5,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
-import androidx.palette.graphics.Palette
 import coil.compose.rememberImagePainter
-import com.doool.pokedex.domain.model.Pokemon
+import com.doool.pokedex.domain.model.PokemonDetail
 
 @Composable
 fun PokemonScreen(
@@ -28,23 +26,22 @@ fun PokemonScreen(
   navigateDetail: (Int) -> Unit
 ) {
 
-  val pokemonList = pokemonViewModel.pokemonList.collectAsLazyPagingItems()
+  val pokemonList by pokemonViewModel.pokemonList.collectAsState(initial = emptyList())
 
   PokemonList(list = pokemonList, navigateDetail)
 }
 
 @Composable
-fun PokemonList(list: LazyPagingItems<Pokemon>, navigateDetail: (Int) -> Unit) {
+fun PokemonList(list: List<PokemonDetail>, navigateDetail: (Int) -> Unit) {
   LazyColumn() {
     items(list) {
-      it?.let { Pokemon(pokemon = it, onClick = navigateDetail) }
+      Pokemon(pokemon = it, onClick = navigateDetail)
     }
   }
 }
 
 @Composable
-fun Pokemon(pokemon: Pokemon, onClick: (Int) -> Unit) {
-
+fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
   Surface(
     Modifier
       .fillMaxWidth()
@@ -56,12 +53,20 @@ fun Pokemon(pokemon: Pokemon, onClick: (Int) -> Unit) {
         .background(color = Color.Green, shape = RoundedCornerShape(8.dp)),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Image(
-        modifier = Modifier.padding(4.dp).size(56.dp),
-        painter = rememberImagePainter(pokemon.imageUrl),
-        contentDescription = null
-      )
+      Text(text = "#%03d".format(pokemon.id))
+      PokemonThumbnail(pokemon.image)
       Text(text = pokemon.name)
     }
   }
+}
+
+@Composable
+fun PokemonThumbnail(url : String){
+  Image(
+    modifier = Modifier
+      .padding(4.dp)
+      .size(56.dp),
+    painter = rememberImagePainter(url),
+    contentDescription = null
+  )
 }

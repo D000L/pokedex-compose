@@ -18,9 +18,6 @@ class RoomModule {
   fun provideRoomData(@ApplicationContext context: Context) = PokeDatabase.getDataBase(context)
 
   @Provides
-  fun providePokemonDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonDao()
-
-  @Provides
   fun providePokemonDetailDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonDetailDao()
 
   @Provides

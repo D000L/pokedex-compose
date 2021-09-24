@@ -9,6 +9,7 @@ import com.doool.pokedex.domain.model.Type
 
 fun PokemonDetailEntity.toModel(): PokemonDetail = with(this) {
   PokemonDetail(
+    id = id,
     name = name,
     height = height,
     weight = weight,

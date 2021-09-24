@@ -26,14 +26,14 @@ fun DetailScreen(
   navigateBack: () -> Unit = {}
 ) {
 
-  val pokemon by pokemonViewModel.pokemon.collectAsState(null)
-  val pokemonSpecies by pokemonViewModel.pokemonSpecies.collectAsState(null)
-
-  pokemon?.let { detail ->
-    pokemonSpecies?.let { species ->
-      Detail(pokemon = detail, pokemonSpecies = species)
-    }
-  }
+//  val pokemon by pokemonViewModel.pokemon.collectAsState(null)
+//  val pokemonSpecies by pokemonViewModel.pokemonSpecies.collectAsState(null)
+//
+//  pokemon?.let { detail ->
+//    pokemonSpecies?.let { species ->
+//      Detail(pokemon = detail, pokemonSpecies = species)
+//    }
+//  }
 }
 
 @Composable

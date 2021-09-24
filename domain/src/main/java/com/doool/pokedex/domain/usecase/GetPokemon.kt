@@ -6,11 +6,11 @@ import javax.inject.Inject
 
 class GetPokemon @Inject constructor(private val pokemonRepository: PokemonRepository) {
 
-  suspend operator fun invoke(id: Int): Result<PokemonDetail> {
-    return try {
-      Result.success(pokemonRepository.getPokemonDetail(id))
-    } catch (e: Throwable) {
-      Result.failure(e)
-    }
-  }
+//  suspend operator fun invoke(id: Int): Result<PokemonDetail> {
+//    return try {
+//      Result.success(pokemonRepository.getAllPokemon(id))
+//    } catch (e: Throwable) {
+//      Result.failure(e)
+//    }
+//  }
 }

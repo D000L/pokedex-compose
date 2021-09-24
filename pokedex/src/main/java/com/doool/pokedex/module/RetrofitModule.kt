@@ -31,7 +31,7 @@ class RetrofitModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://pokeapi.co/api/v2/")
+            .baseUrl("https://raw.githubusercontent.com/D000L/pokedex-compose/main/staticApi/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
