@@ -52,8 +52,3 @@ data class Names(
   val language: InfoEntity,
   val name: String
 )
-
-data class InfoEntity(
-  val name: String,
-  val url: String
-)

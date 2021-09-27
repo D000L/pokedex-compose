@@ -1,6 +1,7 @@
 package com.doool.pokedex.data.mapper
 
 import com.doool.pokedex.data.entity.InfoEntity
+import com.doool.pokedex.data.entity.PokemonEvolutionChain
 import com.doool.pokedex.data.entity.PokemonSpeciesResponse
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonSpecies
