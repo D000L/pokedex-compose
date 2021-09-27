@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 @Keep
-data class PokemonEvolutionChain(
+data class PokemonEvolutionChainResponse(
   @SerializedName("baby_trigger_item") val babyTriggerItem: Any? = null,
   val chain: Chain = Chain(),
   val id: Int = 0
