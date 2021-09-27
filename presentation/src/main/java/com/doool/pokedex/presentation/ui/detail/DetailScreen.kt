@@ -38,7 +38,13 @@ fun DetailScreen(
     pokemonSpecies?.let { species ->
       Column {
         PokemonInfo(detail)
-        Detail(pokemon = detail, pokemonSpecies = species)
+        DetailTabLayout {
+          when (it) {
+            TabState.Detail -> PokemonDetail(detail, species)
+            TabState.Move -> NotDevelop()
+            TabState.Evolution -> NotDevelop()
+          }
+        }
       }
     }
   }
@@ -49,7 +55,7 @@ enum class TabState {
 }
 
 @Composable
-fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+fun DetailTabLayout(content: @Composable (TabState) -> Unit) {
   var tabState by remember { mutableStateOf(TabState.Detail) }
 
   Column(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -61,7 +67,7 @@ fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
         .background(Color.White, CircleShape),
       selectedTabIndex = tabState.ordinal,
       backgroundColor = Color.White,
-      contentColor =  Color.White,
+      contentColor = Color.White,
       indicator = {}
     ) {
       TabState.values().forEach { tab ->
@@ -77,7 +83,7 @@ fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
         ) {
           Text(
             text = tab.name,
-            color = if(tab == tabState) Color.White else Color.Black
+            color = if (tab == tabState) Color.White else Color.Black
           )
         }
       }
@@ -85,11 +91,7 @@ fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
 
     Spacer(modifier = Modifier.height(20.dp))
 
-    when (tabState) {
-      TabState.Detail -> PokemonDetail(pokemon, pokemonSpecies)
-      TabState.Move -> NotDevelop()
-      TabState.Evolution -> NotDevelop()
-    }
+    content(tabState)
   }
 }
 
@@ -101,7 +103,7 @@ fun ColumnScope.PokemonDetail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpe
 
 @Composable
 fun ColumnScope.NotDevelop() {
-
+  Text(text = "Didn't Develop")
 }
 
 @Composable
