@@ -16,6 +16,9 @@ interface PokemonDetailDao {
   @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%'")
   fun getPokemon(query : String): Flow<List<PokemonDetailEntity>>
 
+  @Query("SELECT * FROM pokemon_detail WHERE id = :id")
+  suspend fun getPokemon(id : Int): PokemonDetailEntity
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertPokemonDetail(pokemonDetail: PokemonDetailEntity)
 

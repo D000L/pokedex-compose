@@ -1,6 +1,7 @@
 package com.doool.pokedex.module
 
 import com.doool.pokedex.data.service.PokeApiService
+import com.doool.pokedex.data.service.StaticApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +13,12 @@ import retrofit2.Retrofit
 internal class ServiceModule {
 
   @Provides
-  fun providePokeApiService(retrofit: Retrofit): PokeApiService = retrofit.create(
+  fun providePokeApiService(@RetrofitModule.PokeApiRetrofit retrofit: Retrofit): PokeApiService = retrofit.create(
     PokeApiService::class.java
+  )
+
+  @Provides
+  fun provideStaticApiService(@RetrofitModule.StaticApiRetrofit retrofit: Retrofit): StaticApiService = retrofit.create(
+    StaticApiService::class.java
   )
 }

@@ -6,6 +6,7 @@ import com.doool.pokedex.data.entity.PokemonSpeciesEntity
 import com.doool.pokedex.data.entity.PokemonSpeciesResponse
 import com.doool.pokedex.data.mapper.toModel
 import com.doool.pokedex.data.service.PokeApiService
+import com.doool.pokedex.data.service.StaticApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toModel
 import com.doool.pokedex.domain.model.PokemonDetail
@@ -17,13 +18,14 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
   private val pokeApiService: PokeApiService,
+  private val staticApiService: StaticApiService,
   private val pokemonDetailDao: PokemonDetailDao,
   private val pokemonSpeciesDao: PokemonSpeciesDao
 ) : PokemonRepository {
 
   override suspend fun downloadAllPokemon(startPage: Int, endPage: Int) {
     for (page in startPage..endPage) {
-      val result = pokeApiService.getPokemon(page)
+      val result = staticApiService.getPokemon(page)
       pokemonDetailDao.insertPokemonDetail(result)
     }
   }
@@ -38,6 +40,10 @@ class PokemonRepositoryImpl @Inject constructor(
     return pokemonDetailDao.getPokemon(query).map {
       it.map { it.toModel() }
     }
+  }
+
+  override suspend fun getPokemon(id: Int): PokemonDetail {
+    return pokemonDetailDao.getPokemon(id).toModel()
   }
 
   override suspend fun getPokemonSpecies(id: Int): PokemonSpecies {

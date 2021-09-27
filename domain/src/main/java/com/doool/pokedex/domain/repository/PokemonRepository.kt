@@ -10,4 +10,6 @@ interface PokemonRepository {
   suspend fun downloadAllPokemon(startPage: Int, endPage: Int)
   fun getAllPokemon(): Flow<List<PokemonDetail>>
   fun getPokemon(query: String): Flow<List<PokemonDetail>>
+
+  suspend fun getPokemon(id: Int): PokemonDetail
 }

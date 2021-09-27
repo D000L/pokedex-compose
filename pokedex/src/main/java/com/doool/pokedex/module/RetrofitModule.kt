@@ -9,10 +9,18 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
+import javax.inject.Qualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
+
+    @Qualifier
+    internal annotation class PokeApiRetrofit
+
+    @Qualifier
+    internal annotation class StaticApiRetrofit
 
     @Provides
     fun provideOkHttp(): OkHttpClient {
@@ -27,8 +35,19 @@ class RetrofitModule {
             .build()
     }
 
+    @PokeApiRetrofit
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun providePokeApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl("https://pokeapi.co/api/v2/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @StaticApiRetrofit
+    @Provides
+    fun provideStaticApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://raw.githubusercontent.com/D000L/pokedex-compose/main/staticApi/")
