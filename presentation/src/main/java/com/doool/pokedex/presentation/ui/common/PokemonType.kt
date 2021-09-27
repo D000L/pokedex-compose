@@ -1,10 +1,12 @@
-package com.doool.pokedex.presentation.ui.pokemon
+package com.doool.pokedex.presentation.ui.common
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.doool.pokedex.R
 
-enum class PokemonType(@DrawableRes val resId: Int, @ColorRes val colorResId: Int){
+enum class PokemonType(
+  @DrawableRes val resId: Int,
+  @ColorRes val colorResId: Int) {
   Bug(R.drawable.bug, R.color.bug),
   Dark(R.drawable.dark, R.color.dark),
   Dragon(R.drawable.dragon, R.color.dragon),
@@ -23,4 +25,8 @@ enum class PokemonType(@DrawableRes val resId: Int, @ColorRes val colorResId: In
   Rock(R.drawable.rock, R.color.rock),
   Steel(R.drawable.steel, R.color.steel),
   Water(R.drawable.water, R.color.water)
+}
+
+fun String.toPokemonType() = PokemonType.values().firstOrNull {
+  it.name.lowercase() == this.lowercase()
 }

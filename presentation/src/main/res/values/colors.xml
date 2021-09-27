@@ -27,4 +27,10 @@
     <color name="steel">#5695A3</color>
     <color name="water">#539DDF</color>
 
+    <color name="hp">#FF0000</color>
+    <color name="attack">#F08030</color>
+    <color name="defense">#F8D030</color>
+    <color name="special_attack">#6890F0</color>
+    <color name="special_defense">#78C850</color>
+    <color name="special_speed">#F85888</color>
 </resources>

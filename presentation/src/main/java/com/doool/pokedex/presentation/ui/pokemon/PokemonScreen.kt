@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,19 +22,15 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.Type
+import com.doool.pokedex.presentation.ui.common.TypeList
 
 @Composable
 fun PokemonScreen(
@@ -144,34 +139,6 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
       Text(text = pokemon.name)
     }
   }
-}
-
-@Composable
-fun TypeList(types: List<Type>) {
-  Row {
-    types.forEach { type ->
-      val pokemonType = PokemonType.values().find {
-        it.name.lowercase() == type.name
-      }
-      pokemonType?.let { Type(it) }
-    }
-  }
-}
-
-@Composable
-fun Type(type: PokemonType) {
-  val color = colorResource(id = type.colorResId)
-
-  Icon(
-    modifier = Modifier
-      .size(24.dp)
-      .shadow(4.dp, CircleShape)
-      .background(color, CircleShape)
-      .padding(6.dp),
-    imageVector = ImageVector.vectorResource(
-      id = type.resId
-    ), contentDescription = null, tint = Color.White
-  )
 }
 
 @Composable

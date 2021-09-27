@@ -2,22 +2,28 @@ package com.doool.pokedex.presentation.ui.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.model.Stat
-import com.doool.pokedex.domain.model.Type
+import com.doool.pokedex.presentation.ui.common.StatType
+import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
+import com.doool.pokedex.presentation.ui.common.toStatType
 
 
 @Composable
@@ -30,22 +36,76 @@ fun DetailScreen(
 
   pokemon?.let { detail ->
     pokemonSpecies?.let { species ->
-      Detail(pokemon = detail, pokemonSpecies = species)
+      Column {
+        PokemonInfo(detail)
+        Detail(pokemon = detail, pokemonSpecies = species)
+      }
+    }
+  }
+}
+
+enum class TabState {
+  Detail, Move, Evolution
+}
+
+@Composable
+fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+  var tabState by remember { mutableStateOf(TabState.Detail) }
+
+  Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+    TabRow(
+      modifier = Modifier
+        .height(42.dp)
+        .fillMaxSize(1f)
+        .shadow(4.dp, CircleShape)
+        .background(Color.White, CircleShape),
+      selectedTabIndex = tabState.ordinal,
+      backgroundColor = Color.White,
+      contentColor =  Color.White,
+      indicator = {}
+    ) {
+      TabState.values().forEach { tab ->
+        Box(
+          modifier = Modifier
+            .padding(4.dp)
+            .fillMaxSize(1f)
+            .background(if (tab == tabState) Color.Blue else Color.White, CircleShape)
+            .clickable {
+              tabState = tab
+            },
+          contentAlignment = Alignment.Center
+        ) {
+          Text(
+            text = tab.name,
+            color = if(tab == tabState) Color.White else Color.Black
+          )
+        }
+      }
+    }
+
+    Spacer(modifier = Modifier.height(20.dp))
+
+    when (tabState) {
+      TabState.Detail -> PokemonDetail(pokemon, pokemonSpecies)
+      TabState.Move -> NotDevelop()
+      TabState.Evolution -> NotDevelop()
     }
   }
 }
 
 @Composable
-fun Detail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
-  Column {
-    PokemonInfo(pokemon)
-    Description(pokemonSpecies)
-    Stats(stats = pokemon.stats)
-  }
+fun ColumnScope.PokemonDetail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+  Description(pokemonSpecies)
+  Stats(stats = pokemon.stats)
 }
 
 @Composable
-fun PokemonInfo(pokemon: PokemonDetail){
+fun ColumnScope.NotDevelop() {
+
+}
+
+@Composable
+fun PokemonInfo(pokemon: PokemonDetail) {
   Column(
     Modifier
       .fillMaxWidth()
@@ -53,7 +113,7 @@ fun PokemonInfo(pokemon: PokemonDetail){
       .background(Color.Green)
   ) {
     Text(text = pokemon.name)
-    Types(types = pokemon.types)
+    TypeListWithTitle(pokemon.types)
     Image(
       painter = rememberImagePainter(pokemon.image),
       contentDescription = null
@@ -62,55 +122,40 @@ fun PokemonInfo(pokemon: PokemonDetail){
 }
 
 @Composable
-fun Description(pokemonSpecies: PokemonSpecies){
+fun Description(pokemonSpecies: PokemonSpecies) {
   Text(text = pokemonSpecies.flavorText.first())
 }
 
 @Composable
-fun Types(types : List<Type>){
-  Row {
-    types.forEach {
-      Type(it)
-    }
-  }
-}
-
-@Composable
-fun Type(type: Type) {
-  Box(
-    Modifier
-      .height(24.dp)
-      .background(Color.Blue, RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center
-  ) {
-    Text(text = type.name)
-  }
-}
-
-@Composable
 fun Stats(stats: List<Stat>) {
-  Column {
-    stats.forEach {
-      Stat(it)
+  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    stats.forEach { stat ->
+      stat.name.toStatType()?.let {
+        Stat(it, stat.amount)
+      }
     }
   }
 }
 
 @Composable
-fun Stat(stat: Stat) {
-  Column {
-    Text(text = stat.name)
+fun Stat(stat: StatType, amount: Int) {
+  Row(verticalAlignment = Alignment.CenterVertically) {
+    Text(text = stat.text, modifier = Modifier.width(64.dp))
+    Spacer(modifier = Modifier.width(6.dp))
+    Text(text = amount.toString(), modifier = Modifier.width(28.dp), textAlign = TextAlign.End)
+    Spacer(modifier = Modifier.width(6.dp))
     Box(
       Modifier
         .fillMaxWidth()
-        .height(16.dp)
-        .background(Color.Gray, RoundedCornerShape(8.dp))
+        .height(8.dp)
+        .background(Color.LightGray, RoundedCornerShape(8.dp))
     ) {
-      val fraction = stat.amount / 255.0f
+      val fraction = amount / 255.0f
       Box(
         Modifier
           .fillMaxWidth(fraction)
-          .height(16.dp)
-          .background(Color.Gray, RoundedCornerShape(8.dp))
+          .height(8.dp)
+          .background(colorResource(id = stat.color), RoundedCornerShape(8.dp))
       )
     }
   }
