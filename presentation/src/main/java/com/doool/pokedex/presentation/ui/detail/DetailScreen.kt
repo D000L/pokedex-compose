@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.model.Stat
 import com.doool.pokedex.presentation.ui.common.StatType
@@ -33,6 +34,7 @@ fun DetailScreen(
 ) {
   val pokemon by pokemonViewModel.pokemon.collectAsState(null)
   val pokemonSpecies by pokemonViewModel.pokemonSpecies.collectAsState(null)
+  val pokemonEvolutionChain by pokemonViewModel.pokemonEvolutionChain.collectAsState(emptyList())
 
   pokemon?.let { detail ->
     pokemonSpecies?.let { species ->
@@ -42,7 +44,7 @@ fun DetailScreen(
           when (it) {
             TabState.Detail -> PokemonDetail(detail, species)
             TabState.Move -> NotDevelop()
-            TabState.Evolution -> NotDevelop()
+            TabState.Evolution -> EvolutionList(pokemonEvolutionChain)
           }
         }
       }
@@ -99,6 +101,47 @@ fun DetailTabLayout(content: @Composable (TabState) -> Unit) {
 fun ColumnScope.PokemonDetail(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
   Description(pokemonSpecies)
   Stats(stats = pokemon.stats)
+}
+
+@Composable
+fun ColumnScope.EvolutionList(chainList: List<PokemonEvolutionChain>) {
+  chainList.forEach {
+    Evolution(it)
+  }
+}
+
+enum class EvolutionType(val text: String) {
+  LevelUp("level-up"), Trade("trade"), Item("use-item"), Shed("shed"), Other("other")
+}
+
+@Composable
+fun Evolution(chain: PokemonEvolutionChain) {
+  val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
+
+  Row {
+    Image(
+      painter = rememberImagePainter(chain.from.url),
+      contentDescription = null
+    )
+    when (evolutionType) {
+      EvolutionType.LevelUp -> LevelEvolution(chain.condition.minLevel)
+      EvolutionType.Item -> ItemEvolution(chain.condition.item?.name ?: "")
+    }
+    Image(
+      painter = rememberImagePainter(chain.to.url),
+      contentDescription = null
+    )
+  }
+}
+
+@Composable
+fun LevelEvolution(level: Int) {
+  Text(text = "$level Level")
+}
+
+@Composable
+fun ItemEvolution(name: String) {
+
 }
 
 @Composable

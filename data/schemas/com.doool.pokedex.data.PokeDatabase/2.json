@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "78ac67c0bd3ff756d918b5f05ecb97c7",
+    "identityHash": "97a29e61764dbf135620e19adc83ba8b",
     "entities": [
       {
         "tableName": "pokemon_detail",
@@ -97,12 +97,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "pokemon_evolution_chain",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `json` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "json",
+            "columnName": "json",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '78ac67c0bd3ff756d918b5f05ecb97c7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '97a29e61764dbf135620e19adc83ba8b')"
     ]
   }
 }

@@ -1,7 +1,15 @@
 package com.doool.pokedex.data.entity
 
 import androidx.annotation.Keep
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+
+@Entity(tableName = "pokemon_evolution_chain")
+data class PokemonEvolutionChainEntity(
+  @PrimaryKey val id: Int,
+  val json: String,
+)
 
 @Keep
 data class PokemonEvolutionChainResponse(
@@ -21,7 +29,7 @@ data class Chain(
 @Keep
 data class EvolvesTo(
   @SerializedName("evolution_details") val evolutionDetails: List<EvolutionDetail> = listOf(),
-  @SerializedName("evolves_to") val evolvesTo: List<Any> = listOf(),
+  @SerializedName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
   @SerializedName("is_baby") val isBaby: Boolean = false,
   val species: InfoEntity = InfoEntity()
 )
@@ -30,7 +38,7 @@ data class EvolvesTo(
 data class EvolutionDetail(
   val gender: Any? = null,
   @SerializedName("held_item") val heldItem: Any? = null,
-  val item: Any? = null,
+  val item: InfoEntity? = null,
   @SerializedName("known_move") val knownMove: Any? = null,
   @SerializedName("known_move_type") val knownMoveType: Any? = null,
   val location: Any? = null,

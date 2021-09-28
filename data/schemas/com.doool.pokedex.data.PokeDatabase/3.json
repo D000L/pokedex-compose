@@ -2,40 +2,8 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "164e83ccc2addd19b02c448660c61855",
+    "identityHash": "97a29e61764dbf135620e19adc83ba8b",
     "entities": [
-      {
-        "tableName": "pokemon",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`offset` INTEGER NOT NULL, `name` TEXT NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`offset`))",
-        "fields": [
-          {
-            "fieldPath": "offset",
-            "columnName": "offset",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "offset"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
       {
         "tableName": "pokemon_detail",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `height` INTEGER NOT NULL, `weight` INTEGER NOT NULL, `sprites` TEXT NOT NULL, `stats` TEXT NOT NULL, `types` TEXT NOT NULL, `order` INTEGER NOT NULL, PRIMARY KEY(`id`))",
@@ -100,101 +68,11 @@
       },
       {
         "tableName": "pokemon_species",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `color` TEXT NOT NULL, `eggGroups` TEXT NOT NULL, `evolutionChain` TEXT NOT NULL, `evolvesFromSpecies` TEXT NOT NULL, `flavorTextEntries` TEXT NOT NULL, `formDescriptions` TEXT NOT NULL, `formsSwitchable` INTEGER NOT NULL, `genderRate` INTEGER NOT NULL, `genera` TEXT NOT NULL, `generation` TEXT NOT NULL, `hasGenderDifferences` INTEGER NOT NULL, `hatchCounter` INTEGER NOT NULL, `isBaby` INTEGER NOT NULL, `isLegendary` INTEGER NOT NULL, `isMythical` INTEGER NOT NULL, `name` TEXT NOT NULL, `names` TEXT NOT NULL, `order` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `json` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "color",
-            "columnName": "color",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "eggGroups",
-            "columnName": "eggGroups",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "evolutionChain",
-            "columnName": "evolutionChain",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "evolvesFromSpecies",
-            "columnName": "evolvesFromSpecies",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "flavorTextEntries",
-            "columnName": "flavorTextEntries",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "formDescriptions",
-            "columnName": "formDescriptions",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "formsSwitchable",
-            "columnName": "formsSwitchable",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "genderRate",
-            "columnName": "genderRate",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "genera",
-            "columnName": "genera",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "generation",
-            "columnName": "generation",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasGenderDifferences",
-            "columnName": "hasGenderDifferences",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hatchCounter",
-            "columnName": "hatchCounter",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isBaby",
-            "columnName": "isBaby",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isLegendary",
-            "columnName": "isLegendary",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isMythical",
-            "columnName": "isMythical",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -205,15 +83,35 @@
             "notNull": true
           },
           {
-            "fieldPath": "names",
-            "columnName": "names",
+            "fieldPath": "json",
+            "columnName": "json",
             "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "pokemon_evolution_chain",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `json` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "order",
-            "columnName": "order",
-            "affinity": "INTEGER",
+            "fieldPath": "json",
+            "columnName": "json",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -230,7 +128,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '164e83ccc2addd19b02c448660c61855')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '97a29e61764dbf135620e19adc83ba8b')"
     ]
   }
 }

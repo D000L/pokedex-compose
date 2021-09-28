@@ -1,15 +1,15 @@
 package com.doool.pokedex.data.repository
 
+import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
-import com.doool.pokedex.data.dao.PokemonSpeciesDao
-import com.doool.pokedex.data.entity.PokemonSpeciesEntity
-import com.doool.pokedex.data.entity.PokemonSpeciesResponse
+import com.doool.pokedex.data.entity.*
 import com.doool.pokedex.data.mapper.toModel
 import com.doool.pokedex.data.service.PokeApiService
 import com.doool.pokedex.data.service.StaticApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toModel
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.repository.PokemonRepository
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +20,7 @@ class PokemonRepositoryImpl @Inject constructor(
   private val pokeApiService: PokeApiService,
   private val staticApiService: StaticApiService,
   private val pokemonDetailDao: PokemonDetailDao,
-  private val pokemonSpeciesDao: PokemonSpeciesDao
+  private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
   override suspend fun downloadAllPokemon(startPage: Int, endPage: Int) {
@@ -37,7 +37,7 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override fun getPokemon(query: String): Flow<List<PokemonDetail>> {
-    return pokemonDetailDao.getPokemon(query).map {
+    return pokemonDetailDao.getPokemonList(query).map {
       it.map { it.toModel() }
     }
   }
@@ -51,12 +51,12 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   private suspend fun fetchPokemonSpecies(id: Int): PokemonSpeciesResponse {
-    val localResult = pokemonSpeciesDao.getPokemonSpecies(id)
+    val localResult = pokemonDao.getPokemonSpecies(id)
 
     if (localResult == null) {
       val remoteResult = pokeApiService.getPokemonSpecies(id)
       val model = remoteResult.toJson()
-      pokemonSpeciesDao.insertPokemonSpecies(
+      pokemonDao.insertPokemonSpecies(
         PokemonSpeciesEntity(
           remoteResult.id,
           remoteResult.name,
@@ -66,5 +66,30 @@ class PokemonRepositoryImpl @Inject constructor(
       return remoteResult
     }
     return localResult.json.toModel()
+  }
+
+  override suspend fun getPokemonEvolutionChain(id: Int): List<PokemonEvolutionChain> {
+    return fetchPokemonEvolutionChain(id).toModel()
+  }
+
+  private suspend fun fetchPokemonEvolutionChain(id: Int): PokemonEvolutionChainResponse {
+    val localResult = pokemonDao.getPokemonEvolutionChain(id)
+
+    if (localResult == null) {
+      val remoteResult = pokeApiService.getPokemonEvolutionChain(id)
+      val model = remoteResult.toJson()
+      pokemonDao.insertPokemonEvolutionChain(
+        PokemonEvolutionChainEntity(
+          remoteResult.id,
+          model
+        )
+      )
+      return remoteResult
+    }
+    return localResult.json.toModel()
+  }
+
+  override suspend fun getSprites(name: String): String {
+    return pokemonDetailDao.getPokemon(name).sprites.frontDefault
   }
 }

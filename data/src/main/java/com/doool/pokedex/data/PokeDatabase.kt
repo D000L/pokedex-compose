@@ -4,14 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
-import com.doool.pokedex.data.dao.PokemonSpeciesDao
 import com.doool.pokedex.data.entity.PokemonDetailEntity
+import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
 import com.doool.pokedex.data.entity.PokemonSpeciesEntity
 
 @Database(
-  entities = [PokemonDetailEntity::class, PokemonSpeciesEntity::class],
-  version = 2,
+  entities = [PokemonDetailEntity::class, PokemonSpeciesEntity::class, PokemonEvolutionChainEntity::class],
+  version = 3,
   exportSchema = true
 )
 abstract class PokeDatabase : RoomDatabase() {
@@ -25,5 +26,5 @@ abstract class PokeDatabase : RoomDatabase() {
   }
 
   abstract fun pokemonDetailDao(): PokemonDetailDao
-  abstract fun pokemonSpeciesDao(): PokemonSpeciesDao
+  abstract fun pokemonSpeciesDao(): PokemonDao
 }

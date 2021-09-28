@@ -7,16 +7,11 @@ data class PokemonDetail(
   val weight: Int,
   val image: String,
   val stats: List<Stat>,
-  val types: List<Type>
+  val types: List<Info>
 )
 
 data class Stat(
   val amount: Int,
   val name: String,
   val infoUrl: String,
-)
-
-data class Type(
-  val name: String,
-  val url: String
 )

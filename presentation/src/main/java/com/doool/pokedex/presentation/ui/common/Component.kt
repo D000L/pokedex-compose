@@ -14,10 +14,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.doool.pokedex.domain.model.Type
+import com.doool.pokedex.domain.model.Info
 
 @Composable
-fun TypeList(types: List<Type>) {
+fun TypeList(types: List<Info>) {
   Row {
     types.forEach { type ->
       type.name.toPokemonType()?.let { Type(it) }
@@ -26,7 +26,7 @@ fun TypeList(types: List<Type>) {
 }
 
 @Composable
-fun TypeListWithTitle(types: List<Type>) {
+fun TypeListWithTitle(types: List<Info>) {
   Row {
     types.forEach { type ->
       type.name.toPokemonType()?.let { Type(it, type.name) }

@@ -8,8 +8,3 @@ data class PokemonSpecies(
   val flavorText: List<String>,
   val generation: Info
 )
-
-data class Info(
-  val name: String,
-  val url: String
-)
