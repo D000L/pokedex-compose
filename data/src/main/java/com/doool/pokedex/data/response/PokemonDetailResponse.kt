@@ -23,7 +23,8 @@ data class PokemonDetailResponse(
   val sprites: Sprites = Sprites(),
   val stats: List<StatResponse> = listOf(),
   val types: List<TypeResponse> = listOf(),
-  val weight: Int = 0
+  val weight: Int = 0,
+  val color: InfoResponse = InfoResponse()
 )
 
 @Keep
@@ -52,10 +53,22 @@ data class VersionGroupDetailResponse(
   @SerializedName("version_group") val versionGroup: InfoResponse = InfoResponse()
 )
 
+@Keep
 data class Sprites(
   @SerializedName("front_default") val frontDefault: String = "",
-  @SerializedName("back_default") val backDefault: String = ""
+  @SerializedName("back_default") val backDefault: String = "",
+  val other: SpritesOthers = SpritesOthers()
 )
+
+@Keep
+data class SpritesOthers(
+  @SerializedName("official-artwork") val artwork: Artwork = Artwork(),
+){
+  @Keep
+  data class Artwork(
+    @SerializedName("front_default") val frontDefault: String = "",
+  )
+}
 
 @Keep
 data class StatResponse(

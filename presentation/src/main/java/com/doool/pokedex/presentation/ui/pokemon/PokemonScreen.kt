@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -22,10 +21,11 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +35,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.presentation.ui.common.Space
 import com.doool.pokedex.presentation.ui.common.TypeList
+import com.doool.pokedex.presentation.ui.common.toPokemonColor
 
 @Composable
 fun PokemonScreen(
@@ -136,7 +138,8 @@ fun PokemonPreview() {
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
     listOf(),
     listOf(Info("bug"), Info("fairy")),
-    listOf()
+    listOf(),
+    Info("Red")
   ), {})
 }
 
@@ -146,9 +149,15 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
     Modifier
       .padding(vertical = 6.dp)
       .fillMaxWidth()
-      .height(120.dp)
-      .background(color = Color.Green, shape = RoundedCornerShape(8.dp))
+      .height(96.dp)
+      .shadow(4.dp, RoundedCornerShape(16.dp))
+      .background(
+        color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes),
+        shape = RoundedCornerShape(16.dp)
+      )
   ) {
+    val fontColor = colorResource(id = pokemon.color.name.toPokemonColor().fontColorRes)
+
     Row(
       modifier = Modifier
         .fillMaxSize()
@@ -157,16 +166,22 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
     ) {
       PokemonThumbnail(pokemon.image)
       Column {
-        Text(text = pokemon.name)
+        Text(
+          text = pokemon.name,
+          fontSize = 20.sp,
+          color = fontColor
+        )
+        Space(height = 10.dp)
         TypeList(pokemon.types)
       }
     }
     Text(
-      modifier = Modifier.align(Alignment.BottomEnd),
+      modifier = Modifier
+        .align(Alignment.BottomEnd)
+        .padding(end = 10.dp),
       text = "#%03d".format(pokemon.id),
       fontSize = 52.sp,
-      color = Color.White,
-      fontStyle = FontStyle.Italic,
+      color = fontColor.copy(alpha = 0.4f),
       fontWeight = FontWeight.Bold
     )
   }
@@ -176,8 +191,8 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
 fun PokemonThumbnail(url: String) {
   Image(
     modifier = Modifier
-      .padding(4.dp)
-      .size(56.dp),
+      .padding(10.dp)
+      .size(76.dp),
     painter = rememberImagePainter(url),
     contentDescription = null
   )

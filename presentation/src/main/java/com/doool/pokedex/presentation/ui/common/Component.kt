@@ -13,12 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.doool.pokedex.domain.model.Info
 
 @Composable
 fun TypeList(types: List<Info>) {
-  Row {
+  Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
       type.name.toPokemonType()?.let { Type(it) }
     }
@@ -27,7 +28,7 @@ fun TypeList(types: List<Info>) {
 
 @Composable
 fun TypeListWithTitle(types: List<Info>) {
-  Row {
+  Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
       type.name.toPokemonType()?.let { Type(it, type.name) }
     }
@@ -59,4 +60,9 @@ fun Type(type: PokemonType, text: String? = null) {
       Text(text = text, color = Color.White)
     }
   }
+}
+
+@Composable
+fun Space(width: Dp = 0.dp, height: Dp = 0.dp) {
+  Spacer(modifier = Modifier.size(width, height))
 }

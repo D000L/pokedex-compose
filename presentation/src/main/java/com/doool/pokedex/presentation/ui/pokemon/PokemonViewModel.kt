@@ -27,7 +27,7 @@ class PokemonViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      downloadStaticData()
+//      downloadStaticData()
     }
   }
 

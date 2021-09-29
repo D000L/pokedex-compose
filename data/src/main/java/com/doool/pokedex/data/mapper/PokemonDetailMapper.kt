@@ -9,7 +9,7 @@ fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
     name = name,
     height = height,
     weight = weight,
-    image = sprites.frontDefault,
+    image = sprites.other.artwork.frontDefault,
     stats = stats.map {
       it.toModel()
     },
@@ -18,7 +18,9 @@ fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
     },
     moves = moves.map {
       it.toModel()
-    })
+    },
+    color = color.toModel()
+  )
 }
 
 fun StatResponse.toModel(): Stat = with(this) {

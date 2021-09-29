@@ -10,7 +10,8 @@ data class PokemonDetail(
   val image: String,
   val stats: List<Stat>,
   val types: List<Info>,
-  val moves: List<Move>
+  val moves: List<Move>,
+  val color: Info
 )
 
 data class Stat(
