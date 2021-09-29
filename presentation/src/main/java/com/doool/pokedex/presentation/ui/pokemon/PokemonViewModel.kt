@@ -8,7 +8,7 @@ import com.doool.pokedex.domain.usecase.GetPokemonList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +19,10 @@ class PokemonViewModel @Inject constructor(
 ) : ViewModel() {
 
   private val searchQuery = MutableStateFlow<String?>(null)
-  val pokemonList: Flow<List<PokemonDetail>> = searchQuery.flatMapLatest {
-    getPokemonList(it)
+  val pokemonList: Flow<List<PokemonDetail>> = searchQuery.transformLatest {
+    getPokemonList(it).fold({
+      emit(it)
+    }, {})
   }
 
   init {

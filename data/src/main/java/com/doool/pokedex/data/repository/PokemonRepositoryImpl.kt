@@ -15,8 +15,6 @@ import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.repository.PokemonRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
@@ -25,15 +23,15 @@ class PokemonRepositoryImpl @Inject constructor(
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
-  override fun getAllPokemon(): Flow<List<PokemonDetail>> {
+  override suspend fun getAllPokemon(): List<PokemonDetail> {
     return pokemonDetailDao.getAllPokemon().map {
-      it.map { it.json.toResponse<PokemonDetailResponse>().toModel() }
+      it.json.toResponse<PokemonDetailResponse>().toModel()
     }
   }
 
-  override fun searchPokemonList(query: String): Flow<List<PokemonDetail>> {
+  override suspend fun searchPokemonList(query: String): List<PokemonDetail> {
     return pokemonDetailDao.searchPokemonList(query).map {
-      it.map { it.json.toResponse<PokemonDetailResponse>().toModel() }
+      it.json.toResponse<PokemonDetailResponse>().toModel()
     }
   }
 

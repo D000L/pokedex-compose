@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 interface PokemonDetailDao {
 
   @Query("SELECT * FROM pokemon_detail")
-  fun getAllPokemon(): Flow<List<PokemonDetailEntity>>
+  suspend fun getAllPokemon(): List<PokemonDetailEntity>
 
   @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%'")
-  fun searchPokemonList(query: String): Flow<List<PokemonDetailEntity>>
+  suspend fun searchPokemonList(query: String): List<PokemonDetailEntity>
 
   @Query("SELECT * FROM pokemon_detail WHERE id = :id")
   suspend fun getPokemon(id: Int): PokemonDetailEntity
