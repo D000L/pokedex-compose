@@ -25,10 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.presentation.ui.common.TypeList
 
@@ -120,24 +125,50 @@ fun PokemonList(list: List<PokemonDetail>, navigateDetail: (Int) -> Unit) {
   }
 }
 
+@Preview
+@Composable
+fun PokemonPreview() {
+  Pokemon(PokemonDetail(
+    101,
+    "electrode",
+    14,
+    54,
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
+    listOf(),
+    listOf(Info("bug"), Info("fairy")),
+    listOf()
+  ), {})
+}
+
 @Composable
 fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
-  Surface(
+  Box(
     Modifier
+      .padding(vertical = 6.dp)
       .fillMaxWidth()
-      .wrapContentHeight()
-      .clickable { onClick(pokemon.id) }) {
+      .height(120.dp)
+      .background(color = Color.Green, shape = RoundedCornerShape(8.dp))
+  ) {
     Row(
       modifier = Modifier
-        .padding(vertical = 6.dp)
-        .background(color = Color.Green, shape = RoundedCornerShape(8.dp)),
+        .fillMaxSize()
+        .clickable { onClick(pokemon.id) },
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Text(text = "#%03d".format(pokemon.id))
       PokemonThumbnail(pokemon.image)
-      TypeList(pokemon.types)
-      Text(text = pokemon.name)
+      Column {
+        Text(text = pokemon.name)
+        TypeList(pokemon.types)
+      }
     }
+    Text(
+      modifier = Modifier.align(Alignment.BottomEnd),
+      text = "#%03d".format(pokemon.id),
+      fontSize = 52.sp,
+      color = Color.White,
+      fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Bold
+    )
   }
 }
 
