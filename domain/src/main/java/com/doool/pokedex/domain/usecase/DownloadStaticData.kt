@@ -7,7 +7,7 @@ class DownloadStaticData @Inject constructor(private val downloadRepository: Dow
 
   suspend operator fun invoke(): Result<Unit> {
     return try {
-      downloadRepository.downloadStaticData(1, 2)
+      downloadRepository.downloadStaticData(0, 8)
 
       Result.success(Unit)
     } catch (e: Throwable) {
