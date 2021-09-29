@@ -1,6 +1,6 @@
 package com.doool.pokedex.data.mapper
 
-import com.doool.pokedex.data.response.InfoEntity
+import com.doool.pokedex.data.response.InfoResponse
 import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonSpecies
@@ -18,6 +18,6 @@ fun PokemonSpeciesResponse.toModel(): PokemonSpecies = with(this) {
   )
 }
 
-fun InfoEntity.toModel(): Info = with(this) {
+fun InfoResponse.toModel(): Info = with(this) {
   Info(name = name, url = url)
 }

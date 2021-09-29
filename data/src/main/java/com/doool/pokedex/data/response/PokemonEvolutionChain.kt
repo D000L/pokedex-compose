@@ -15,7 +15,7 @@ data class Chain(
   @SerializedName("evolution_details") val evolutionDetails: List<Any> = listOf(),
   @SerializedName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
   @SerializedName("is_baby") val isBaby: Boolean = false,
-  val species: InfoEntity = InfoEntity()
+  val species: InfoResponse = InfoResponse()
 )
 
 @Keep
@@ -23,14 +23,14 @@ data class EvolvesTo(
   @SerializedName("evolution_details") val evolutionDetails: List<EvolutionDetail> = listOf(),
   @SerializedName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
   @SerializedName("is_baby") val isBaby: Boolean = false,
-  val species: InfoEntity = InfoEntity()
+  val species: InfoResponse = InfoResponse()
 )
 
 @Keep
 data class EvolutionDetail(
   val gender: Any? = null,
   @SerializedName("held_item") val heldItem: Any? = null,
-  val item: InfoEntity? = null,
+  val item: InfoResponse? = null,
   @SerializedName("known_move") val knownMove: Any? = null,
   @SerializedName("known_move_type") val knownMoveType: Any? = null,
   val location: Any? = null,
@@ -44,6 +44,6 @@ data class EvolutionDetail(
   @SerializedName("relative_physical_stats") val relativePhysicalStats: Int = 0,
   @SerializedName("time_of_day") val timeOfDay: String = "",
   @SerializedName("trade_species") val tradeSpecies: Any? = null,
-  val trigger: InfoEntity = InfoEntity(),
+  val trigger: InfoResponse = InfoResponse(),
   @SerializedName("turn_upside_down") val turnUpsideDown: Boolean = false
 )

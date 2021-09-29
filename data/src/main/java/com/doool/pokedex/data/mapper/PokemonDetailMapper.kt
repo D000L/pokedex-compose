@@ -1,11 +1,7 @@
 package com.doool.pokedex.data.mapper
 
-import com.doool.pokedex.data.response.PokemonDetailResponse
-import com.doool.pokedex.data.response.StatEntity
-import com.doool.pokedex.data.response.TypeEntity
-import com.doool.pokedex.domain.model.Info
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.Stat
+import com.doool.pokedex.data.response.*
+import com.doool.pokedex.domain.model.*
 
 fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
   PokemonDetail(
@@ -19,13 +15,30 @@ fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
     },
     types = types.map {
       it.toModel()
+    },
+    moves = moves.map {
+      it.toModel()
     })
 }
 
-fun StatEntity.toModel(): Stat = with(this) {
+fun StatResponse.toModel(): Stat = with(this) {
   Stat(amount = baseStat, name = stat.name, infoUrl = stat.url)
 }
 
-fun TypeEntity.toModel(): Info = with(this) {
+fun TypeResponse.toModel(): Info = with(this) {
   Info(name = type.name, url = type.url)
+}
+
+fun MoveResponse.toModel(): Move = with(this) {
+  Move(name = move.name, url = move.url, details = versionGroupDetails.map {
+    it.toModel()
+  })
+}
+
+fun VersionGroupDetailResponse.toModel(): VersionGroupDetail = with(this) {
+  VersionGroupDetail(
+    learnLevel = levelLearnedAt,
+    learnMethod = moveLearnMethod.toModel(),
+    version = versionGroup.toModel()
+  )
 }

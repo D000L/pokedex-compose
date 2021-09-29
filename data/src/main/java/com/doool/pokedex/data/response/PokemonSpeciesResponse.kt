@@ -7,16 +7,16 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class PokemonSpeciesResponse(
   @PrimaryKey val id: Int = 0,
-  val color: InfoEntity = InfoEntity(),
-  @SerializedName("egg_groups") val eggGroups: List<InfoEntity> = emptyList(),
+  val color: InfoResponse = InfoResponse(),
+  @SerializedName("egg_groups") val eggGroups: List<InfoResponse> = emptyList(),
   @SerializedName("evolution_chain") val evolutionChain: EvolutionChain? = null,
-  @SerializedName("evolves_from_species") val evolvesFromSpecies: InfoEntity? = null,
+  @SerializedName("evolves_from_species") val evolvesFromSpecies: InfoResponse? = null,
   @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntries> = emptyList(),
   @SerializedName("form_descriptions") val formDescriptions: List<String> = emptyList(),
   @SerializedName("forms_switchable") val formsSwitchable: Boolean = false,
   @SerializedName("gender_rate") val genderRate: Int = 0,
   val genera: List<Genera> = emptyList(),
-  val generation: InfoEntity,
+  val generation: InfoResponse,
   @SerializedName("has_gender_differences") val hasGenderDifferences: Boolean = false,
   @SerializedName("hatch_counter") val hatchCounter: Int = 0,
   @SerializedName("is_baby") val isBaby: Boolean = false,
@@ -35,18 +35,18 @@ data class EvolutionChain(
 @Keep
 data class Genera(
   val genus: String = "",
-  val language: InfoEntity = InfoEntity()
+  val language: InfoResponse = InfoResponse()
 )
 
 @Keep
 data class FlavorTextEntries(
   @SerializedName("flavor_text") val flavorText: String = "",
-  val language: InfoEntity = InfoEntity(),
-  val version: InfoEntity = InfoEntity()
+  val language: InfoResponse = InfoResponse(),
+  val version: InfoResponse = InfoResponse()
 )
 
 @Keep
 data class Names(
-  val language: InfoEntity = InfoEntity(),
+  val language: InfoResponse = InfoResponse(),
   val name: String = ""
 )
