@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TabRow
@@ -18,10 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonEvolutionChain
-import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.domain.model.Stat
+import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.common.StatType
 import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.common.toStatType
@@ -43,7 +42,7 @@ fun DetailScreen(
         DetailTabLayout {
           when (it) {
             TabState.Detail -> PokemonDetail(detail, species)
-            TabState.Move -> NotDevelop()
+            TabState.Move -> MoveList(detail.moves)
             TabState.Evolution -> EvolutionList(pokemonEvolutionChain)
           }
         }
@@ -145,8 +144,17 @@ fun ItemEvolution(name: String) {
 }
 
 @Composable
-fun ColumnScope.NotDevelop() {
-  Text(text = "Didn't Develop")
+fun MoveList(moves: List<Move>) {
+  LazyColumn {
+    items(moves) {
+      Move(it)
+    }
+  }
+}
+
+@Composable
+fun Move(move: Move) {
+  Text(text = move.name)
 }
 
 @Composable
