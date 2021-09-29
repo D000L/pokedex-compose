@@ -9,5 +9,5 @@ class GetPokemonList @Inject constructor(private val pokemonRepository: PokemonR
 
   operator fun invoke(query: String? = null): Flow<List<PokemonDetail>> =
     if (query == null) pokemonRepository.getAllPokemon()
-    else pokemonRepository.getPokemon(query)
+    else pokemonRepository.searchPokemonList(query)
 }

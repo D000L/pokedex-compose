@@ -1,9 +1,9 @@
 package com.doool.pokedex.data.mapper
 
-import com.doool.pokedex.data.entity.EvolutionDetail
-import com.doool.pokedex.data.entity.EvolvesTo
-import com.doool.pokedex.data.entity.InfoEntity
-import com.doool.pokedex.data.entity.PokemonEvolutionChainResponse
+import com.doool.pokedex.data.response.EvolutionDetail
+import com.doool.pokedex.data.response.EvolvesTo
+import com.doool.pokedex.data.response.InfoEntity
+import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.domain.model.Condition
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 

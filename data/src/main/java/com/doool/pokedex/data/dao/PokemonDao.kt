@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
-import com.doool.pokedex.data.entity.PokemonEvolutionChainResponse
 import com.doool.pokedex.data.entity.PokemonSpeciesEntity
 
 @Dao

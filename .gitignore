@@ -83,3 +83,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+/data/schemas/com.doool.pokedex.data.PokeDatabase/

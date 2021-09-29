@@ -3,7 +3,7 @@ package com.doool.pokedex.presentation.ui.pokemon
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.usecase.DownloadAllData
+import com.doool.pokedex.domain.usecase.DownloadStaticData
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
   private val getPokemonList: GetPokemonList,
-  private val downloadAllData: DownloadAllData
+  private val downloadStaticData: DownloadStaticData
 ) : ViewModel() {
 
   private val searchQuery = MutableStateFlow<String?>(null)
@@ -25,7 +25,7 @@ class PokemonViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      downloadAllData()
+      downloadStaticData()
     }
   }
 

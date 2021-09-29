@@ -12,7 +12,7 @@ import com.doool.pokedex.data.entity.PokemonSpeciesEntity
 
 @Database(
   entities = [PokemonDetailEntity::class, PokemonSpeciesEntity::class, PokemonEvolutionChainEntity::class],
-  version = 3,
+  version = 4,
   exportSchema = true
 )
 abstract class PokeDatabase : RoomDatabase() {

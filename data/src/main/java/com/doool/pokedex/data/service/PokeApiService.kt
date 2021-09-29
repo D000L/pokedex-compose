@@ -1,7 +1,7 @@
 package com.doool.pokedex.data.service
 
-import com.doool.pokedex.data.entity.PokemonEvolutionChainResponse
-import com.doool.pokedex.data.entity.PokemonSpeciesResponse
+import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
+import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 

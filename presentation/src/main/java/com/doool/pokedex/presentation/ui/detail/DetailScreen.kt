@@ -141,7 +141,7 @@ fun LevelEvolution(level: Int) {
 
 @Composable
 fun ItemEvolution(name: String) {
-
+  Text(text = "$name")
 }
 
 @Composable

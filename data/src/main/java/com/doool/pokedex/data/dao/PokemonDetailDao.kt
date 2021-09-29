@@ -14,16 +14,13 @@ interface PokemonDetailDao {
   fun getAllPokemon(): Flow<List<PokemonDetailEntity>>
 
   @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%'")
-  fun getPokemonList(query : String): Flow<List<PokemonDetailEntity>>
+  fun searchPokemonList(query: String): Flow<List<PokemonDetailEntity>>
 
   @Query("SELECT * FROM pokemon_detail WHERE id = :id")
-  suspend fun getPokemon(id : Int): PokemonDetailEntity
+  suspend fun getPokemon(id: Int): PokemonDetailEntity
 
   @Query("SELECT * FROM pokemon_detail WHERE name = :name")
-  suspend fun getPokemon(name : String): PokemonDetailEntity
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend fun insertPokemonDetail(pokemonDetail: PokemonDetailEntity)
+  suspend fun getPokemon(name: String): PokemonDetailEntity
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertPokemonDetail(pokemonDetail: List<PokemonDetailEntity>)

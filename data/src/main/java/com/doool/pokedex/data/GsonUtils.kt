@@ -7,6 +7,6 @@ inline fun <reified T> T.toJson(): String {
   return Gson().toJson(this, object : TypeToken<T>() {}.type)
 }
 
-inline fun <reified T> String.toModel(): T {
+inline fun <reified T> String.toResponse(): T {
   return Gson().fromJson(this, object : TypeToken<T>() {}.type)
 }

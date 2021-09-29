@@ -1,6 +1,8 @@
 package com.doool.pokedex.module
 
+import com.doool.pokedex.data.repository.DownloadRepositoryImpl
 import com.doool.pokedex.data.repository.PokemonRepositoryImpl
+import com.doool.pokedex.domain.repository.DownloadRepository
 import com.doool.pokedex.domain.repository.PokemonRepository
 import dagger.Binds
 import dagger.Module
@@ -13,4 +15,7 @@ abstract class RepositoryModule {
 
   @Binds
   abstract fun bindPokemonRepository(impl: PokemonRepositoryImpl): PokemonRepository
+
+  @Binds
+  abstract fun bindDownloadRepository(impl: DownloadRepositoryImpl): DownloadRepository
 }

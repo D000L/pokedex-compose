@@ -7,7 +7,7 @@ class GetPokemonThumbnail @Inject constructor(private val pokemonRepository: Pok
 
   suspend operator fun invoke(name: String): Result<String> {
     return try {
-      Result.success(pokemonRepository.getSprites(name))
+      Result.success(pokemonRepository.getPokemonThumbnail(name))
     } catch (e: Throwable) {
       Result.failure(e)
     }
