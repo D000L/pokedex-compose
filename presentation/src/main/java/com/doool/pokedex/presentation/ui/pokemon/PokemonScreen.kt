@@ -77,7 +77,10 @@ fun Search(doSearch: (String) -> Unit) {
         } else false
       },
     value = query,
-    onValueChange = { query = it },
+    onValueChange = {
+      query = it
+      doSearch(query)
+    },
     singleLine = true,
     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
     keyboardActions = KeyboardActions {
