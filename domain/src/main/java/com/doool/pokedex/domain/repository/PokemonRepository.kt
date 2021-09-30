@@ -1,14 +1,13 @@
 package com.doool.pokedex.domain.repository
 
+import androidx.paging.DataSource
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.domain.model.PokemonSpecies
-import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepository {
 
-  suspend fun getAllPokemon(): List<PokemonDetail>
-  suspend fun searchPokemonList(query: String): List<PokemonDetail>
+  fun searchPokemonList(query: String?): DataSource.Factory<Int, PokemonDetail>
 
   suspend fun getPokemon(id: Int): PokemonDetail
   suspend fun getPokemonSpecies(id: Int): PokemonSpecies

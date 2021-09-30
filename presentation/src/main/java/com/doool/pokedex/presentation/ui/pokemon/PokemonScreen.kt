@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,6 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
@@ -45,7 +47,7 @@ fun PokemonScreen(
   navigateDetail: (Int) -> Unit
 ) {
 
-  val pokemonList by pokemonViewModel.pokemonList.collectAsState(initial = emptyList())
+  val pokemonList = pokemonViewModel.pokemonList.collectAsLazyPagingItems()
 
   Column(Modifier.padding(horizontal = 20.dp)) {
     Search(pokemonViewModel::search)
@@ -119,10 +121,10 @@ fun SearchLayout(
 }
 
 @Composable
-fun PokemonList(list: List<PokemonDetail>, navigateDetail: (Int) -> Unit) {
+fun PokemonList(list: LazyPagingItems<PokemonDetail>, navigateDetail: (Int) -> Unit) {
   LazyColumn() {
     items(list) {
-      Pokemon(pokemon = it, onClick = navigateDetail)
+      it?.let { Pokemon(pokemon = it, onClick = navigateDetail) }
     }
   }
 }

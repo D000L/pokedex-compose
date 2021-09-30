@@ -1,5 +1,7 @@
 package com.doool.pokedex.data.repository
 
+import android.util.Log
+import androidx.paging.DataSource
 import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
 import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
@@ -23,15 +25,14 @@ class PokemonRepositoryImpl @Inject constructor(
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
-  override suspend fun getAllPokemon(): List<PokemonDetail> {
-    return pokemonDetailDao.getAllPokemon().map {
-      it.json.toResponse<PokemonDetailResponse>().toModel()
-    }
-  }
+  override fun searchPokemonList(query: String?): DataSource.Factory<Int, PokemonDetail> {
+    val dataSourceFactory =
+      if (query.isNullOrEmpty()) pokemonDetailDao.getAllPokemon()
+      else pokemonDetailDao.searchPokemonList(query)
 
-  override suspend fun searchPokemonList(query: String): List<PokemonDetail> {
-    return pokemonDetailDao.searchPokemonList(query).map {
-      it.json.toResponse<PokemonDetailResponse>().toModel()
+    return dataSourceFactory.mapByPage {
+      Log.d("sdfasfasgdg", "load ${it.size}")
+      it.map { it.json.toResponse<PokemonDetailResponse>().toModel() }
     }
   }
 
