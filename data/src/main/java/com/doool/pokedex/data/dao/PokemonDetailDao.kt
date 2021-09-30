@@ -11,10 +11,10 @@ import com.doool.pokedex.data.entity.PokemonDetailEntity
 interface PokemonDetailDao {
 
   @Query("SELECT * FROM pokemon_detail")
-   fun getAllPokemon(): DataSource.Factory<Int, PokemonDetailEntity>
+  fun getAllPokemon(): DataSource.Factory<Int, PokemonDetailEntity>
 
   @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%'")
-   fun searchPokemonList(query: String): DataSource.Factory<Int, PokemonDetailEntity>
+  fun searchPokemonList(query: String): DataSource.Factory<Int, PokemonDetailEntity>
 
   @Query("SELECT * FROM pokemon_detail WHERE id = :id")
   suspend fun getPokemon(id: Int): PokemonDetailEntity

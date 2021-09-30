@@ -8,14 +8,14 @@ import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.usecase.DownloadStaticData
-import com.doool.pokedex.domain.usecase.GetPokemonList
+import com.doool.pokedex.domain.usecase.GetPokemonPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
-  private val getPokemonList: GetPokemonList,
+  private val getPokemonList: GetPokemonPagingSource,
   private val downloadStaticData: DownloadStaticData
 ) : ViewModel() {
 
@@ -30,9 +30,7 @@ class PokemonViewModel @Inject constructor(
       enablePlaceholders = false
     )
   ) {
-    getPokemonList(searchQuery).also {
-      pagingSource = it
-    }
+    getPokemonList(searchQuery).also { pagingSource = it }
   }.flow.cachedIn(viewModelScope)
 
   init {

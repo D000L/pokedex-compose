@@ -24,26 +24,38 @@ import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.common.StatType
 import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.common.toStatType
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.map
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun DetailScreen(
   pokemonViewModel: PokemonDetailViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
-  val pokemon by pokemonViewModel.pokemon.collectAsState(null)
   val pokemonSpecies by pokemonViewModel.pokemonSpecies.collectAsState(null)
   val pokemonEvolutionChain by pokemonViewModel.pokemonEvolutionChain.collectAsState(emptyList())
 
-  pokemon?.let { detail ->
-    pokemonSpecies?.let { species ->
-      Column {
+  val initIndex by pokemonViewModel.pokemonId.collectAsState(initial = 0)
+
+  val items = listOf(1..500)
+  val state = rememberPagerState(pageCount = items.size, initIndex)
+
+
+  pokemonSpecies?.let { species ->
+    HorizontalPager(state = state) {
+      pokemonViewModel.getItem(it).map { detail ->
         PokemonInfo(detail)
         DetailTabLayout {
-          when (it) {
-            TabState.Detail -> PokemonDetail(detail, species)
-            TabState.Move -> MoveList(detail.moves)
-            TabState.Evolution -> EvolutionList(pokemonEvolutionChain)
+          Column {
+            when (it) {
+              TabState.Detail -> PokemonDetail(detail, species)
+              TabState.Move -> MoveList(detail.moves)
+              TabState.Evolution -> EvolutionList(pokemonEvolutionChain)
+            }
           }
         }
       }

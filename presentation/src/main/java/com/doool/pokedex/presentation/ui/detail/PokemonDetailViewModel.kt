@@ -29,10 +29,16 @@ class PokemonDetailViewModel @Inject constructor(
     const val POKEMON_ID = "POKEMON_ID"
   }
 
-  private val pokemonId = savedStateHandle.getLiveData<Int>(POKEMON_ID).asFlow()
+  val pokemonId = savedStateHandle.getLiveData<Int>(POKEMON_ID).asFlow()
 
   val pokemon: Flow<PokemonDetail> = pokemonId.transformLatest {
     getPokemon(it).fold({
+      emit(it)
+    }, {})
+  }
+
+  fun getItem(id :Int) : Flow<PokemonDetail> = flow {
+    getPokemon(id).fold({
       emit(it)
     }, {})
   }

@@ -31,7 +31,6 @@ class PokemonRepositoryImpl @Inject constructor(
       else pokemonDetailDao.searchPokemonList(query)
 
     return dataSourceFactory.mapByPage {
-      Log.d("sdfasfasgdg", "load ${it.size}")
       it.map { it.json.toResponse<PokemonDetailResponse>().toModel() }
     }
   }
