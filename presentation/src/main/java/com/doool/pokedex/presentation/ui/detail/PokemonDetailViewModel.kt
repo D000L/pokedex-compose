@@ -1,6 +1,5 @@
 package com.doool.pokedex.presentation.ui.detail
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.PokemonDetail
@@ -27,56 +26,42 @@ class PokemonDetailViewModel @Inject constructor(
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain
 ) : ViewModel() {
 
-  fun getDetail(id: Int) = flow {
-    getPokemon(id).fold({
-      emit(it)
-    }, {})
-  }
-
-  fun getSpecies(id: Int) = flow {
-    getPokemonSpecies(id).fold({
-      emit(it)
-    }, {})
-  }
-
-  fun getEvolutionChain(url: String) = flow {
-    val evolutionId = url.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
+  private fun parseEvolutionChainId(url: String): Int {
+    return url.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
       .toInt()
-    getPokemonEvolutionChain(evolutionId).fold({
-      emit(it)
-    }, {})
   }
 
-  fun <K, V> lazyMap(initializer: (K) -> V): Map<K, V> {
+  private fun <K, V> lazyMap(initializer: (K) -> V): Map<K, V> {
     val map = mutableMapOf<K, V>()
     return map.withDefault { key ->
-      val newValue = initializer(key)
-      map[key] = newValue
-      return@withDefault newValue
+      return@withDefault map.getOrPut(key) { initializer(key) }
     }
   }
 
   private val uiState: Map<Int, Flow<DetailUiState>> = lazyMap { id ->
-    var uiState = DetailUiState()
-    Log.d("sdfsadf", "uiState $id")
+    val pokemon = getPokemon(id)
+    val species = getPokemonSpecies(id)
+    val evolutionChain = species.flatMapLatest {
+      getPokemonEvolutionChain(parseEvolutionChainId(it.evolutionUrl))
+    }
 
-    return@lazyMap merge(
-      getDetail(id).map {
-        Log.d("sdfsadf", "getDetail $it")
-        uiState = uiState.copy(pokemon = it)
-        uiState
-      }.catch { emit(uiState.copy(pokemon = PokemonDetail(id = -1))) },
-      getSpecies(id).map {
-        Log.d("sdfsadf", "getSpecies $it")
-        uiState = uiState.copy(species = it)
-        uiState
-      }.catch { emit(uiState.copy(pokemon = PokemonDetail(id = -2))) }
-    ).stateIn(viewModelScope, SharingStarted.Lazily, DetailUiState())
+    return@lazyMap merge(pokemon, species, evolutionChain)
+      .scan(DetailUiState()) { state, item ->
+        when (item) {
+          is PokemonDetail -> state.copy(pokemon = item)
+          is PokemonSpecies -> state.copy(species = item)
+          is List<*> -> state.copy(evolutionChain = item as List<PokemonEvolutionChain>)
+          else -> state
+        }
+      }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        DetailUiState()
+      )
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)
   fun loadPokemon(id: Int): Flow<DetailUiState> {
-    Log.d("sdfsadf", "load $id")
     return uiState.getValue(id)
   }
 }

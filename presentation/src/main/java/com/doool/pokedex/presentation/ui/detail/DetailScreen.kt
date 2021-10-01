@@ -15,10 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.common.StatType
@@ -27,6 +30,7 @@ import com.doool.pokedex.presentation.ui.common.toStatType
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.collect
 
 
 @OptIn(ExperimentalPagerApi::class)
