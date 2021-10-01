@@ -8,30 +8,38 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.HiltViewModelFactory
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.*
-import com.doool.pokedex.presentation.ui.common.StatType
-import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
-import com.doool.pokedex.presentation.ui.common.toStatType
+import com.doool.pokedex.presentation.ui.common.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.flow.collect
 
+private val TOOLBAR_HEIGHT = 56.dp
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -44,15 +52,27 @@ fun DetailScreen(
   val items = (1..500).toList()
   val state = rememberPagerState(pageCount = items.size, initPokemonId - 1)
 
-  HorizontalPager(state = state) {
-    val uiState by viewModel.loadPokemon(items[it]).collectAsState(initial = DetailUiState())
-    DetailPage(uiState)
+  Box {
+    HorizontalPager(state = state) {
+      val uiState by viewModel.loadPokemon(items[it]).collectAsState(initial = DetailUiState())
+      DetailPage(uiState = uiState)
+    }
+    DetailAppBar(navigateBack)
   }
 }
 
 @Composable
-fun DetailPage(uiState: DetailUiState) {
-  Column {
+fun DetailAppBar(onClickBack: () -> Unit) {
+  Row(modifier = Modifier.height(TOOLBAR_HEIGHT)) {
+    IconButton(onClick = onClickBack) {
+      Icon(Icons.Default.ArrowBack, contentDescription = null)
+    }
+  }
+}
+
+@Composable
+fun DetailPage(modifier: Modifier = Modifier, uiState: DetailUiState) {
+  Column(modifier.fillMaxSize(1f)) {
     PokemonInfo(uiState.pokemon)
     DetailTabLayout {
       when (it) {
@@ -170,20 +190,70 @@ fun Move(move: Move) {
   Text(text = move.name)
 }
 
+@Preview
+@Composable
+fun PreviewPokemonInfo() {
+  val pokemon = PokemonDetail(
+    height = 5,
+    id = 7,
+    image = "https://raw.githubuserconten.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwor/7.png",
+    name = "squirtle",
+    types = listOf(Info("water")),
+    color = Info("blue")
+  )
+
+  PokemonInfo(pokemon)
+}
+
+class CurveShape : Shape {
+  override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+    return Outline.Generic(Path().apply {
+      val width = size.width
+      val height = size.height
+      val curveHeight = height * 0.9f
+
+      moveTo(0f, curveHeight)
+      quadraticBezierTo(width / 2f, height, width, curveHeight)
+      lineTo(width, 0f)
+      lineTo(0f, 0f)
+      lineTo(0f, height)
+      close()
+    })
+  }
+}
+
 @Composable
 fun PokemonInfo(pokemon: PokemonDetail) {
-  Column(
-    Modifier
+  Box {
+    Box(modifier = Modifier
       .fillMaxWidth()
-      .height(120.dp)
-      .background(Color.Green)
-  ) {
-    Text(text = pokemon.name)
-    TypeListWithTitle(pokemon.types)
-    Image(
-      painter = rememberImagePainter(pokemon.image),
-      contentDescription = null
-    )
+      .height(300.dp)
+      .background(colorResource(id = pokemon.color.name.toPokemonColor().colorRes), shape = CurveShape()))
+
+    Column(
+      Modifier
+        .fillMaxWidth()
+        .padding(top = TOOLBAR_HEIGHT, start = 20.dp, end = 20.dp)
+    ) {
+      Row(verticalAlignment = Alignment.Bottom) {
+        Text(text = pokemon.name, fontSize = 36.sp, color = Color.White)
+        Spacer(modifier = Modifier.weight(1f))
+        Text(text = "#%03d".format(pokemon.id),
+          fontSize = 18.sp,
+          color = Color.White.copy(alpha = 0.4f),
+          fontWeight = FontWeight.Bold)
+      }
+      Space(height = 6.dp)
+      TypeListWithTitle(pokemon.types)
+      Space(height = 20.dp)
+      Image(
+        modifier = Modifier
+          .size(180.dp)
+          .align(Alignment.CenterHorizontally),
+        painter = rememberImagePainter(pokemon.image),
+        contentDescription = null
+      )
+    }
   }
 }
 
