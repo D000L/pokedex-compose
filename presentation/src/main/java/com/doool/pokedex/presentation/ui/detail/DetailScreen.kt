@@ -27,37 +27,34 @@ import com.doool.pokedex.presentation.ui.common.toStatType
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.flow.map
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun DetailScreen(
-  pokemonViewModel: PokemonDetailViewModel = hiltViewModel(),
+  initPokemonId: Int = 1,
+  viewModel: PokemonDetailViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
-  val pokemonSpecies by pokemonViewModel.pokemonSpecies.collectAsState(null)
-  val pokemonEvolutionChain by pokemonViewModel.pokemonEvolutionChain.collectAsState(emptyList())
 
-  val initIndex by pokemonViewModel.pokemonId.collectAsState(initial = 0)
+  val items = (1..500).toList()
+  val state = rememberPagerState(pageCount = items.size, initPokemonId - 1)
 
-  val items = listOf(1..500)
-  val state = rememberPagerState(pageCount = items.size, initIndex)
+  HorizontalPager(state = state) {
+    val uiState by viewModel.loadPokemon(items[it]).collectAsState(initial = DetailUiState())
+    DetailPage(uiState)
+  }
+}
 
-
-  pokemonSpecies?.let { species ->
-    HorizontalPager(state = state) {
-      pokemonViewModel.getItem(it).map { detail ->
-        PokemonInfo(detail)
-        DetailTabLayout {
-          Column {
-            when (it) {
-              TabState.Detail -> PokemonDetail(detail, species)
-              TabState.Move -> MoveList(detail.moves)
-              TabState.Evolution -> EvolutionList(pokemonEvolutionChain)
-            }
-          }
-        }
+@Composable
+fun DetailPage(uiState: DetailUiState) {
+  Column {
+    PokemonInfo(uiState.pokemon)
+    DetailTabLayout {
+      when (it) {
+        TabState.Detail -> PokemonDetail(uiState.pokemon, uiState.species)
+        TabState.Move -> MoveList(uiState.pokemon.moves)
+        TabState.Evolution -> EvolutionList(uiState.evolutionChain)
       }
     }
   }
@@ -188,7 +185,7 @@ fun PokemonInfo(pokemon: PokemonDetail) {
 
 @Composable
 fun Description(pokemonSpecies: PokemonSpecies) {
-  Text(text = pokemonSpecies.flavorText.first())
+  Text(text = pokemonSpecies.flavorText.firstOrNull() ?: "")
 }
 
 @Composable

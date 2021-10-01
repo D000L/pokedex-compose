@@ -1,9 +1,9 @@
 package com.doool.pokedex.domain.model
 
 data class PokemonEvolutionChain(
-  val from: Info,
-  val to: Info,
-  val condition: Condition,
+  val from: Info = Info(),
+  val to: Info = Info(),
+  val condition: Condition = Condition(),
 )
 
 data class Condition(

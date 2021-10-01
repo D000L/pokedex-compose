@@ -30,8 +30,8 @@ class MainActivity : ComponentActivity() {
   }
 }
 
-enum class NavDestination {
-  List, Detail
+enum class NavDestination(val argument : Pair<NavType<*>, String>? = null) {
+  List, Detail(Pair(NavType.IntType,"POKEMON_ID"))
 }
 
 @Composable
@@ -44,12 +44,13 @@ fun App() {
       PokemonScreen(navigateDetail = navActions::navigateDetail)
     }
     composable(
-      route = "${NavDestination.Detail.name}/{${PokemonDetailViewModel.POKEMON_ID}}",
-      arguments = listOf(navArgument(PokemonDetailViewModel.POKEMON_ID) {
-        type = NavType.IntType
+      route = "${NavDestination.Detail.name}/{${NavDestination.Detail.argument!!.second}}",
+      arguments = listOf(navArgument(NavDestination.Detail.argument!!.second) {
+        type = NavDestination.Detail.argument!!.first
       })
     ) {
-      DetailScreen(navigateBack = navActions::navigateBack)
+      val pokemonId = it.arguments?.getInt(NavDestination.Detail.argument!!.second) ?: 1
+      DetailScreen(initPokemonId = pokemonId, navigateBack = navActions::navigateBack)
     }
   }
 }
