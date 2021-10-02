@@ -11,7 +11,7 @@ interface PokemonRepository {
 
   suspend fun getPokemon(id: Int): PokemonDetail
   suspend fun getPokemonSpecies(id: Int): PokemonSpecies
-  suspend fun getPokemonEvolutionChain(id: Int): List<PokemonEvolutionChain>
+  suspend fun getPokemonEvolutionChain(url: String): List<PokemonEvolutionChain>
 
   suspend fun getPokemonThumbnail(name: String): String
 }

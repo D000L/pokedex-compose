@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 class GetPokemonEvolutionChain @Inject constructor(private val pokemonRepository: PokemonRepository) {
 
-  operator fun invoke(id: Int): Flow<List<PokemonEvolutionChain>> = flow {
-    val result = pokemonRepository.getPokemonEvolutionChain(id)
+  operator fun invoke(url: String): Flow<List<PokemonEvolutionChain>> = flow {
+    val result = pokemonRepository.getPokemonEvolutionChain(url)
     result.forEach {
       it.from.url = pokemonRepository.getPokemonThumbnail(it.from.name)
       it.to.url = pokemonRepository.getPokemonThumbnail(it.to.name)

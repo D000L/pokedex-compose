@@ -8,9 +8,11 @@ import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonEvolutionChain
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
+import com.doool.pokedex.presentation.utils.lazyMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class DetailUiState(
@@ -26,23 +28,22 @@ class PokemonDetailViewModel @Inject constructor(
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain
 ) : ViewModel() {
 
-  private fun parseEvolutionChainId(url: String): Int {
-    return url.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
-      .toInt()
-  }
+  private val currentItem = MutableStateFlow(1)
 
-  private fun <K, V> lazyMap(initializer: (K) -> V): Map<K, V> {
-    val map = mutableMapOf<K, V>()
-    return map.withDefault { key ->
-      return@withDefault map.getOrPut(key) { initializer(key) }
-    }
+
+  private val pokemonMap: Map<Int, Flow<PokemonDetail>> = lazyMap { id ->
+    return@lazyMap getPokemon(id).stateIn(
+      viewModelScope,
+      SharingStarted.Lazily,
+      PokemonDetail()
+    )
   }
 
   private val uiState: Map<Int, Flow<DetailUiState>> = lazyMap { id ->
-    val pokemon = getPokemon(id)
+    val pokemon = pokemonMap.getValue(id)
     val species = getPokemonSpecies(id)
     val evolutionChain = species.flatMapLatest {
-      getPokemonEvolutionChain(parseEvolutionChainId(it.evolutionUrl))
+      getPokemonEvolutionChain(it.evolutionUrl)
     }
 
     return@lazyMap merge(pokemon, species, evolutionChain)
@@ -53,15 +54,29 @@ class PokemonDetailViewModel @Inject constructor(
           is List<*> -> state.copy(evolutionChain = item as List<PokemonEvolutionChain>)
           else -> state
         }
-      }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        DetailUiState()
-      )
+      }
+  }
+
+  fun setCurrentItem(id: Int) {
+    viewModelScope.launch {
+      currentItem.emit(id)
+    }
+  }
+
+  fun getPokemon(): Flow<PokemonDetail> {
+    return currentItem.flatMapLatest {
+      pokemonMap.getValue(it)
+    }
+  }
+
+  fun getUiState(): Flow<DetailUiState> {
+    return currentItem.flatMapLatest {
+      uiState.getValue(it)
+    }
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  fun loadPokemon(id: Int): Flow<DetailUiState> {
-    return uiState.getValue(id)
+  fun loadPokemonImage(id: Int): Flow<String> {
+    return pokemonMap.getValue(id).map { it.image }
   }
 }

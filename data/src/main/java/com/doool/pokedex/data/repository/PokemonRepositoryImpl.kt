@@ -61,8 +61,13 @@ class PokemonRepositoryImpl @Inject constructor(
     return localResult.json.toResponse()
   }
 
-  override suspend fun getPokemonEvolutionChain(id: Int): List<PokemonEvolutionChain> {
-    return fetchPokemonEvolutionChain(id).toModel()
+  override suspend fun getPokemonEvolutionChain(url: String): List<PokemonEvolutionChain> {
+    return fetchPokemonEvolutionChain(parseEvolutionChainId(url)).toModel()
+  }
+
+  private fun parseEvolutionChainId(url: String): Int {
+    return url.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
+      .toInt()
   }
 
   private suspend fun fetchPokemonEvolutionChain(id: Int): PokemonEvolutionChainResponse {

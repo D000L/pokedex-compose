@@ -19,18 +19,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,7 +33,9 @@ import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.common.*
 import com.doool.viewpager.ViewPager
 import com.doool.viewpager.ViewPagerOrientation
+import com.doool.viewpager.ViewPagerState
 import com.doool.viewpager.rememberViewPagerState
+import kotlinx.coroutines.flow.Flow
 import kotlin.math.abs
 
 private val TOOLBAR_HEIGHT = 56.dp
@@ -53,75 +49,66 @@ fun DetailScreen(
 
   val items = (1..500).toList()
 
-  val currentIndex by remember { mutableStateOf(initPokemonId - 1) }
+  val viewPagerState = rememberViewPagerState(currentPage = initPokemonId - 1)
+  val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
 
-  val viewPagerState = rememberViewPagerState(currentPage = currentIndex)
-  val currentPokemon by viewModel.loadPokemon(items[viewPagerState.currentPage])
-    .collectAsState(initial = DetailUiState())
+  LaunchedEffect(key1 = viewPagerState.currentPage) {
+    viewModel.setCurrentItem(items[viewPagerState.currentPage])
+  }
 
-  val mainColor by animateColorAsState(targetValue = colorResource(currentPokemon.pokemon.color.name.toPokemonColor().colorRes))
-
-  Column() {
-    BoxWithConstraints() {
+  Column {
+    BoxWithConstraints {
       val width = LocalDensity.current.run { maxWidth.toPx() }
       val offsetY = LocalDensity.current.run { -10.dp.toPx() }
 
-      Box(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(300.dp)
-          .background(
-            color = mainColor,
-            shape = CurveShape()
-          )
-      )
+      CurveBackground(pokemon.color.name.toPokemonColor().colorRes)
 
-      Column{
-        DetailAppBar(navigateBack)
+      Column {
+        DetailAppBar(modifier = Modifier.height(TOOLBAR_HEIGHT), onClickBack = navigateBack)
+        PokemonInfo(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(start = 20.dp, end = 20.dp),
+          pokemon = pokemon
+        )
+        Space(height = 20.dp)
 
-        PokemonInfo(currentPokemon.pokemon)
-
-        Space(height = 40.dp)
-        ViewPager(
+        PokemonImagePager(
           modifier = Modifier.height(180.dp),
-          state = viewPagerState,
-          transformer = Transformer(
-            mapOf(-2 to -width, -1 to -width / 2f, 0 to 0f, 1 to width / 2f, 2 to width),
-            mapOf(-2 to offsetY * 2, -1 to offsetY, 0 to 0f, 1 to offsetY, 2 to offsetY * 2)
-          ),
-          orientation = ViewPagerOrientation.Horizontal
+          items = items,
+          viewPagerState = viewPagerState,
+          width = width,
+          offsetY = offsetY
         ) {
-          items(items) { pokemonId ->
-            val uiState by viewModel.loadPokemon(pokemonId).collectAsState(initial = DetailUiState())
-
-            val pageOffset = (1 - abs(getPagePosition())).coerceIn(0f, 1f)
-
-            val sizePercent = 0.5f + pageOffset / 2f
-
-            Image(
-              modifier = Modifier
-                .size(180.dp * sizePercent),
-              painter = rememberImagePainter(uiState.pokemon.image),
-              contentDescription = null
-            )
-          }
+          viewModel.loadPokemonImage(it)
         }
       }
     }
 
-    DetailTabLayout {
-      when (it) {
-        TabState.Detail -> PokemonDetail(currentPokemon.pokemon, currentPokemon.species)
-        TabState.Move -> MoveList(currentPokemon.pokemon.moves)
-        TabState.Evolution -> EvolutionList(currentPokemon.evolutionChain)
-      }
-    }
+    val uiState by remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState())
+    DetailPage(uiState)
   }
 }
 
 @Composable
-fun DetailAppBar(onClickBack: () -> Unit) {
-  Row(modifier = Modifier.height(TOOLBAR_HEIGHT)) {
+fun CurveBackground(color: Int) {
+  val mainColor by animateColorAsState(targetValue = colorResource(color))
+
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(300.dp)
+      .background(
+        color = mainColor,
+        shape = CurveShape()
+      )
+  )
+}
+
+@Composable
+fun DetailAppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
+  Row(modifier = modifier) {
     IconButton(onClick = onClickBack) {
       Icon(Icons.Default.ArrowBack, contentDescription = null)
     }
@@ -129,15 +116,66 @@ fun DetailAppBar(onClickBack: () -> Unit) {
 }
 
 @Composable
-fun DetailPage(modifier: Modifier = Modifier, uiState: DetailUiState) {
-  Column(modifier.fillMaxSize(1f)) {
-    PokemonInfo(uiState.pokemon)
-    DetailTabLayout {
-      when (it) {
-        TabState.Detail -> PokemonDetail(uiState.pokemon, uiState.species)
-        TabState.Move -> MoveList(uiState.pokemon.moves)
-        TabState.Evolution -> EvolutionList(uiState.evolutionChain)
-      }
+fun PokemonImagePager(
+  modifier: Modifier = Modifier,
+  items: List<Int> = listOf(),
+  viewPagerState: ViewPagerState = rememberViewPagerState(),
+  width: Float = 0f,
+  offsetY: Float = 0f,
+  loadImage: (Int) -> Flow<String>
+) {
+  val loadImage by rememberUpdatedState(newValue = loadImage)
+
+  ViewPager(
+    modifier = modifier,
+    state = viewPagerState,
+    transformer = Transformer(
+      mapOf(-2 to -width, -1 to -width / 2f, 0 to 0f, 1 to width / 2f, 2 to width),
+      mapOf(-2 to offsetY * 2, -1 to offsetY, 0 to 0f, 1 to offsetY, 2 to offsetY * 2)
+    ),
+    orientation = ViewPagerOrientation.Horizontal
+  ) {
+    items(items) { pokemonId ->
+      val pageOffset = (1 - abs(getPagePosition())).coerceIn(0f, 1f)
+      val sizePercent = 0.5f + pageOffset / 2f
+
+      val imageUrl by loadImage(pokemonId).collectAsState(initial = "")
+
+      Image(
+        modifier = Modifier
+          .size(180.dp * sizePercent),
+        painter = rememberImagePainter(imageUrl),
+        contentDescription = null
+      )
+    }
+  }
+}
+
+@Composable
+fun PokemonInfo(modifier: Modifier = Modifier, pokemon: PokemonDetail) {
+  Column(modifier) {
+    Row(verticalAlignment = Alignment.Bottom) {
+      Text(text = pokemon.name, fontSize = 36.sp, color = Color.White)
+      Spacer(modifier = Modifier.weight(1f))
+      Text(
+        text = "#%03d".format(pokemon.id),
+        fontSize = 18.sp,
+        color = Color.White.copy(alpha = 0.4f),
+        fontWeight = FontWeight.Bold
+      )
+    }
+    Space(height = 6.dp)
+    TypeListWithTitle(pokemon.types)
+  }
+}
+
+@Composable
+fun DetailPage(uiState: DetailUiState) {
+  DetailTabLayout {
+    when (it) {
+      TabState.Detail -> PokemonDetail(uiState.pokemon, uiState.species)
+      TabState.Move -> MoveList(uiState.pokemon.moves)
+      TabState.Evolution -> EvolutionList(uiState.evolutionChain)
     }
   }
 }
@@ -204,10 +242,6 @@ fun EvolutionList(chainList: List<PokemonEvolutionChain>) {
   }
 }
 
-enum class EvolutionType(val text: String) {
-  LevelUp("level-up"), Trade("trade"), Item("use-item"), Shed("shed"), Other("other")
-}
-
 @Composable
 fun Evolution(chain: PokemonEvolutionChain) {
   val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
@@ -252,75 +286,6 @@ fun Move(move: Move) {
   Text(text = move.name)
 }
 
-@Preview
-@Composable
-fun PreviewPokemonInfo() {
-  val pokemon = PokemonDetail(
-    height = 5,
-    id = 7,
-    image = "https://raw.githubuserconten.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwor/7.png",
-    name = "squirtle",
-    types = listOf(Info("water")),
-    color = Info("blue")
-  )
-
-  PokemonInfo(pokemon)
-}
-
-class CurveShape : Shape {
-  override fun createOutline(
-    size: Size,
-    layoutDirection: LayoutDirection,
-    density: Density
-  ): Outline {
-    return Outline.Generic(Path().apply {
-      val width = size.width
-      val height = size.height
-      val curveHeight = height * 0.9f
-
-      moveTo(0f, curveHeight)
-      quadraticBezierTo(width / 2f, height, width, curveHeight)
-      lineTo(width, 0f)
-      lineTo(0f, 0f)
-      lineTo(0f, height)
-      close()
-    })
-  }
-}
-
-@Composable
-fun PokemonInfo(pokemon: PokemonDetail) {
-  Box {
-    Box(
-      modifier = Modifier
-        .fillMaxWidth()
-        .background(
-          colorResource(id = pokemon.color.name.toPokemonColor().colorRes),
-          shape = CurveShape()
-        )
-    )
-
-    Column(
-      Modifier
-        .fillMaxWidth()
-        .padding(start = 20.dp, end = 20.dp)
-    ) {
-      Row(verticalAlignment = Alignment.Bottom) {
-        Text(text = pokemon.name, fontSize = 36.sp, color = Color.White)
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-          text = "#%03d".format(pokemon.id),
-          fontSize = 18.sp,
-          color = Color.White.copy(alpha = 0.4f),
-          fontWeight = FontWeight.Bold
-        )
-      }
-      Space(height = 6.dp)
-      TypeListWithTitle(pokemon.types)
-    }
-  }
-}
-
 @Composable
 fun Description(pokemonSpecies: PokemonSpecies) {
   Text(text = pokemonSpecies.flavorText.firstOrNull() ?: "")
@@ -359,4 +324,19 @@ fun Stat(stat: StatType, amount: Int) {
       )
     }
   }
+}
+
+@Preview
+@Composable
+fun PreviewPokemonInfo() {
+  val pokemon = PokemonDetail(
+    height = 5,
+    id = 7,
+    image = "https://raw.githubuserconten.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwor/7.png",
+    name = "squirtle",
+    types = listOf(Info("water")),
+    color = Info("blue")
+  )
+
+  PokemonInfo(pokemon = pokemon)
 }
