@@ -1,5 +1,6 @@
 package com.doool.pokedex.presentation.ui.detail
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,18 +47,19 @@ fun DetailScreen(
   viewModel: PokemonDetailViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
-
+  Log.d("composable update", "DetailScreen")
   val items = (1..500).toList()
 
   val viewPagerState = rememberViewPagerState(currentPage = initPokemonId - 1)
-  val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
 
-  LaunchedEffect(key1 = viewPagerState.currentPage) {
+  LaunchedEffect(viewPagerState.currentPage) {
     viewModel.setCurrentItem(items[viewPagerState.currentPage])
   }
 
   Column {
     BoxWithConstraints {
+      val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
+
       val width = LocalDensity.current.run { maxWidth.toPx() }
       val offsetY = LocalDensity.current.run { -10.dp.toPx() }
 
@@ -85,14 +87,13 @@ fun DetailScreen(
         }
       }
     }
-
-    val uiState by remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState())
-    DetailPage(uiState)
+    DetailPage(remember { viewModel.getUiState() })
   }
 }
 
 @Composable
 fun CurveBackground(color: Int) {
+  Log.d("composable update", "CurveBackground")
   val mainColor by animateColorAsState(targetValue = colorResource(color))
 
   Box(
@@ -124,6 +125,7 @@ fun PokemonImagePager(
   offsetY: Float = 0f,
   loadImage: (Int) -> Flow<String>
 ) {
+  Log.d("composable update", "PokemonImagePager")
   val loadImage by rememberUpdatedState(newValue = loadImage)
 
   ViewPager(
@@ -153,6 +155,7 @@ fun PokemonImagePager(
 
 @Composable
 fun PokemonInfo(modifier: Modifier = Modifier, pokemon: PokemonDetail) {
+  Log.d("composable update", "PokemonInfo")
   Column(modifier) {
     Row(verticalAlignment = Alignment.Bottom) {
       Text(text = pokemon.name, fontSize = 36.sp, color = Color.White)
@@ -170,7 +173,10 @@ fun PokemonInfo(modifier: Modifier = Modifier, pokemon: PokemonDetail) {
 }
 
 @Composable
-fun DetailPage(uiState: DetailUiState) {
+fun DetailPage(uiState: Flow<DetailUiState>) {
+  val uiState by uiState.collectAsState(initial = DetailUiState())
+
+  Log.d("composable update", "DetailPage")
   DetailTabLayout {
     when (it) {
       TabState.Detail -> PokemonDetail(uiState.pokemon, uiState.species)

@@ -30,31 +30,12 @@ class PokemonDetailViewModel @Inject constructor(
 
   private val currentItem = MutableStateFlow(1)
 
-
   private val pokemonMap: Map<Int, Flow<PokemonDetail>> = lazyMap { id ->
     return@lazyMap getPokemon(id).stateIn(
       viewModelScope,
       SharingStarted.Lazily,
       PokemonDetail()
     )
-  }
-
-  private val uiState: Map<Int, Flow<DetailUiState>> = lazyMap { id ->
-    val pokemon = pokemonMap.getValue(id)
-    val species = getPokemonSpecies(id)
-    val evolutionChain = species.flatMapLatest {
-      getPokemonEvolutionChain(it.evolutionUrl)
-    }
-
-    return@lazyMap merge(pokemon, species, evolutionChain)
-      .scan(DetailUiState()) { state, item ->
-        when (item) {
-          is PokemonDetail -> state.copy(pokemon = item)
-          is PokemonSpecies -> state.copy(species = item)
-          is List<*> -> state.copy(evolutionChain = item as List<PokemonEvolutionChain>)
-          else -> state
-        }
-      }
   }
 
   fun setCurrentItem(id: Int) {
@@ -70,8 +51,22 @@ class PokemonDetailViewModel @Inject constructor(
   }
 
   fun getUiState(): Flow<DetailUiState> {
-    return currentItem.flatMapLatest {
-      uiState.getValue(it)
+    return currentItem.flatMapLatest { id ->
+      val pokemon = getPokemon(id)
+      val species = getPokemonSpecies(id)
+      val evolutionChain = species.flatMapLatest {
+        getPokemonEvolutionChain(it.evolutionUrl)
+      }
+
+      merge(pokemon, species, evolutionChain)
+        .scan(DetailUiState()) { state, item ->
+          when (item) {
+            is PokemonDetail -> state.copy(pokemon = item)
+            is PokemonSpecies -> state.copy(species = item)
+            is List<*> -> state.copy(evolutionChain = item as List<PokemonEvolutionChain>)
+            else -> state
+          }
+        }
     }
   }
 
