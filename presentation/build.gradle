@@ -83,5 +83,7 @@ dependencies {
 
     implementation 'androidx.palette:palette-ktx:1.0.0'
 
-    implementation "com.google.accompanist:accompanist-pager:0.18.0"
+    implementation('com.github.D000L:compose-viewpager:master-SNAPSHOT') {
+        changing = true
+    }
 }
