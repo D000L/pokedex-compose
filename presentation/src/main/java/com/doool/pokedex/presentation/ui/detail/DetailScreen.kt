@@ -2,25 +2,27 @@ package com.doool.pokedex.presentation.ui.detail
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +43,7 @@ import kotlin.math.abs
 
 private val TOOLBAR_HEIGHT = 56.dp
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailScreen(
   initPokemonId: Int = 1,
@@ -56,28 +59,47 @@ fun DetailScreen(
     viewModel.setCurrentItem(items[viewPagerState.currentPage])
   }
 
-  Column {
+  val headerMin = LocalDensity.current.run { 150.dp.toPx() }
+  val headerMax = LocalDensity.current.run { 290.dp.toPx() }
+
+  var scrollY by remember { mutableStateOf(headerMax) }
+  val offsetYY = (scrollY - headerMin) / (headerMax - headerMin)
+
+  Column(Modifier.nestedScroll(object : NestedScrollConnection {
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+      val preScrollY = scrollY
+      scrollY = (preScrollY + available.y).coerceIn(headerMin, headerMax)
+      val used = scrollY - preScrollY
+      return super.onPreScroll(Offset(0f, available.y - used), source)
+    }
+  })) {
     BoxWithConstraints {
+      val scrollState = rememberScrollState()
+
       val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
 
       val width = LocalDensity.current.run { maxWidth.toPx() }
-      val offsetY = LocalDensity.current.run { -10.dp.toPx() }
+      val offsetY = LocalDensity.current.run { -5.dp.toPx() }
 
-      CurveBackground(pokemon.color.name.toPokemonColor().colorRes)
+      CurveBackground(scrollY, 1f - offsetYY * 0.15f, pokemon.color.name.toPokemonColor().colorRes)
 
-      Column {
+      Column(Modifier.verticalScroll(scrollState)) {
         DetailAppBar(modifier = Modifier.height(TOOLBAR_HEIGHT), onClickBack = navigateBack)
         PokemonInfo(
           modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(85.dp)
             .padding(start = 20.dp, end = 20.dp),
           pokemon = pokemon
         )
-        Space(height = 20.dp)
+        Space(height = 5.dp)
 
         PokemonImagePager(
-          modifier = Modifier.height(180.dp),
+          modifier = Modifier
+            .height(180.dp)
+            .graphicsLayer {
+              alpha = offsetYY
+            },
           items = items,
           viewPagerState = viewPagerState,
           width = width,
@@ -92,17 +114,17 @@ fun DetailScreen(
 }
 
 @Composable
-fun CurveBackground(color: Int) {
+fun CurveBackground(height: Float, amount: Float, color: Int) {
   Log.d("composable update", "CurveBackground")
   val mainColor by animateColorAsState(targetValue = colorResource(color))
 
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(300.dp)
+      .height(LocalDensity.current.run { height.toDp() })
       .background(
         color = mainColor,
-        shape = CurveShape()
+        shape = CurveShape(amount)
       )
   )
 }
@@ -146,6 +168,10 @@ fun PokemonImagePager(
       Image(
         modifier = Modifier
           .size(180.dp * sizePercent),
+        colorFilter = ColorFilter.tint(
+          Color.Black.copy(alpha = 1f - pageOffset),
+          blendMode = BlendMode.SrcAtop
+        ),
         painter = rememberImagePainter(imageUrl),
         contentDescription = null
       )

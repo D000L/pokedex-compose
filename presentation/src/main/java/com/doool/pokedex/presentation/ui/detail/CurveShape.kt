@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
-class CurveShape : Shape {
+class CurveShape(val amount : Float) : Shape {
   override fun createOutline(
     size: Size,
     layoutDirection: LayoutDirection,
@@ -16,7 +16,7 @@ class CurveShape : Shape {
     return Outline.Generic(Path().apply {
       val width = size.width
       val height = size.height
-      val curveHeight = height * 0.9f
+      val curveHeight = height * amount
 
       moveTo(0f, curveHeight)
       quadraticBezierTo(width / 2f, height, width, curveHeight)

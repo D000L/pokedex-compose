@@ -3,7 +3,6 @@ package com.doool.pokedex.presentation.ui.pokemon
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -25,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,9 +36,9 @@ import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.presentation.ui.common.Space
-import com.doool.pokedex.presentation.ui.common.TypeList
-import com.doool.pokedex.presentation.ui.common.toPokemonColor
+import com.doool.pokedex.presentation.ui.common.*
+import com.google.accompanist.flowlayout.FlowColumn
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun PokemonScreen(
@@ -50,13 +49,36 @@ fun PokemonScreen(
   val pokemonList = pokemonViewModel.pokemonList.collectAsLazyPagingItems()
 
   Column(Modifier.padding(horizontal = 20.dp)) {
-    Search(pokemonViewModel::search)
+    Space(height = 20.dp)
+    Text(
+      text = "Pokedex",
+      fontSize = 28.sp,
+      fontWeight = FontWeight.Bold
+    )
+    Space(height = 18.dp)
+    Row {
+      Search(Modifier.weight(1f), pokemonViewModel::search)
+      Space(width = 10.dp)
+      IconButton(onClick = {}) {
+        Icon(Icons.Default.Build, contentDescription = null)
+      }
+    }
     PokemonList(list = pokemonList, navigateDetail)
   }
 }
 
+@Preview
 @Composable
-fun Search(doSearch: (String) -> Unit) {
+fun Filter(){
+  FlowRow(mainAxisSpacing = 6.dp, crossAxisSpacing = 6.dp) {
+    PokemonType.values().forEach {
+      Type(type = it)
+    }
+  }
+}
+
+@Composable
+fun Search(modifier : Modifier = Modifier, doSearch: (String) -> Unit) {
   var query by remember { mutableStateOf("") }
   val focus = LocalFocusManager.current
 
@@ -66,10 +88,9 @@ fun Search(doSearch: (String) -> Unit) {
   }
 
   BasicTextField(
-    modifier = Modifier
+    modifier = modifier
       .height(40.dp)
-      .fillMaxWidth()
-      .border(1.dp, Color.Gray, RoundedCornerShape(26.dp))
+      .background(color = Color.LightGray.copy(alpha = 0.4f), shape = RoundedCornerShape(20.dp))
       .onPreviewKeyEvent {
         if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
           searchAndKeyboardHide()
@@ -107,25 +128,31 @@ fun SearchLayout(
   textField: @Composable () -> Unit
 ) {
   Row(
-    Modifier.padding(horizontal = 20.dp),
+    Modifier.padding(horizontal = 10.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Box(Modifier.weight(1f)) {
+    IconButton(modifier = Modifier.size(24.dp), onClick = onClickSearch) {
+      Icon(imageVector = Icons.Default.Search, contentDescription = null)
+    }
+    Box(
+      Modifier
+        .padding(horizontal = 10.dp)
+        .weight(1f)
+    ) {
       if (showHint) Text("Let's go pokemon")
       textField()
     }
-    IconButton(onClick = onClickClear) {
-      Icon(imageVector = Icons.Default.Clear, contentDescription = null)
-    }
-    IconButton(onClick = onClickSearch) {
-      Icon(imageVector = Icons.Default.Search, contentDescription = null)
+    if (!showHint) {
+      IconButton(modifier = Modifier.size(28.dp), onClick = onClickClear) {
+        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+      }
     }
   }
 }
 
 @Composable
 fun PokemonList(list: LazyPagingItems<PokemonDetail>, navigateDetail: (Int) -> Unit) {
-  LazyColumn() {
+  LazyColumn(contentPadding = PaddingValues(top = 20.dp)) {
     items(list) {
       it?.let { Pokemon(pokemon = it, onClick = navigateDetail) }
     }
