@@ -9,10 +9,11 @@ import com.doool.pokedex.data.dao.PokemonDetailDao
 import com.doool.pokedex.data.entity.PokemonDetailEntity
 import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
 import com.doool.pokedex.data.entity.PokemonSpeciesEntity
+import com.doool.pokedex.data.entity.PokemonTypeResistanceEntity
 
 @Database(
-  entities = [PokemonDetailEntity::class, PokemonSpeciesEntity::class, PokemonEvolutionChainEntity::class],
-  version = 4,
+  entities = [PokemonDetailEntity::class, PokemonSpeciesEntity::class, PokemonEvolutionChainEntity::class, PokemonTypeResistanceEntity::class],
+  version = 5,
   exportSchema = true
 )
 abstract class PokeDatabase : RoomDatabase() {

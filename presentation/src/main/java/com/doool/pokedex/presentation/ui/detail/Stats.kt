@@ -14,13 +14,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.doool.pokedex.domain.model.Damage
 import com.doool.pokedex.domain.model.Stat
 import com.doool.pokedex.presentation.ui.common.*
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
-fun Stats(stats: List<Stat>) {
+fun Stats(stats: List<Stat>, damageRelations: List<Damage>) {
   Column(
     modifier = Modifier.verticalScroll(rememberScrollState())
   ) {
@@ -37,8 +37,8 @@ fun Stats(stats: List<Stat>) {
     Space(height = 10.dp)
 
     FlowRow {
-      (0..40).forEach {
-        DamageType(PokemonType.Bug, 0.5f)
+      damageRelations.forEach { damage ->
+        damage.type.toPokemonType()?.let { DamageType(it, damage.amount) }
       }
     }
 

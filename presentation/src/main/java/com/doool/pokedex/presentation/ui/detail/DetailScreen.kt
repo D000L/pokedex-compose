@@ -198,7 +198,7 @@ fun PokemonImagePager(
         Image(
           modifier = Modifier
             .size(180.dp * sizePercent)
-            .alpha( ( pageOffset).coerceIn(0.1f,1f)),
+            .alpha((pageOffset).coerceIn(0.1f, 1f)),
           colorFilter = ColorFilter.tint(
             Color.Black.copy(alpha = 1f - pageOffset),
             blendMode = BlendMode.SrcAtop
@@ -219,7 +219,10 @@ fun DetailPage(uiState: Flow<DetailUiState>) {
   DetailTabLayout {
     when (it) {
       TabState.Detail -> Info(uiState.pokemon, uiState.species)
-      TabState.Stats -> Stats(stats = uiState.pokemon.stats)
+      TabState.Stats -> Stats(
+        stats = uiState.pokemon.stats,
+        damageRelations = uiState.damageRelations
+      )
       TabState.Move -> MoveList(uiState.pokemon.moves)
       TabState.Evolution -> EvolutionList(uiState.evolutionChain)
     }

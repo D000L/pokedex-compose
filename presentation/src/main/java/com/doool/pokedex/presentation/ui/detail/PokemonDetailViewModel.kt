@@ -2,9 +2,8 @@ package com.doool.pokedex.presentation.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonEvolutionChain
-import com.doool.pokedex.domain.model.PokemonSpecies
+import com.doool.pokedex.domain.model.*
+import com.doool.pokedex.domain.usecase.GetDamageRelations
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonEvolutionChain
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
@@ -18,6 +17,7 @@ import javax.inject.Inject
 data class DetailUiState(
   val pokemon: PokemonDetail = PokemonDetail(),
   val species: PokemonSpecies = PokemonSpecies(),
+  val damageRelations: List<Damage> = listOf(),
   val evolutionChain: List<PokemonEvolutionChain> = listOf()
 )
 
@@ -25,7 +25,8 @@ data class DetailUiState(
 class PokemonDetailViewModel @Inject constructor(
   private val getPokemon: GetPokemon,
   private val getPokemonSpecies: GetPokemonSpecies,
-  private val getPokemonEvolutionChain: GetPokemonEvolutionChain
+  private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
+  private val getDamageRelations: GetDamageRelations
 ) : ViewModel() {
 
   private val currentItem = MutableStateFlow(1)
@@ -54,16 +55,26 @@ class PokemonDetailViewModel @Inject constructor(
     return currentItem.flatMapLatest { id ->
       val pokemon = getPokemon(id)
       val species = getPokemonSpecies(id)
+
       val evolutionChain = species.flatMapLatest {
         getPokemonEvolutionChain(it.evolutionUrl)
       }
+      val damageRelations = pokemon.flatMapLatest {
+        getDamageRelations(it.types.map { it.name })
+      }
 
-      merge(pokemon, species, evolutionChain)
+      merge(pokemon, species, evolutionChain, damageRelations)
         .scan(DetailUiState()) { state, item ->
           when (item) {
             is PokemonDetail -> state.copy(pokemon = item)
             is PokemonSpecies -> state.copy(species = item)
-            is List<*> -> state.copy(evolutionChain = item as List<PokemonEvolutionChain>)
+            is List<*> -> {
+              when (item.firstOrNull()) {
+                is Damage -> state.copy(damageRelations = item as List<Damage>)
+                is PokemonEvolutionChain -> state.copy(evolutionChain = item as List<PokemonEvolutionChain>)
+                else -> state
+              }
+            }
             else -> state
           }
         }

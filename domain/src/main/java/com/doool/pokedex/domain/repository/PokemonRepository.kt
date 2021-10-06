@@ -4,6 +4,7 @@ import androidx.paging.DataSource
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.domain.model.PokemonSpecies
+import com.doool.pokedex.domain.model.PokemonTypeResistance
 
 interface PokemonRepository {
 
@@ -12,6 +13,7 @@ interface PokemonRepository {
   suspend fun getPokemon(id: Int): PokemonDetail
   suspend fun getPokemonSpecies(id: Int): PokemonSpecies
   suspend fun getPokemonEvolutionChain(url: String): List<PokemonEvolutionChain>
+  suspend fun getPokemonTypeResistance(name: String): PokemonTypeResistance
 
   suspend fun getPokemonThumbnail(name: String): String
 }
