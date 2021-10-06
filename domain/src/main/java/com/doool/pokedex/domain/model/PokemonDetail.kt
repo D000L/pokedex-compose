@@ -1,7 +1,5 @@
 package com.doool.pokedex.domain.model
 
-import androidx.annotation.Keep
-
 data class PokemonDetail(
   val id: Int = 0,
   val name: String = "",
@@ -11,7 +9,8 @@ data class PokemonDetail(
   val stats: List<Stat> = listOf(),
   val types: List<Info> = listOf(),
   val moves: List<Move> = listOf(),
-  val color: Info = Info()
+  val color: Info = Info(),
+  val abilities: List<Ability> = listOf()
 )
 
 data class Stat(
@@ -20,16 +19,20 @@ data class Stat(
   val infoUrl: String = ""
 )
 
-@Keep
 data class Move(
   val name: String = "",
   val url: String = "",
   val details: List<VersionGroupDetail> = listOf()
 )
 
-@Keep
 data class VersionGroupDetail(
   val learnLevel: Int = 0,
   val learnMethod: Info = Info(),
   val version: Info = Info()
+)
+
+data class Ability(
+  val ability: Info = Info(),
+  val isHidden: Boolean = false,
+  val slot: Int = 0
 )

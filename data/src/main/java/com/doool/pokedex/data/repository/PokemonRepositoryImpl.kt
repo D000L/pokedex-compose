@@ -89,6 +89,6 @@ class PokemonRepositoryImpl @Inject constructor(
 
   override suspend fun getPokemonThumbnail(name: String): String {
     val pokemon = pokemonDetailDao.getPokemon(name).json.toResponse<PokemonDetailResponse>()
-    return pokemon.sprites.frontDefault
+    return pokemon.sprites.other.artwork.frontDefault
   }
 }

@@ -27,19 +27,17 @@ fun TypeList(types: List<Info>) {
 }
 
 @Composable
-fun TypeListWithTitle(types: List<Info>) {
-  Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+fun TypeListWithTitle(modifier : Modifier = Modifier, types: List<Info>) {
+  Row(modifier =modifier,horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
-      type.name.toPokemonType()?.let { Type(it, type.name) }
+      type.name.toPokemonType()?.let { Type(it, text = type.name) }
     }
   }
 }
 
 @Composable
-fun Type(type: PokemonType, text: String? = null) {
+fun Type(type: PokemonType, size : Dp = 26.dp, text: String? = null) {
   val color = colorResource(id = type.colorResId)
-
-  val size = 26.dp
 
   Row(
     Modifier
@@ -65,4 +63,14 @@ fun Type(type: PokemonType, text: String? = null) {
 @Composable
 fun Space(width: Dp = 0.dp, height: Dp = 0.dp) {
   Spacer(modifier = Modifier.size(width, height))
+}
+
+@Composable
+fun ColumnScope.SpaceFill() {
+  Spacer(modifier = Modifier.weight(1f))
+}
+
+@Composable
+fun RowScope.SpaceFill() {
+  Spacer(modifier = Modifier.weight(1f))
 }
