@@ -85,7 +85,7 @@ fun DetailScreen(
   navigateBack: () -> Unit = {}
 ) {
   Log.d("composable update", "DetailScreen")
-  val items = (1..500).toList()
+  val items = (1..800).toList()
 
   val viewPagerState = rememberViewPagerState(currentPage = initPokemonId - 1)
 

@@ -13,13 +13,18 @@ import com.doool.pokedex.presentation.ui.common.Space
 
 @Composable
 fun Info(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
-  Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
     Description(pokemonSpecies.flavorText.firstOrNull() ?: "")
     Space(height = 5.dp)
+    ColumnItem(
+      "Gender",
+      listOf("male ${pokemonSpecies.maleRate}", "female ${pokemonSpecies.femaleRate}")
+    )
     ColumnItem("Genre", listOf(pokemonSpecies.genera.genus))
-    ColumnItem("Height", listOf("%.1f cm".format(pokemon.height / 10f)))
+    ColumnItem("Height", listOf("%.1f m".format(pokemon.height / 10f)))
     ColumnItem("Weight", listOf("%.1f kg".format(pokemon.weight / 10f)))
     ColumnItem("Abilities", pokemon.abilities.sortedBy { it.slot }.map { it.ability.name })
+    ColumnItem("Egg Groups", pokemonSpecies.eggGroups.map { it.name })
   }
 }
 

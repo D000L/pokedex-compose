@@ -11,12 +11,15 @@ fun PokemonSpeciesResponse.toModel(): PokemonSpecies = with(this) {
     id = id,
     name = name,
     color = color.toModel(),
+    maleRate = if (genderRate == 0) 100 else (1 - (1 / genderRate)) * 100,
+    femaleRate = if (genderRate == 0) 0 else (1 / genderRate) * 100,
     evolutionUrl = evolutionChain?.url ?: "",
     flavorText = flavorTextEntries.map {
-      it.flavorText.replace("\n"," ")
+      it.flavorText.replace("\n", " ")
     },
     generation = generation.toModel(),
-    genera = Genera(this.genera.first().genus)
+    genera = Genera(this.genera.first().genus),
+    eggGroups = eggGroups.map { it.toModel() }
   )
 }
 
