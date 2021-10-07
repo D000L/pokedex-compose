@@ -2,10 +2,15 @@ package com.doool.pokedex.presentation.ui.detail
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -14,19 +19,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,37 +43,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.math.abs
 
 private val TOOLBAR_HEIGHT = 56.dp
+private val THUMBNAIL_VIEWPAGER_HEIGHT = 180.dp
+private val TITLE_HEIGHT = 92.dp
+private val TAB_HEIGHT = 42.dp
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun CollapsingToolbarLayout(
-  min: Float = 0f,
-  max: Float = 1f,
-  toolbar: @Composable (Float) -> Unit,
-  content: @Composable ColumnScope.() -> Unit
-) {
-  val state = rememberSwipeableState(initialValue = 0f)
+private val HEADER_HEIGHT = TOOLBAR_HEIGHT + THUMBNAIL_VIEWPAGER_HEIGHT + TITLE_HEIGHT + TAB_HEIGHT
 
-  Column(
-    Modifier
-      .swipeable(state, anchors = mapOf(min to 0f, max to 1f), Orientation.Vertical)
-      .nestedScroll(object : NestedScrollConnection {
-        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-          val used = state.performDrag(available.y)
-          return super.onPreScroll(Offset(0f, available.y - used), source)
-        }
+fun LazyListState.getFirstItemTopOffset(): Int {
+  val topOffset = layoutInfo.visibleItemsInfo.firstOrNull()?.offset ?: 0
+  val startOffset = layoutInfo.viewportStartOffset
+  return topOffset - startOffset
+}
 
-        override suspend fun onPreFling(available: Velocity): Velocity {
-          state.performFling(available.y)
-          return super.onPreFling(available)
-        }
-      })
-  ) {
-    Box(Modifier.verticalScroll(rememberScrollState())) {
-      toolbar((state.offset.value - min) / (max - min))
-    }
-    content()
-  }
+enum class TabState {
+  Detail, Stats, Move, Evolution
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -88,75 +70,94 @@ fun DetailScreen(
   val items = (1..800).toList()
 
   val viewPagerState = rememberViewPagerState(currentPage = initPokemonId - 1)
+  val lazyListState = rememberLazyListState()
+
+  val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
+  var tabState by remember { mutableStateOf(TabState.Detail) }
+
+  val density = LocalDensity.current
+  val offset by derivedStateOf {
+    val topOffset = lazyListState.getFirstItemTopOffset()
+
+    val heightExcludePager = HEADER_HEIGHT - THUMBNAIL_VIEWPAGER_HEIGHT
+    val height = density.run { (topOffset.toDp() - heightExcludePager) }
+
+    (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
+  }
+
+  val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
+  LaunchedEffect(dragged) {
+    if (!dragged && offset != 0f && offset != 1f) {
+      val direction = if (offset > 0.5f) -offset else offset
+      lazyListState.animateScrollBy(direction * density.run { THUMBNAIL_VIEWPAGER_HEIGHT.toPx() })
+    }
+  }
+
+  Box {
+    BodyLayout(
+      tabState,
+      lazyListState,
+      PaddingValues(top = HEADER_HEIGHT, start = 20.dp, end = 20.dp),
+      remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value
+    )
+    Column {
+      HeaderLayout(viewPagerState, viewModel, items, pokemon, offset, navigateBack)
+      TabLayout(tabState) { tabState = it }
+    }
+  }
 
   LaunchedEffect(viewPagerState.currentPage) {
     viewModel.setCurrentItem(items[viewPagerState.currentPage])
   }
+}
 
-  val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
+@Composable
+private fun HeaderLayout(
+  viewPagerState: ViewPagerState,
+  viewModel: PokemonDetailViewModel,
+  items: List<Int>,
+  pokemon: PokemonDetail,
+  offset: Float,
+  navigateBack: () -> Unit
+) {
+  val mainColor by animateColorAsState(targetValue = colorResource(pokemon.color.name.toPokemonColor().colorRes))
 
-  CollapsingToolbarLayout(0f, 600f, toolbar = { offset ->
-    val mainColor by animateColorAsState(targetValue = colorResource(pokemon.color.name.toPokemonColor().colorRes))
+  Box(
+    modifier = Modifier.background(color = mainColor)
+  ) {
+    val viewPagerHeight = THUMBNAIL_VIEWPAGER_HEIGHT * offset
 
-    BoxWithConstraints(
-      modifier = Modifier.background(color = mainColor)
-    ) {
-      val width = LocalDensity.current.run { maxWidth.toPx() }
-      val offsetY = LocalDensity.current.run { -5.dp.toPx() }
+    DetailAppBar(modifier = Modifier.height(TOOLBAR_HEIGHT), onClickBack = navigateBack)
 
-      DetailAppBar(modifier = Modifier.height(TOOLBAR_HEIGHT), onClickBack = navigateBack)
-
-      if ((offset * 3).coerceIn(0f, 1f) <= 1f) {
-        PokemonImagePager(
-          modifier = Modifier
-            .padding(top = ((TOOLBAR_HEIGHT + 0.dp) * offset).coerceAtLeast(0.dp))
-            .height(180.dp * offset)
-            .graphicsLayer {
-              alpha = (offset * 3).coerceIn(0f, 1f)
-            },
-          items = items,
-          viewPagerState = viewPagerState,
-          width = width,
-          offsetY = offsetY
-        ) {
-          viewModel.loadPokemonImage(it)
-        }
-      }
-
-      Column(
-        Modifier
-          .padding(horizontal = 20.dp)
-          .padding(bottom = 20.dp)
+    if (offset * 3 >= 1f) {
+      PokemonImagePager(
+        modifier = Modifier
+          .padding(top = TOOLBAR_HEIGHT)
+          .height(viewPagerHeight)
+          .graphicsLayer {
+            alpha = (offset * 3).coerceIn(0f, 1f)
+          },
+        viewPagerState = viewPagerState,
+        items = items
       ) {
-        Row(
-          Modifier
-            .padding(top = (TOOLBAR_HEIGHT) + 180.dp * offset),
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          Text(
-            text = pokemon.name,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = Color.White
-          )
-          SpaceFill()
-          Text(
-            text = "#%03d".format(pokemon.id),
-            fontSize = 24.sp,
-            color = Color.White.copy(alpha = 0.7f)
-          )
-        }
-        Space(height = 6.dp)
-        TypeListWithTitle(types = pokemon.types)
+        viewModel.loadPokemonImage(it)
       }
     }
-  }) {
-    DetailPage(remember { viewModel.getUiState() })
+
+    TitleLayout(
+      modifier = Modifier
+        .padding(
+          top = TOOLBAR_HEIGHT + viewPagerHeight,
+          start = 20.dp,
+          end = 20.dp
+        ),
+      pokemon = pokemon
+    )
   }
 }
 
 @Composable
-fun DetailAppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
+private fun DetailAppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
   Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
     IconButton(onClick = onClickBack) {
       Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.White)
@@ -169,24 +170,28 @@ fun DetailAppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
 }
 
 @Composable
-fun PokemonImagePager(
+private fun PokemonImagePager(
   modifier: Modifier = Modifier,
-  items: List<Int> = listOf(),
   viewPagerState: ViewPagerState = rememberViewPagerState(),
-  width: Float = 0f,
-  offsetY: Float = 0f,
+  items: List<Int> = listOf(),
   loadImage: (Int) -> Flow<String>
 ) {
   Log.d("composable update", "PokemonImagePager")
   val loadImage by rememberUpdatedState(newValue = loadImage)
 
-  Box(modifier) {
-    ViewPager(
-      state = viewPagerState,
-      transformer = Transformer(
+  BoxWithConstraints(modifier) {
+    val (width, offsetY) = LocalDensity.current.run { Pair(maxWidth.toPx(), -5.dp.toPx()) }
+
+    val transformer = remember {
+      Transformer(
         mapOf(-2 to -width, -1 to -width / 2f, 0 to 0f, 1 to width / 2f, 2 to width),
         mapOf(-2 to offsetY * 2, -1 to offsetY, 0 to 0f, 1 to offsetY, 2 to offsetY * 2)
-      ),
+      )
+    }
+
+    ViewPager(
+      state = viewPagerState,
+      transformer = transformer,
       orientation = ViewPagerOrientation.Horizontal
     ) {
       items(items) { pokemonId ->
@@ -212,64 +217,74 @@ fun PokemonImagePager(
 }
 
 @Composable
-fun DetailPage(uiState: Flow<DetailUiState>) {
-  val uiState by uiState.collectAsState(initial = DetailUiState())
-
-  Log.d("composable update", "DetailPage")
-  DetailTabLayout {
-    when (it) {
-      TabState.Detail -> Info(uiState.pokemon, uiState.species)
-      TabState.Stats -> Stats(
-        stats = uiState.pokemon.stats,
-        damageRelations = uiState.damageRelations
+private fun TitleLayout(modifier: Modifier, pokemon: PokemonDetail) {
+  Column(modifier.height(TITLE_HEIGHT)) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Text(
+        text = pokemon.name,
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
+        color = Color.White
       )
-      TabState.Move -> MoveList(uiState.pokemon.moves)
-      TabState.Evolution -> EvolutionList(uiState.evolutionChain)
+      SpaceFill()
+      Text(
+        text = "#%03d".format(pokemon.id),
+        fontSize = 24.sp,
+        color = Color.White.copy(alpha = 0.7f)
+      )
     }
+    Space(height = 6.dp)
+    TypeListWithTitle(types = pokemon.types)
   }
-}
-
-enum class TabState {
-  Detail, Stats, Move, Evolution
 }
 
 @Composable
-fun DetailTabLayout(content: @Composable (TabState) -> Unit) {
-  var tabState by remember { mutableStateOf(TabState.Detail) }
-
-  Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-    TabRow(
-      modifier = Modifier
-        .height(42.dp)
-        .fillMaxSize(1f)
-        .shadow(4.dp, CircleShape)
-        .background(Color.White, CircleShape),
-      selectedTabIndex = tabState.ordinal,
-      backgroundColor = Color.White,
-      contentColor = Color.White,
-      indicator = {}
-    ) {
-      TabState.values().forEach { tab ->
-        Box(
-          modifier = Modifier
-            .padding(4.dp)
-            .fillMaxSize(1f)
-            .background(if (tab == tabState) Color.Blue else Color.White, CircleShape)
-            .clickable {
-              tabState = tab
-            },
-          contentAlignment = Alignment.Center
-        ) {
-          Text(
-            text = tab.name,
-            color = if (tab == tabState) Color.White else Color.Black
-          )
-        }
+private fun TabLayout(tabState: TabState, changeTab: (TabState) -> Unit) {
+  TabRow(
+    modifier = Modifier.height(TAB_HEIGHT),
+    selectedTabIndex = tabState.ordinal,
+    backgroundColor = Color.White,
+    contentColor = Color.White
+  ) {
+    TabState.values().forEach { tab ->
+      Tab(selected = tabState == tab, onClick = { changeTab(tab) }) {
+        Text(
+          text = tab.name,
+          color = Color.Black
+        )
       }
     }
-
-    Spacer(modifier = Modifier.height(20.dp))
-
-    content(tabState)
   }
 }
+
+@Composable
+private fun BodyLayout(
+  currentTab: TabState,
+  state: LazyListState,
+  contentPadding: PaddingValues,
+  uiState: DetailUiState
+) {
+  LazyColumn(state = state, contentPadding = contentPadding) {
+    when (currentTab) {
+      TabState.Detail -> {
+        item {
+          Info(uiState.pokemon, uiState.species)
+        }
+      }
+      TabState.Stats ->
+        item {
+          Stats(
+            stats = uiState.pokemon.stats,
+            damageRelations = uiState.damageRelations
+          )
+        }
+      TabState.Move -> items(uiState.pokemon.moves) {
+        Move(it)
+      }
+      TabState.Evolution -> item {
+        EvolutionList(uiState.evolutionChain)
+      }
+    }
+  }
+}
+

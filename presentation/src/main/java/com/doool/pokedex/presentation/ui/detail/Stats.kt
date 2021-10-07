@@ -21,9 +21,7 @@ import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun Stats(stats: List<Stat>, damageRelations: List<Damage>) {
-  Column(
-    modifier = Modifier.verticalScroll(rememberScrollState())
-  ) {
+  Column{
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
       stats.forEach { stat ->
         stat.name.toStatType()?.let {

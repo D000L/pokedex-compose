@@ -8,7 +8,7 @@ import com.doool.pokedex.domain.model.Move
 
 @Composable
 fun MoveList(moves: List<Move>) {
-  LazyColumn {
+  LazyColumn{
     items(moves) {
       Move(it)
     }
