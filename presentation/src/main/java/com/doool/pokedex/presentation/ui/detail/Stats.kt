@@ -2,9 +2,7 @@ package com.doool.pokedex.presentation.ui.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,8 +18,8 @@ import com.doool.pokedex.presentation.ui.common.*
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
-fun Stats(stats: List<Stat>, damageRelations: List<Damage>) {
-  Column{
+fun Stats(modifier: Modifier = Modifier, stats: List<Stat>, damageRelations: List<Damage>) {
+  Column(modifier) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
       stats.forEach { stat ->
         stat.name.toStatType()?.let {

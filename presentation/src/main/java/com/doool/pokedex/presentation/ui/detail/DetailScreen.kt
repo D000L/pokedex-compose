@@ -48,6 +48,7 @@ private val TITLE_HEIGHT = 92.dp
 private val TAB_HEIGHT = 42.dp
 
 private val HEADER_HEIGHT = TOOLBAR_HEIGHT + THUMBNAIL_VIEWPAGER_HEIGHT + TITLE_HEIGHT + TAB_HEIGHT
+private val HEADER_HEIGHT_EXCLUDE_PAGER = HEADER_HEIGHT - THUMBNAIL_VIEWPAGER_HEIGHT
 
 fun LazyListState.getFirstItemTopOffset(): Int {
   val topOffset = layoutInfo.visibleItemsInfo.firstOrNull()?.offset ?: 0
@@ -78,10 +79,7 @@ fun DetailScreen(
   val density = LocalDensity.current
   val offset by derivedStateOf {
     val topOffset = lazyListState.getFirstItemTopOffset()
-
-    val heightExcludePager = HEADER_HEIGHT - THUMBNAIL_VIEWPAGER_HEIGHT
-    val height = density.run { (topOffset.toDp() - heightExcludePager) }
-
+    val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
     (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
   }
 
@@ -93,8 +91,9 @@ fun DetailScreen(
     }
   }
 
-  Box {
+  BoxWithConstraints {
     BodyLayout(
+      Modifier.fillMaxSize(),
       tabState,
       lazyListState,
       PaddingValues(top = HEADER_HEIGHT, start = 20.dp, end = 20.dp),
@@ -258,22 +257,33 @@ private fun TabLayout(tabState: TabState, changeTab: (TabState) -> Unit) {
 }
 
 @Composable
-private fun BodyLayout(
+private fun BoxWithConstraintsScope.BodyLayout(
+  modifier: Modifier = Modifier,
   currentTab: TabState,
   state: LazyListState,
   contentPadding: PaddingValues,
   uiState: DetailUiState
 ) {
-  LazyColumn(state = state, contentPadding = contentPadding) {
+  val maxHeight = LocalDensity.current.run { constraints.maxHeight.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER }
+  val defaultModifier = Modifier
+    .defaultMinSize(minHeight = maxHeight)
+    .fillMaxWidth()
+
+  LazyColumn(modifier = modifier, state = state, contentPadding = contentPadding) {
     when (currentTab) {
       TabState.Detail -> {
         item {
-          Info(uiState.pokemon, uiState.species)
+          Info(
+            modifier = defaultModifier,
+            pokemon = uiState.pokemon,
+            pokemonSpecies = uiState.species
+          )
         }
       }
       TabState.Stats ->
         item {
           Stats(
+            modifier = defaultModifier,
             stats = uiState.pokemon.stats,
             damageRelations = uiState.damageRelations
           )
@@ -282,7 +292,10 @@ private fun BodyLayout(
         Move(it)
       }
       TabState.Evolution -> item {
-        EvolutionList(uiState.evolutionChain)
+        EvolutionList(
+          modifier = defaultModifier,
+          chainList = uiState.evolutionChain
+        )
       }
     }
   }

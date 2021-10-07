@@ -15,8 +15,8 @@ import com.doool.pokedex.presentation.ui.common.EvolutionType
 import com.doool.pokedex.presentation.ui.common.Space
 
 @Composable
-fun EvolutionList(chainList: List<PokemonEvolutionChain>) {
-  Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+fun EvolutionList(modifier: Modifier = Modifier, chainList: List<PokemonEvolutionChain>) {
+  Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
     chainList.forEach {
       Evolution(it)
     }

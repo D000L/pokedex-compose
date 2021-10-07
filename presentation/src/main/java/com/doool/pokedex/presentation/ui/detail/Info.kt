@@ -12,8 +12,8 @@ import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.presentation.ui.common.Space
 
 @Composable
-fun Info(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
-  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+fun Info(modifier: Modifier = Modifier, pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+  Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
     Description(pokemonSpecies.flavorText.firstOrNull() ?: "")
     Space(height = 5.dp)
     ColumnItem(
