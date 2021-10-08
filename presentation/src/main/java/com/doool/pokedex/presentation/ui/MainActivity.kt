@@ -1,9 +1,14 @@
 package com.doool.pokedex.presentation.ui
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -20,12 +25,35 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+  private val viewModel: MainViewModel by viewModels()
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    val content: View = findViewById(android.R.id.content)
+    content.viewTreeObserver.addOnPreDrawListener(
+      object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+          // Check if the initial data is ready.
+          return if (viewModel.isReady) {
+            // The content is ready; start drawing.
+            content.viewTreeObserver.removeOnPreDrawListener(this)
+            true
+          } else {
+            // The content is not ready; suspend.
+            false
+          }
+        }
+      }
+    )
+
     setContent {
       PokedexTheme {
-        App()
+        val isDownloaded by viewModel.isDownloaded.collectAsState(initial = false)
+        val initPage = if (isDownloaded) NavDestination.List else NavDestination.DownLoad
+        if(viewModel.isReady) {
+          App(initPage)
+        }
       }
     }
   }
@@ -36,11 +64,11 @@ enum class NavDestination(val argument: Pair<NavType<*>, String>? = null) {
 }
 
 @Composable
-fun App() {
+fun App(initPage: NavDestination) {
   val navController = rememberNavController()
   val navActions = remember(navController) { NavActions(navController) }
 
-  NavHost(navController, NavDestination.DownLoad.name) {
+  NavHost(navController, initPage.name) {
     composable(NavDestination.DownLoad.name) {
       DownloadScreen(completeDownload = navActions::navigateList)
     }
