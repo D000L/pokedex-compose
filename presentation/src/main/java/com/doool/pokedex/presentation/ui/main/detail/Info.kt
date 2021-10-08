@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.detail
+package com.doool.pokedex.presentation.ui.main.detail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.presentation.ui.common.Space
+import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable

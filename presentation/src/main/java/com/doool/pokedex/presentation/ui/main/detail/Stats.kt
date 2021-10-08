@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.detail
+package com.doool.pokedex.presentation.ui.main.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.Damage
 import com.doool.pokedex.domain.model.Stat
-import com.doool.pokedex.presentation.ui.common.*
+import com.doool.pokedex.presentation.ui.main.common.*
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable

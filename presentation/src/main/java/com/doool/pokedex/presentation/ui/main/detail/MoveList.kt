@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.detail
+package com.doool.pokedex.presentation.ui.main.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.presentation.ui.common.Space
-import com.doool.pokedex.presentation.ui.common.SpaceFill
-import com.doool.pokedex.presentation.ui.common.Type
-import com.doool.pokedex.presentation.ui.common.toPokemonType
+import com.doool.pokedex.presentation.ui.main.common.Space
+import com.doool.pokedex.presentation.ui.main.common.SpaceFill
+import com.doool.pokedex.presentation.ui.main.common.Type
+import com.doool.pokedex.presentation.ui.main.common.toPokemonType
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable

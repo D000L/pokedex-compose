@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.news
+package com.doool.pokedex.presentation.ui.main.news
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

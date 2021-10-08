@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.detail
+package com.doool.pokedex.presentation.ui.main.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
-import com.doool.pokedex.presentation.ui.common.EvolutionType
-import com.doool.pokedex.presentation.ui.common.Space
+import com.doool.pokedex.presentation.ui.main.common.EvolutionType
+import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable

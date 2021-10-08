@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.news
+package com.doool.pokedex.presentation.ui.main.news
 
 import android.widget.TextView
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +25,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonNews
-import com.doool.pokedex.presentation.ui.common.Space
+import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 
 @Composable

@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.detail
+package com.doool.pokedex.presentation.ui.main.detail
 
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline

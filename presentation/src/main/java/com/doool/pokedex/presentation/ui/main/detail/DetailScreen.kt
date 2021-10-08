@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.detail
+package com.doool.pokedex.presentation.ui.main.detail
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
@@ -32,10 +32,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.presentation.ui.common.Space
-import com.doool.pokedex.presentation.ui.common.SpaceFill
-import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
-import com.doool.pokedex.presentation.ui.common.toPokemonColor
+import com.doool.pokedex.presentation.ui.main.common.Space
+import com.doool.pokedex.presentation.ui.main.common.SpaceFill
+import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
+import com.doool.pokedex.presentation.ui.main.common.toPokemonColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.doool.viewpager.ViewPager

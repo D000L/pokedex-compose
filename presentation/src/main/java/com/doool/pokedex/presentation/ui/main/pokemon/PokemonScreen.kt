@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.pokemon
+package com.doool.pokedex.presentation.ui.main.pokemon
 
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,9 +35,8 @@ import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.presentation.ui.common.*
+import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.google.accompanist.flowlayout.FlowColumn
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable

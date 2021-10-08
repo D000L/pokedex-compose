@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pokedex">
+        <activity android:name=".presentation.ui.main.MainActivity" />
         <activity
-            android:name=".presentation.ui.MainActivity"
+            android:name=".presentation.ui.SplashActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Pokedex.NoActionBar">
@@ -20,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".presentation.ui.download.DownloadActivity" />
     </application>
 
 </manifest>

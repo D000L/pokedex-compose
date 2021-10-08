@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.common
+package com.doool.pokedex.presentation.ui.main.common
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
