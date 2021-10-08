@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.doool.pokedex.presentation.ui.detail.DetailScreen
 import com.doool.pokedex.presentation.ui.download.DownloadScreen
+import com.doool.pokedex.presentation.ui.news.NewsScreen
 import com.doool.pokedex.presentation.ui.pokemon.PokemonScreen
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,8 +51,8 @@ class MainActivity : ComponentActivity() {
     setContent {
       PokedexTheme {
         val isDownloaded by viewModel.isDownloaded.collectAsState(initial = false)
-        val initPage = if (isDownloaded) NavDestination.List else NavDestination.DownLoad
-        if(viewModel.isReady) {
+        val initPage = if (isDownloaded) NavDestination.News else NavDestination.DownLoad
+        if (viewModel.isReady) {
           App(initPage)
         }
       }
@@ -60,7 +61,7 @@ class MainActivity : ComponentActivity() {
 }
 
 enum class NavDestination(val argument: Pair<NavType<*>, String>? = null) {
-  DownLoad, List, Detail(Pair(NavType.IntType, "POKEMON_ID"))
+  DownLoad, List, Detail(Pair(NavType.IntType, "POKEMON_ID")), News
 }
 
 @Composable
@@ -74,6 +75,9 @@ fun App(initPage: NavDestination) {
     }
     composable(NavDestination.List.name) {
       PokemonScreen(navigateDetail = navActions::navigateDetail)
+    }
+    composable(NavDestination.News.name){
+      NewsScreen()
     }
     composable(
       route = "${NavDestination.Detail.name}/{${NavDestination.Detail.argument!!.second}}",

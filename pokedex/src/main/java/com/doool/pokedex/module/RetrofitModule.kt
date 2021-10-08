@@ -22,6 +22,9 @@ class RetrofitModule {
     @Qualifier
     internal annotation class StaticApiRetrofit
 
+    @Qualifier
+    internal annotation class NewsRetrofit
+
     @Provides
     fun provideOkHttp(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor { message ->
@@ -51,6 +54,16 @@ class RetrofitModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://raw.githubusercontent.com/D000L/pokedex-compose/main/staticApi/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @NewsRetrofit
+    @Provides
+    fun provideNewsRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl("https://api.pokemon.com/us/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
