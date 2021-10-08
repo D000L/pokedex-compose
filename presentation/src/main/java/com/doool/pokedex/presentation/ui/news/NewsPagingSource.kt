@@ -14,7 +14,7 @@ class NewsPagingSource(private val getPokemonNews: GetPokemonNews) :
 
     return try {
       val result = getPokemonNews.invoke(key, params.loadSize)
-      LoadResult.Page(result, null, key + 1)
+      LoadResult.Page(result, null, key + params.loadSize)
     } catch (e: Throwable) {
       LoadResult.Error(e)
     }

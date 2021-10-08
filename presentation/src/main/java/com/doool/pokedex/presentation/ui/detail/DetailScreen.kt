@@ -37,6 +37,7 @@ import com.doool.pokedex.presentation.ui.common.SpaceFill
 import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.common.toPokemonColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.doool.viewpager.ViewPager
 import com.doool.viewpager.ViewPagerOrientation
 import com.doool.viewpager.ViewPagerState
@@ -51,12 +52,6 @@ private val TAB_HEIGHT = 42.dp
 
 private val HEADER_HEIGHT = TOOLBAR_HEIGHT + THUMBNAIL_VIEWPAGER_HEIGHT + TITLE_HEIGHT + TAB_HEIGHT
 private val HEADER_HEIGHT_EXCLUDE_PAGER = HEADER_HEIGHT - THUMBNAIL_VIEWPAGER_HEIGHT
-
-fun LazyListState.getFirstItemTopOffset(): Int {
-  val topOffset = layoutInfo.visibleItemsInfo.firstOrNull()?.offset ?: 0
-  val startOffset = layoutInfo.viewportStartOffset
-  return topOffset - startOffset
-}
 
 enum class TabState {
   Detail, Stats, Move, Evolution
@@ -80,7 +75,7 @@ fun DetailScreen(
 
   val density = LocalDensity.current
   val offset by derivedStateOf {
-    val topOffset = lazyListState.getFirstItemTopOffset()
+    val topOffset = lazyListState.getItemTopOffset()
     val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
     (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
   }

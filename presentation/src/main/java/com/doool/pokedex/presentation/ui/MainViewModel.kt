@@ -14,14 +14,14 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val checkIsDownloaded: CheckIsDownloaded) :
   ViewModel() {
 
-  var isReady = false
+  var isReady = MutableStateFlow(false)
   var isDownloaded = MutableStateFlow(false)
 
   init {
     viewModelScope.launch {
       delay(1000)
       checkIsDownloaded().collectLatest {
-        isReady = true
+        isReady.emit(true)
         isDownloaded.emit(it)
       }
     }
