@@ -1,6 +1,7 @@
 package com.doool.pokedex.data.service
 
 import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
+import com.doool.pokedex.data.response.PokemonMoveResponse
 import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
 import retrofit2.http.GET
@@ -16,4 +17,7 @@ interface PokeApiService {
 
   @GET("type/{name}")
   suspend fun getPokemonTypeResistance(@Path("name") name: String): PokemonTypeResistanceResponse
+
+  @GET("move/{name}/")
+  suspend fun getPokemonMove(@Path("name") name: String): PokemonMoveResponse
 }

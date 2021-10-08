@@ -4,20 +4,15 @@ import androidx.paging.DataSource
 import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
 import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
+import com.doool.pokedex.data.entity.PokemonMoveEntity
 import com.doool.pokedex.data.entity.PokemonSpeciesEntity
 import com.doool.pokedex.data.entity.PokemonTypeResistanceEntity
 import com.doool.pokedex.data.mapper.toModel
-import com.doool.pokedex.data.response.PokemonDetailResponse
-import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
-import com.doool.pokedex.data.response.PokemonSpeciesResponse
-import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
+import com.doool.pokedex.data.response.*
 import com.doool.pokedex.data.service.PokeApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toResponse
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonEvolutionChain
-import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.domain.model.PokemonTypeResistance
+import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
@@ -108,6 +103,28 @@ class PokemonRepositoryImpl @Inject constructor(
         PokemonTypeResistanceEntity(
           remoteResult.id,
           remoteResult.name,
+          model
+        )
+      )
+      return remoteResult
+    }
+    return localResult.json.toResponse()
+  }
+
+  override suspend fun getPokemonMove(name: String): PokemonMove {
+    return fetchPokemonMove(name).toModel()
+  }
+
+  private suspend fun fetchPokemonMove(name: String): PokemonMoveResponse {
+    val localResult = pokemonDao.getPokemonMoveEntity(name)
+
+    if (localResult == null) {
+      val remoteResult = pokeApiService.getPokemonMove(name)
+      val model = remoteResult.toJson()
+      pokemonDao.insertPokemonMoveEntity(
+        PokemonMoveEntity(
+          remoteResult.name,
+          remoteResult.id,
           model
         )
       )

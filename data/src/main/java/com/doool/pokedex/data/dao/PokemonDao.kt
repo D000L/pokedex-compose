@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
+import com.doool.pokedex.data.entity.PokemonMoveEntity
 import com.doool.pokedex.data.entity.PokemonSpeciesEntity
 import com.doool.pokedex.data.entity.PokemonTypeResistanceEntity
 
@@ -27,5 +28,11 @@ interface PokemonDao {
   suspend fun getPokemonTypeResistanceEntity(name: String): PokemonTypeResistanceEntity?
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend fun insertPokemonTypeResistanceEntity(species: PokemonTypeResistanceEntity)
+  suspend fun insertPokemonTypeResistanceEntity(typeResistance: PokemonTypeResistanceEntity)
+
+  @Query("SELECT * FROM pokemon_move WHERE name = :name")
+  suspend fun getPokemonMoveEntity(name: String): PokemonMoveEntity?
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertPokemonMoveEntity(move: PokemonMoveEntity)
 }

@@ -3,10 +3,7 @@ package com.doool.pokedex.presentation.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.*
-import com.doool.pokedex.domain.usecase.GetDamageRelations
-import com.doool.pokedex.domain.usecase.GetPokemon
-import com.doool.pokedex.domain.usecase.GetPokemonEvolutionChain
-import com.doool.pokedex.domain.usecase.GetPokemonSpecies
+import com.doool.pokedex.domain.usecase.*
 import com.doool.pokedex.presentation.utils.lazyMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +23,8 @@ class PokemonDetailViewModel @Inject constructor(
   private val getPokemon: GetPokemon,
   private val getPokemonSpecies: GetPokemonSpecies,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
-  private val getDamageRelations: GetDamageRelations
+  private val getDamageRelations: GetDamageRelations,
+  private val getPokemonMove: GetPokemonMove
 ) : ViewModel() {
 
   private val currentItem = MutableStateFlow(1)
@@ -84,5 +82,9 @@ class PokemonDetailViewModel @Inject constructor(
   @OptIn(ExperimentalCoroutinesApi::class)
   fun loadPokemonImage(id: Int): Flow<String> {
     return pokemonMap.getValue(id).map { it.image }
+  }
+
+  fun loadPokemonMove(name: String): Flow<PokemonMove> {
+    return getPokemonMove(name)
   }
 }

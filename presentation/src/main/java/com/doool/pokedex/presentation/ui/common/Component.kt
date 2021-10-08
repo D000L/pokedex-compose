@@ -1,5 +1,6 @@
 package com.doool.pokedex.presentation.ui.common
 
+import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,6 +58,23 @@ fun Type(type: PokemonType, size: Dp = 26.dp, text: String? = null) {
       Spacer(modifier = Modifier.width(size / 4))
       Text(text = text, color = Color.White)
     }
+  }
+}
+
+
+@Composable
+fun Type(@ColorRes color: Int, size: Dp = 26.dp, text: String) {
+  val color = colorResource(id = color)
+
+  Row(
+    Modifier
+      .requiredHeight(size)
+      .shadow(4.dp, RoundedCornerShape(size / 2))
+      .background(color, RoundedCornerShape(size / 2))
+      .padding(horizontal = size / 4),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Text(text = text, color = Color.White)
   }
 }
 

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.presentation.ui.common.Space
 import com.doool.pokedex.presentation.ui.common.SpaceFill
 import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
@@ -97,7 +98,8 @@ fun DetailScreen(
       tabState,
       lazyListState,
       PaddingValues(top = HEADER_HEIGHT, start = 20.dp, end = 20.dp),
-      remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value
+      remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value,
+      viewModel::loadPokemonMove
     )
     Column {
       HeaderLayout(viewPagerState, viewModel, items, pokemon, offset, navigateBack)
@@ -262,14 +264,23 @@ private fun BoxWithConstraintsScope.BodyLayout(
   currentTab: TabState,
   state: LazyListState,
   contentPadding: PaddingValues,
-  uiState: DetailUiState
+  uiState: DetailUiState,
+  loadMove: (String) -> Flow<PokemonMove>
 ) {
-  val maxHeight = LocalDensity.current.run { constraints.maxHeight.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER }
+  val loadMove by rememberUpdatedState(newValue = loadMove)
+
+  val maxHeight =
+    LocalDensity.current.run { constraints.maxHeight.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER }
   val defaultModifier = Modifier
     .defaultMinSize(minHeight = maxHeight)
     .fillMaxWidth()
 
-  LazyColumn(modifier = modifier, state = state, contentPadding = contentPadding) {
+  LazyColumn(
+    modifier = modifier,
+    state = state,
+    contentPadding = contentPadding,
+    verticalArrangement = Arrangement.spacedBy(26.dp)
+  ) {
     when (currentTab) {
       TabState.Detail -> {
         item {
@@ -288,8 +299,12 @@ private fun BoxWithConstraintsScope.BodyLayout(
             damageRelations = uiState.damageRelations
           )
         }
-      TabState.Move -> items(uiState.pokemon.moves) {
-        Move(it)
+      TabState.Move -> {
+        item { Space(height = 10.dp) }
+        items(uiState.pokemon.moves) {
+          val moveDetail by remember(it.name) { loadMove(it.name) }.collectAsState(initial = PokemonMove())
+          Move(moveDetail)
+        }
       }
       TabState.Evolution -> item {
         EvolutionList(
