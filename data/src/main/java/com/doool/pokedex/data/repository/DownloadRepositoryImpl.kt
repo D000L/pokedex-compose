@@ -12,13 +12,7 @@ class DownloadRepositoryImpl @Inject constructor(
   private val pokemonDetailDao: PokemonDetailDao,
 ) : DownloadRepository {
 
-  override suspend fun downloadStaticData(startPage: Int, endPage: Int) {
-    for (page in startPage..endPage) {
-      downloadPokemonDetail(page)
-    }
-  }
-
-  private suspend fun downloadPokemonDetail(page: Int) {
+  override suspend fun downloadPokemonDetail(page: Int) {
     val remoteResult = staticApiService.getPokemon(page)
     val entityList = remoteResult.map { pokemon ->
       PokemonDetailEntity(pokemon.id, pokemon.name, pokemon.toJson())

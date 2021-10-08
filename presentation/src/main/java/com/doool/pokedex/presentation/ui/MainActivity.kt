@@ -6,13 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.doool.pokedex.presentation.ui.detail.DetailScreen
-import com.doool.pokedex.presentation.ui.detail.PokemonDetailViewModel
+import com.doool.pokedex.presentation.ui.download.DownloadScreen
 import com.doool.pokedex.presentation.ui.pokemon.PokemonScreen
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
     setContent {
       PokedexTheme {
         App()
@@ -30,8 +31,8 @@ class MainActivity : ComponentActivity() {
   }
 }
 
-enum class NavDestination(val argument : Pair<NavType<*>, String>? = null) {
-  List, Detail(Pair(NavType.IntType,"POKEMON_ID"))
+enum class NavDestination(val argument: Pair<NavType<*>, String>? = null) {
+  DownLoad, List, Detail(Pair(NavType.IntType, "POKEMON_ID"))
 }
 
 @Composable
@@ -39,7 +40,10 @@ fun App() {
   val navController = rememberNavController()
   val navActions = remember(navController) { NavActions(navController) }
 
-  NavHost(navController, NavDestination.List.name) {
+  NavHost(navController, NavDestination.DownLoad.name) {
+    composable(NavDestination.DownLoad.name) {
+      DownloadScreen(completeDownload = navActions::navigateList)
+    }
     composable(NavDestination.List.name) {
       PokemonScreen(navigateDetail = navActions::navigateDetail)
     }
@@ -58,6 +62,10 @@ fun App() {
 class NavActions(private val navController: NavController) {
   fun navigateBack() {
     navController.navigateUp()
+  }
+
+  fun navigateList() {
+    navController.navigate(NavDestination.List.name)
   }
 
   fun navigateDetail(id: Int) {
