@@ -13,6 +13,7 @@ import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.presentation.ui.common.EvolutionType
 import com.doool.pokedex.presentation.ui.common.Space
+import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
 fun EvolutionList(modifier: Modifier = Modifier, chainList: List<PokemonEvolutionChain>) {
@@ -49,7 +50,7 @@ private fun Pokemon(info: Info) {
       contentDescription = null
     )
     Space(height = 4.dp)
-    Text(text = info.name, fontSize = 16.sp)
+    Text(text = info.name.capitalizeAndRemoveHyphen(), fontSize = 16.sp)
   }
 }
 
@@ -60,5 +61,5 @@ fun LevelEvolution(level: Int) {
 
 @Composable
 fun ItemEvolution(name: String) {
-  Text(text = "$name", fontSize = 16.sp)
+  Text(text = name.capitalizeAndRemoveHyphen(), fontSize = 16.sp)
 }

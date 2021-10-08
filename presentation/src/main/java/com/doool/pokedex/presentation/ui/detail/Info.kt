@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.presentation.ui.common.Space
+import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
 fun Info(modifier: Modifier = Modifier, pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
@@ -23,8 +24,8 @@ fun Info(modifier: Modifier = Modifier, pokemon: PokemonDetail, pokemonSpecies: 
     ColumnItem("Genre", listOf(pokemonSpecies.genera.genus))
     ColumnItem("Height", listOf("%.1f m".format(pokemon.height / 10f)))
     ColumnItem("Weight", listOf("%.1f kg".format(pokemon.weight / 10f)))
-    ColumnItem("Abilities", pokemon.abilities.sortedBy { it.slot }.map { it.ability.name })
-    ColumnItem("Egg Groups", pokemonSpecies.eggGroups.map { it.name })
+    ColumnItem("Abilities", pokemon.abilities.sortedBy { it.slot }.map { it.ability.name.capitalizeAndRemoveHyphen() })
+    ColumnItem("Egg Groups", pokemonSpecies.eggGroups.map { it.name.capitalizeAndRemoveHyphen() })
   }
 }
 

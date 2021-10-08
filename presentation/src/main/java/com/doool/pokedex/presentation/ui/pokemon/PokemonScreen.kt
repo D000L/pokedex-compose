@@ -37,6 +37,7 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.presentation.ui.common.*
+import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.google.accompanist.flowlayout.FlowColumn
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -199,7 +200,7 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
       PokemonThumbnail(pokemon.image)
       Column {
         Text(
-          text = pokemon.name,
+          text = pokemon.name.capitalizeAndRemoveHyphen(),
           fontSize = 20.sp,
           color = fontColor
         )

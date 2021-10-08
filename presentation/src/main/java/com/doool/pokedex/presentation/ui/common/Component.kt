@@ -17,6 +17,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.doool.pokedex.domain.model.Info
+import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
 fun TypeList(types: List<Info>) {
@@ -31,7 +32,7 @@ fun TypeList(types: List<Info>) {
 fun TypeListWithTitle(modifier: Modifier = Modifier, types: List<Info>) {
   Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
-      type.name.toPokemonType()?.let { Type(it, text = type.name) }
+      type.name.toPokemonType()?.let { Type(it, text = type.name.capitalizeAndRemoveHyphen()) }
     }
   }
 }

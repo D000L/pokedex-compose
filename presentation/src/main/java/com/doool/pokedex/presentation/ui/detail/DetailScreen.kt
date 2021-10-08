@@ -36,6 +36,7 @@ import com.doool.pokedex.presentation.ui.common.Space
 import com.doool.pokedex.presentation.ui.common.SpaceFill
 import com.doool.pokedex.presentation.ui.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.common.toPokemonColor
+import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.viewpager.ViewPager
 import com.doool.viewpager.ViewPagerOrientation
 import com.doool.viewpager.ViewPagerState
@@ -222,7 +223,7 @@ private fun TitleLayout(modifier: Modifier, pokemon: PokemonDetail) {
   Column(modifier.height(TITLE_HEIGHT)) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
-        text = pokemon.name,
+        text = pokemon.name.capitalizeAndRemoveHyphen(),
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         color = Color.White
