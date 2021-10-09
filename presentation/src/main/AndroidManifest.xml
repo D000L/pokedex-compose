@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Pokedex">
         <activity android:name=".presentation.ui.main.MainActivity" />
         <activity
-            android:name=".presentation.ui.SplashActivity"
+            android:name=".presentation.ui.splash.SplashActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Pokedex.NoActionBar">

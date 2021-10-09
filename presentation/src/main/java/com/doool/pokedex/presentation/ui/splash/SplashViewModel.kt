@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui
+package com.doool.pokedex.presentation.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
