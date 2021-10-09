@@ -10,7 +10,7 @@ import com.doool.pokedex.data.entity.*
 
 @Database(
   entities = [PokemonDetailEntity::class, PokemonSpeciesEntity::class, PokemonEvolutionChainEntity::class, PokemonTypeResistanceEntity::class, PokemonMoveEntity::class],
-  version = 6,
+  version = 7,
   exportSchema = true
 )
 abstract class PokeDatabase : RoomDatabase() {
