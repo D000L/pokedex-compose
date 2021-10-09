@@ -13,6 +13,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.doool.pokedex.presentation.ui.download.DownloadScreen
 import com.doool.pokedex.presentation.ui.main.detail.DetailScreen
+import com.doool.pokedex.presentation.ui.main.menu.Menu
+import com.doool.pokedex.presentation.ui.main.menu.MenuScreen
 import com.doool.pokedex.presentation.ui.main.news.NewsScreen
 import com.doool.pokedex.presentation.ui.main.pokemon.PokemonScreen
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
 }
 
 enum class NavDestination(val argument: Pair<NavType<*>, String>? = null) {
-  DownLoad, List, Detail(Pair(NavType.IntType, "POKEMON_ID")), News
+  Menu, DownLoad, List, Detail(Pair(NavType.IntType, "POKEMON_ID")), News
 }
 
 @Composable
@@ -41,7 +43,16 @@ fun App() {
   val navController = rememberNavController()
   val navActions = remember(navController) { NavActions(navController) }
 
-  NavHost(navController, NavDestination.List.name) {
+  NavHost(navController, NavDestination.Menu.name) {
+    composable(NavDestination.Menu.name){
+      MenuScreen(){
+        when(it){
+          Menu.Pokemon -> navActions.navigateList()
+          Menu.Berry -> navActions.navigateList()
+          Menu.Move ->navActions.navigateList()
+        }
+      }
+    }
     composable(NavDestination.DownLoad.name) {
       DownloadScreen(completeDownload = navActions::navigateList)
     }
