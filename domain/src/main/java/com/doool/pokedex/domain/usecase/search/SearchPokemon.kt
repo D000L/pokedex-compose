@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
-class SearchMove @Inject constructor(private val searchRepository: SearchRepository) {
+class SearchPokemon @Inject constructor(private val searchRepository: SearchRepository) {
 
   suspend operator fun invoke(query: String?, limit: Int = -1) = flow {
     emit(LoadState.Loading)
-    val result = searchRepository.searchMove(query, limit).mapLatest { LoadState.Complete(it) }
+    val result = searchRepository.searchPokemon(query, limit).mapLatest { LoadState.Complete(it) }
     emitAll(result)
   }
 }

@@ -3,6 +3,7 @@ package com.doool.pokedex.data.repository
 import com.doool.pokedex.data.dao.SearchDao
 import com.doool.pokedex.data.mapper.toModel
 import com.doool.pokedex.domain.model.Item
+import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.repository.SearchRepository
 import kotlinx.coroutines.Dispatchers
@@ -14,12 +15,18 @@ import javax.inject.Inject
 class SearchRepositoryImpl @Inject constructor(private val searchDao: SearchDao) :
   SearchRepository {
 
-  override fun searchMove(query: String?): Flow<List<PokemonMove>> {
-    return searchDao.searchPokemonMove(query ?: "").map { it.map { it.toModel() } }
+  override fun searchPokemon(query: String?, limit: Int): Flow<List<PokemonDetail>> {
+    return searchDao.searchPokemon(query ?: "", limit).map { it.map { it.toModel() } }
       .flowOn(Dispatchers.IO)
   }
 
-  override fun searchItem(query: String?): Flow<List<Item>> {
-    return searchDao.searchItem(query ?: "").map { it.map { it.toModel() } }.flowOn(Dispatchers.IO)
+  override fun searchMove(query: String?, limit: Int): Flow<List<PokemonMove>> {
+    return searchDao.searchPokemonMove(query ?: "", limit).map { it.map { it.toModel() } }
+      .flowOn(Dispatchers.IO)
+  }
+
+  override fun searchItem(query: String?, limit: Int): Flow<List<Item>> {
+    return searchDao.searchItem(query ?: "", limit).map { it.map { it.toModel() } }
+      .flowOn(Dispatchers.IO)
   }
 }

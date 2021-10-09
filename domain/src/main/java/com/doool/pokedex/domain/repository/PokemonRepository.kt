@@ -17,4 +17,6 @@ interface PokemonRepository {
   suspend fun fetchMove(name: String)
   suspend fun fetchItem(name: String)
   suspend fun getItem(name: String): Item
+  suspend fun getPokemon(name: String): PokemonDetail
+  suspend fun fetchPokemon(name: String)
 }

@@ -6,6 +6,6 @@ import retrofit2.http.Path
 
 interface StaticApiService {
 
-  @GET("pokemon/{page}.json")
-  suspend fun getPokemon(@Path("page") page: Int): List<PokemonDetailResponse>
+  @GET("pokemon/{name}.json")
+  suspend fun getPokemon(@Path("name") name: String): PokemonDetailResponse
 }

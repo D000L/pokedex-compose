@@ -9,9 +9,9 @@ import javax.inject.Inject
 
 class SearchItem @Inject constructor(private val searchRepository: SearchRepository) {
 
-  suspend operator fun invoke(query: String?) = flow {
+  suspend operator fun invoke(query: String?, limit: Int = -1) = flow {
     emit(LoadState.Loading)
-    val result = searchRepository.searchItem(query).mapLatest { LoadState.Complete(it) }
+    val result = searchRepository.searchItem(query, limit).mapLatest { LoadState.Complete(it) }
     emitAll(result)
   }
 }

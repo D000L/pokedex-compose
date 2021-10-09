@@ -28,4 +28,7 @@ interface PokeApiService {
 
   @GET("item?offset=0&limit=999")
   suspend fun getAllItemInfo(): ListItem<InfoResponse>
+
+  @GET("pokemon?limit=1200")
+  suspend fun getAllPokemonInfo(): ListItem<InfoResponse>
 }

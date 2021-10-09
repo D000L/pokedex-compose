@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Item
+import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.usecase.LoadState
 import com.doool.pokedex.presentation.ui.main.pokemon.Search
@@ -35,6 +36,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu) -
 
     if (isSearching) {
       SearchScreen(
+        pokemon = remember { viewModel.searchedPokemon() }.collectAsState(initial = LoadState.Loading).value,
         items = remember { viewModel.searchedItems() }.collectAsState(initial = LoadState.Loading).value,
         moves = remember { viewModel.searchedMoves() }.collectAsState(initial = LoadState.Loading).value
       )
@@ -46,14 +48,48 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu) -
 
 @Composable
 fun SearchScreen(
+  pokemon: LoadState<List<PokemonDetail>>,
   items: LoadState<List<Item>>,
   moves: LoadState<List<PokemonMove>>
 ) {
   Column(
     Modifier.fillMaxSize()
   ) {
+
+    PokemonThumbnailList(pokemon)
     ItemThumbnailList(items)
     MoveThumbnailList(moves)
+  }
+}
+
+@Composable
+fun PokemonThumbnailList(pokemon: LoadState<List<PokemonDetail>>) {
+  Box(Modifier.height(80.dp).fillMaxWidth()) {
+    pokemon.Process(onComplete = {
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        it.forEach {
+          PokemonThumbnail(it)
+        }
+      }
+    }, onLoading = {
+      CircularProgressIndicator()
+    })
+  }
+}
+
+@Composable
+fun PokemonThumbnail(pokemon: PokemonDetail) {
+  if (pokemon.isPlaceholder) {
+    Box(
+      Modifier
+        .size(80.dp)
+        .background(Color.Black)
+    )
+  } else {
+    Column(Modifier.size(80.dp)) {
+      Image(modifier = Modifier.size(40.dp), painter = rememberImagePainter(pokemon.image), contentDescription = null)
+      Text(text = pokemon.name)
+    }
   }
 }
 

@@ -13,14 +13,14 @@ interface PokemonDetailDao {
   @Query("SELECT * FROM pokemon_detail")
   fun getAllPokemon(): DataSource.Factory<Int, PokemonDetailEntity>
 
-  @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%'")
-  fun searchPokemonList(query: String): DataSource.Factory<Int, PokemonDetailEntity>
-
   @Query("SELECT * FROM pokemon_detail WHERE id = :id")
   suspend fun getPokemon(id: Int): PokemonDetailEntity
 
   @Query("SELECT * FROM pokemon_detail WHERE name = :name")
-  suspend fun getPokemon(name: String): PokemonDetailEntity
+  suspend fun getPokemon(name: String): PokemonDetailEntity?
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertPokemonDetail(pokemonDetail: PokemonDetailEntity)
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertPokemonDetail(pokemonDetail: List<PokemonDetailEntity>)

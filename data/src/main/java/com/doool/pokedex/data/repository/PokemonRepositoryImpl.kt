@@ -10,6 +10,7 @@ import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
 import com.doool.pokedex.data.service.PokeApiService
+import com.doool.pokedex.data.service.StaticApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.*
@@ -18,22 +19,43 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
   private val pokeApiService: PokeApiService,
+  private val staticApiService: StaticApiService,
   private val pokemonDetailDao: PokemonDetailDao,
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
   override fun searchPokemonList(query: String?): DataSource.Factory<Int, PokemonDetail> {
-    val dataSourceFactory =
-      if (query.isNullOrEmpty()) pokemonDetailDao.getAllPokemon()
-      else pokemonDetailDao.searchPokemonList(query)
+    val dataSourceFactory = pokemonDetailDao.getAllPokemon()
 
     return dataSourceFactory.mapByPage {
-      it.map { it.json.toResponse<PokemonDetailResponse>().toModel() }
+      it.mapNotNull { it.json?.toResponse<PokemonDetailResponse>()?.toModel() }
     }
   }
 
   override suspend fun getPokemon(id: Int): PokemonDetail {
-    return pokemonDetailDao.getPokemon(id).json.toResponse<PokemonDetailResponse>().toModel()
+    return pokemonDetailDao.getPokemon(id).json?.toResponse<PokemonDetailResponse>()?.toModel()
+      ?: PokemonDetail()
+  }
+
+  override suspend fun getPokemon(name: String): PokemonDetail {
+    val result = pokemonDetailDao.getPokemon(name)
+    return if (result?.json == null) loadPokemon(name) else result.toModel()
+  }
+
+  private suspend fun loadPokemon(name: String): PokemonDetail {
+    val remoteResult = staticApiService.getPokemon(name)
+    val model = remoteResult.toJson()
+    val entity = PokemonDetailEntity(
+      remoteResult.name,
+      remoteResult.id,
+      model
+    )
+    pokemonDetailDao.insertPokemonDetail(entity)
+    return entity.toModel()
+  }
+
+  override suspend fun fetchPokemon(name: String) {
+    loadPokemon(name)
   }
 
   override suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
@@ -85,8 +107,8 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override suspend fun getPokemonThumbnail(name: String): String {
-    val pokemon = pokemonDetailDao.getPokemon(name).json.toResponse<PokemonDetailResponse>()
-    return pokemon.sprites.other.artwork.frontDefault
+    val pokemon = pokemonDetailDao.getPokemon(name)?.json?.toResponse<PokemonDetailResponse>()
+    return pokemon?.sprites?.other?.artwork?.frontDefault ?: ""
   }
 
   override suspend fun getPokemonTypeResistance(name: String): PokemonTypeResistance {

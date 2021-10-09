@@ -11,7 +11,7 @@ data class PokemonDetail(
   val moves: List<Move> = listOf(),
   val color: Info = Info(),
   val abilities: List<Ability> = listOf()
-)
+) : Placeholdable()
 
 data class Stat(
   val amount: Int = 0,
