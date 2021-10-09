@@ -1,4 +1,4 @@
-package com.doool.pokedex.data.response
+package com.doool.pokedex.data.response.common
 
 import androidx.annotation.Keep
 

@@ -2,7 +2,7 @@ package com.doool.pokedex.data.mapper
 
 import com.doool.pokedex.data.response.EvolutionDetail
 import com.doool.pokedex.data.response.EvolvesTo
-import com.doool.pokedex.data.response.InfoResponse
+import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.domain.model.Condition
 import com.doool.pokedex.domain.model.PokemonEvolutionChain

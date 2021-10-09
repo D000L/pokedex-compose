@@ -2,6 +2,9 @@ package com.doool.pokedex.data.response
 
 
 import androidx.annotation.Keep
+import com.doool.pokedex.data.response.common.GameIndice
+import com.doool.pokedex.data.response.common.InfoResponse
+import com.doool.pokedex.data.response.common.Sprites
 import com.google.gson.annotations.SerializedName
 
 @Keep
@@ -35,12 +38,6 @@ data class Ability(
 )
 
 @Keep
-data class GameIndice(
-  @SerializedName("game_index") val gameIndex: Int = 0,
-  val version: InfoResponse = InfoResponse()
-)
-
-@Keep
 data class MoveResponse(
   val move: InfoResponse = InfoResponse(),
   @SerializedName("version_group_details") val versionGroupDetails: List<VersionGroupDetailResponse> = listOf()
@@ -52,23 +49,6 @@ data class VersionGroupDetailResponse(
   @SerializedName("move_learn_method") val moveLearnMethod: InfoResponse = InfoResponse(),
   @SerializedName("version_group") val versionGroup: InfoResponse = InfoResponse()
 )
-
-@Keep
-data class Sprites(
-  @SerializedName("front_default") val frontDefault: String = "",
-  @SerializedName("back_default") val backDefault: String = "",
-  val other: SpritesOthers = SpritesOthers()
-)
-
-@Keep
-data class SpritesOthers(
-  @SerializedName("official-artwork") val artwork: Artwork = Artwork(),
-){
-  @Keep
-  data class Artwork(
-    @SerializedName("front_default") val frontDefault: String = "",
-  )
-}
 
 @Keep
 data class StatResponse(

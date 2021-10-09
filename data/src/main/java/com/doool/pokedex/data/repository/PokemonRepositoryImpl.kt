@@ -3,12 +3,12 @@ package com.doool.pokedex.data.repository
 import androidx.paging.DataSource
 import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
-import com.doool.pokedex.data.entity.PokemonEvolutionChainEntity
-import com.doool.pokedex.data.entity.PokemonMoveEntity
-import com.doool.pokedex.data.entity.PokemonSpeciesEntity
-import com.doool.pokedex.data.entity.PokemonTypeResistanceEntity
+import com.doool.pokedex.data.entity.*
 import com.doool.pokedex.data.mapper.toModel
-import com.doool.pokedex.data.response.*
+import com.doool.pokedex.data.response.PokemonDetailResponse
+import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
+import com.doool.pokedex.data.response.PokemonSpeciesResponse
+import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
 import com.doool.pokedex.data.service.PokeApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toResponse
@@ -112,24 +112,44 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override suspend fun getPokemonMove(name: String): PokemonMove {
-    return fetchPokemonMove(name).toModel()
+    val result = pokemonDao.getPokemonMoveEntity(name)
+    return if (result?.json == null) loadMove(name) else result.toModel()
   }
 
-  private suspend fun fetchPokemonMove(name: String): PokemonMoveResponse {
-    val localResult = pokemonDao.getPokemonMoveEntity(name)
+  private suspend fun loadMove(name: String): PokemonMove {
+    val remoteResult = pokeApiService.getPokemonMove(name)
+    val model = remoteResult.toJson()
+    val entity = PokemonMoveEntity(
+      remoteResult.name,
+      remoteResult.id,
+      model
+    )
+    pokemonDao.insertPokemonMoveEntity(entity)
+    return entity.toModel()
+  }
 
-    if (localResult?.json == null) {
-      val remoteResult = pokeApiService.getPokemonMove(name)
-      val model = remoteResult.toJson()
-      pokemonDao.insertPokemonMoveEntity(
-        PokemonMoveEntity(
-          remoteResult.name,
-          remoteResult.id,
-          model
-        )
-      )
-      return remoteResult
-    }
-    return localResult.json.toResponse()
+  override suspend fun fetchMove(name: String) {
+    loadMove(name)
+  }
+
+  override suspend fun getItem(name: String): Item {
+    val result = pokemonDao.getItemEntity(name)
+    return if (result?.json == null) loadItem(name) else result.toModel()
+  }
+
+  private suspend fun loadItem(name: String): Item {
+    val remoteResult = pokeApiService.getItem(name)
+    val model = remoteResult.toJson()
+    val entity = ItemEntity(
+      remoteResult.name,
+      remoteResult.id,
+      model
+    )
+    pokemonDao.insertItemEntity(entity)
+    return entity.toModel()
+  }
+
+  override suspend fun fetchItem(name: String) {
+    loadItem(name)
   }
 }

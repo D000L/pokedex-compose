@@ -2,6 +2,9 @@ package com.doool.pokedex.data.response
 
 import androidx.annotation.Keep
 import androidx.room.PrimaryKey
+import com.doool.pokedex.data.response.common.FlavorText
+import com.doool.pokedex.data.response.common.InfoResponse
+import com.doool.pokedex.data.response.common.Names
 import com.google.gson.annotations.SerializedName
 
 @Keep
@@ -11,7 +14,7 @@ data class PokemonSpeciesResponse(
   @SerializedName("egg_groups") val eggGroups: List<InfoResponse> = emptyList(),
   @SerializedName("evolution_chain") val evolutionChain: EvolutionChain? = null,
   @SerializedName("evolves_from_species") val evolvesFromSpecies: InfoResponse? = null,
-  @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntries> = emptyList(),
+  @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorText> = emptyList(),
   @SerializedName("form_descriptions") val formDescriptions: List<String> = emptyList(),
   @SerializedName("forms_switchable") val formsSwitchable: Boolean = false,
   @SerializedName("gender_rate") val genderRate: Int = 0,
@@ -36,17 +39,4 @@ data class EvolutionChain(
 data class Genera(
   val genus: String = "",
   val language: InfoResponse = InfoResponse()
-)
-
-@Keep
-data class FlavorTextEntries(
-  @SerializedName("flavor_text") val flavorText: String = "",
-  val language: InfoResponse = InfoResponse(),
-  val version: InfoResponse = InfoResponse()
-)
-
-@Keep
-data class Names(
-  val language: InfoResponse = InfoResponse(),
-  val name: String = ""
 )

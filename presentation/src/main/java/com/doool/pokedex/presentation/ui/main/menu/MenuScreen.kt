@@ -1,5 +1,6 @@
 package com.doool.pokedex.presentation.ui.main.menu
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberImagePainter
+import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.usecase.LoadState
 import com.doool.pokedex.presentation.ui.main.pokemon.Search
@@ -31,7 +34,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu) -
     Search(doSearch = viewModel::search)
 
     if (isSearching) {
-      SearchScreen(remember { viewModel.moves }.collectAsState(initial = LoadState.Loading).value)
+      SearchScreen(
+        items = remember { viewModel.searchedItems() }.collectAsState(initial = LoadState.Loading).value,
+        moves = remember { viewModel.searchedMoves() }.collectAsState(initial = LoadState.Loading).value
+      )
     } else {
       MenuScreen(onClickMenu = onClickMenu)
     }
@@ -39,17 +45,53 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu) -
 }
 
 @Composable
-fun SearchScreen(moves: LoadState<List<PokemonMove>>) {
+fun SearchScreen(
+  items: LoadState<List<Item>>,
+  moves: LoadState<List<PokemonMove>>
+) {
   Column(
     Modifier.fillMaxSize()
   ) {
+    ItemThumbnailList(items)
     MoveThumbnailList(moves)
   }
 }
 
 @Composable
+fun ItemThumbnailList(items: LoadState<List<Item>>) {
+  Box(Modifier.height(80.dp).fillMaxWidth()) {
+    items.Process(onComplete = {
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        it.forEach {
+          ItemThumbnail(it)
+        }
+      }
+    }, onLoading = {
+      CircularProgressIndicator()
+    })
+  }
+}
+
+@Composable
+fun ItemThumbnail(item: Item) {
+  if (item.isPlaceholder) {
+    Box(
+      Modifier
+        .size(80.dp)
+        .background(Color.Black)
+    )
+  } else {
+    Column(Modifier.size(80.dp)) {
+      Image(modifier = Modifier.size(40.dp), painter = rememberImagePainter(item.sprites), contentDescription = null)
+      Text(text = item.name)
+    }
+  }
+}
+
+
+@Composable
 fun MoveThumbnailList(moves: LoadState<List<PokemonMove>>) {
-  Box(Modifier.fillMaxWidth()) {
+  Box(Modifier.height(80.dp).fillMaxWidth()) {
     moves.Process(onComplete = {
       Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         it.forEach {
@@ -67,11 +109,11 @@ fun MoveThumbnail(move: PokemonMove) {
   if (move.isPlaceholder) {
     Box(
       Modifier
-        .size(40.dp)
+        .size(80.dp)
         .background(Color.Black)
     )
   } else {
-    Box(Modifier.size(40.dp)) {
+    Box(Modifier.size(80.dp)) {
       Text(text = move.name)
     }
   }

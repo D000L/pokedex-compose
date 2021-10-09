@@ -1,13 +1,13 @@
 package com.doool.pokedex.data.mapper
 
 import com.doool.pokedex.data.entity.PokemonMoveEntity
-import com.doool.pokedex.data.response.EffectResponse
 import com.doool.pokedex.data.response.PokemonMoveResponse
+import com.doool.pokedex.data.response.common.EffectResponse
 import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.PokemonMove
 
-fun PokemonMoveEntity.toModel() : PokemonMove = with(this){
+fun PokemonMoveEntity.toModel(): PokemonMove = with(this) {
   json?.toResponse<PokemonMoveResponse>()?.toModel() ?: PokemonMove(name = name).apply {
     isPlaceholder = true
   }

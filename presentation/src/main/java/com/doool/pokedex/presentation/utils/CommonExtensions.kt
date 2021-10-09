@@ -10,7 +10,7 @@ fun String.capitalizeAndRemoveHyphen(): String {
   }.joinToString(" ")
 }
 
-fun LazyListState.getItemTopOffset(index : Int = 0): Int {
+fun LazyListState.getItemTopOffset(index: Int = 0): Int {
   val topOffset = layoutInfo.visibleItemsInfo.getOrNull(index)?.offset ?: 0
   val startOffset = layoutInfo.viewportStartOffset
   return topOffset - startOffset
@@ -21,6 +21,18 @@ fun <T : Any> LoadState<T>.Process(
   onError: @Composable () -> Unit = {},
   onLoading: @Composable () -> Unit = {},
   onComplete: @Composable (T) -> Unit = {}
+) {
+  when (this) {
+    is LoadState.Complete -> onComplete(data)
+    LoadState.Error -> onError()
+    is LoadState.Loading -> onLoading()
+  }
+}
+
+suspend fun <T : Any> LoadState<T>.process(
+  onError: suspend () -> Unit = {},
+  onLoading: suspend () -> Unit = {},
+  onComplete: suspend (T) -> Unit = {}
 ) {
   when (this) {
     is LoadState.Complete -> onComplete(data)

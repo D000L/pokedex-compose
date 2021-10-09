@@ -1,6 +1,7 @@
 package com.doool.pokedex.data.response
 
 import androidx.annotation.Keep
+import com.doool.pokedex.data.response.common.InfoResponse
 import com.google.gson.annotations.SerializedName
 
 @Keep

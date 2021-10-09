@@ -14,7 +14,8 @@ class DownloadStaticData @Inject constructor(private val downloadRepository: Dow
       for (page in 0..8) {
         downloadRepository.downloadPokemonDetail(page)
       }
-      downloadRepository.downloadPokemonMove()
+      downloadRepository.downloadAllMove()
+      downloadRepository.downloadAllItem()
       emit(LoadState.Complete(Unit))
     } catch (e: Throwable) {
       emit(LoadState.Error)

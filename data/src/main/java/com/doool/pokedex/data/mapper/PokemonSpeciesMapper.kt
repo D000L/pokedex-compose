@@ -1,6 +1,6 @@
 package com.doool.pokedex.data.mapper
 
-import com.doool.pokedex.data.response.InfoResponse
+import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import com.doool.pokedex.domain.model.Genera
 import com.doool.pokedex.domain.model.Info
