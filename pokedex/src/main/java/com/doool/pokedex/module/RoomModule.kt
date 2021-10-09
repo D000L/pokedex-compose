@@ -22,4 +22,7 @@ class RoomModule {
 
   @Provides
   fun providePokemonSpeciesDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonSpeciesDao()
+
+  @Provides
+  fun providePokemonSearchDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonSearchDao()
 }

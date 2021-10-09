@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
+import com.doool.pokedex.data.dao.SearchDao
 import com.doool.pokedex.data.entity.*
 
 @Database(
@@ -25,4 +26,5 @@ abstract class PokeDatabase : RoomDatabase() {
 
   abstract fun pokemonDetailDao(): PokemonDetailDao
   abstract fun pokemonSpeciesDao(): PokemonDao
+  abstract fun pokemonSearchDao(): SearchDao
 }

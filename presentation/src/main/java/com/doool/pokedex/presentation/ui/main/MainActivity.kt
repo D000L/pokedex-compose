@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.doool.pokedex.presentation.ui.download.DownloadScreen
 import com.doool.pokedex.presentation.ui.main.detail.DetailScreen
+import com.doool.pokedex.presentation.ui.main.menu.HomeScreen
 import com.doool.pokedex.presentation.ui.main.menu.Menu
 import com.doool.pokedex.presentation.ui.main.menu.MenuScreen
 import com.doool.pokedex.presentation.ui.main.news.NewsScreen
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       PokedexTheme {
-        App()
+        HomeScreen(onClickMenu = {})
       }
     }
   }

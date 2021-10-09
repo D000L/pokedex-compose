@@ -18,9 +18,3 @@ class GetDamageRelations @Inject constructor(private val pokemonRepository: Poke
   }
 }
 
-class GetPokemonMove @Inject constructor(private val pokemonRepository: PokemonRepository){
-
-  operator fun invoke(name: String): Flow<PokemonMove> = flow {
-    emit(pokemonRepository.getPokemonMove(name))
-  }
-}

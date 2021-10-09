@@ -10,7 +10,7 @@ data class PokemonMove(
   val power: Int = 0,
   val pp: Int = 0,
   val type: Info = Info()
-)
+) : Placeholdable()
 
 data class Effect(
   val effect: String = "",
