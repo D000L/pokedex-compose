@@ -35,4 +35,7 @@ interface PokemonDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertPokemonMoveEntity(move: PokemonMoveEntity)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertPokemonMoveEntity(move: List<PokemonMoveEntity>)
 }

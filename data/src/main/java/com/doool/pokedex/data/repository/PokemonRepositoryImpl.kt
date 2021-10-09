@@ -118,7 +118,7 @@ class PokemonRepositoryImpl @Inject constructor(
   private suspend fun fetchPokemonMove(name: String): PokemonMoveResponse {
     val localResult = pokemonDao.getPokemonMoveEntity(name)
 
-    if (localResult == null) {
+    if (localResult?.json == null) {
       val remoteResult = pokeApiService.getPokemonMove(name)
       val model = remoteResult.toJson()
       pokemonDao.insertPokemonMoveEntity(

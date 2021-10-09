@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pokemon_move")
 data class PokemonMoveEntity(
   @PrimaryKey val name: String,
-  val id: Int,
-  val json: String
+  val id: Int = 0,
+  val json: String? = null
 )
