@@ -11,11 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.doool.pokedex.presentation.ui.download.DownloadScreen
 import com.doool.pokedex.presentation.ui.main.detail.DetailScreen
 import com.doool.pokedex.presentation.ui.main.menu.HomeScreen
 import com.doool.pokedex.presentation.ui.main.menu.Menu
-import com.doool.pokedex.presentation.ui.main.menu.MenuScreen
 import com.doool.pokedex.presentation.ui.main.news.NewsScreen
 import com.doool.pokedex.presentation.ui.main.pokemon.PokemonScreen
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
@@ -36,7 +34,7 @@ class MainActivity : ComponentActivity() {
 }
 
 enum class NavDestination(val argument: Pair<NavType<*>, String>? = null) {
-  Menu, DownLoad, List, Detail(Pair(NavType.IntType, "POKEMON_ID")), News
+  Menu, List(Pair(NavType.StringType, "QUERY")), Detail(Pair(NavType.IntType, "POKEMON_ID")), News
 }
 
 @Composable
@@ -45,19 +43,23 @@ fun App() {
   val navActions = remember(navController) { NavActions(navController) }
 
   NavHost(navController, NavDestination.Menu.name) {
-    composable(NavDestination.Menu.name){
-      HomeScreen(){
-        when(it){
-          Menu.Pokemon -> navActions.navigateList()
+    composable(NavDestination.Menu.name) {
+      HomeScreen { menu, query->
+        when (menu) {
+          Menu.Pokemon -> navActions.navigateList(query)
           Menu.Berry -> navActions.navigateList()
-          Menu.Move ->navActions.navigateList()
+          Menu.Move -> navActions.navigateList()
         }
       }
     }
-    composable(NavDestination.DownLoad.name) {
-      DownloadScreen(completeDownload = navActions::navigateList)
-    }
-    composable(NavDestination.List.name) {
+    composable(
+      route = "${NavDestination.List.name}?${NavDestination.List.argument!!.second}={${NavDestination.List.argument!!.second}}",
+      arguments = listOf(navArgument(NavDestination.List.argument!!.second) {
+        type = NavDestination.List.argument!!.first
+        nullable = true
+        defaultValue = null
+      })
+    ) {
       PokemonScreen(navigateDetail = navActions::navigateDetail)
     }
     composable(NavDestination.News.name) {
@@ -80,8 +82,10 @@ class NavActions(private val navController: NavController) {
     navController.navigateUp()
   }
 
-  fun navigateList() {
-    navController.navigate(NavDestination.List.name)
+  fun navigateList(query: String? = null) {
+    var route = NavDestination.List.name
+    if (query != null) route += "?${NavDestination.List.argument!!.second}=$query"
+    navController.navigate(route)
   }
 
   fun navigateDetail(id: Int) {

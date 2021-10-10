@@ -65,46 +65,48 @@ fun DetailScreen(
   navigateBack: () -> Unit = {}
 ) {
   Log.d("composable update", "DetailScreen")
-  val items = (1..800).toList()
+  val items by viewModel.pokemonList.collectAsState(initial = emptyList())
 
-  val viewPagerState = rememberViewPagerState(currentPage = initPokemonId - 1)
-  val lazyListState = rememberLazyListState()
+  if (items.isNotEmpty()) {
+    val viewPagerState = rememberViewPagerState(currentPage = initPokemonId - 1)
+    val lazyListState = rememberLazyListState()
 
-  val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
-  var tabState by remember { mutableStateOf(TabState.Detail) }
+    val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
+    var tabState by remember { mutableStateOf(TabState.Detail) }
 
-  val density = LocalDensity.current
-  val offset by derivedStateOf {
-    val topOffset = lazyListState.getItemTopOffset()
-    val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
-    (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
-  }
-
-  val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
-  LaunchedEffect(dragged) {
-    if (!dragged && offset != 0f && offset != 1f) {
-      val direction = if (offset > 0.5f) -offset else offset
-      lazyListState.animateScrollBy(direction * density.run { THUMBNAIL_VIEWPAGER_HEIGHT.toPx() })
+    val density = LocalDensity.current
+    val offset by derivedStateOf {
+      val topOffset = lazyListState.getItemTopOffset()
+      val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
+      (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
     }
-  }
 
-  BoxWithConstraints {
-    BodyLayout(
-      Modifier.fillMaxSize(),
-      tabState,
-      lazyListState,
-      PaddingValues(top = HEADER_HEIGHT, start = 20.dp, end = 20.dp),
-      remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value,
-      viewModel::loadPokemonMove
-    )
-    Column {
-      HeaderLayout(viewPagerState, viewModel, items, pokemon, offset, navigateBack)
-      TabLayout(tabState) { tabState = it }
+    val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
+    LaunchedEffect(dragged) {
+      if (!dragged && offset != 0f && offset != 1f) {
+        val direction = if (offset > 0.5f) -offset else offset
+        lazyListState.animateScrollBy(direction * density.run { THUMBNAIL_VIEWPAGER_HEIGHT.toPx() })
+      }
     }
-  }
 
-  LaunchedEffect(viewPagerState.currentPage) {
-    viewModel.setCurrentItem(items[viewPagerState.currentPage])
+    BoxWithConstraints {
+      BodyLayout(
+        Modifier.fillMaxSize(),
+        tabState,
+        lazyListState,
+        PaddingValues(top = HEADER_HEIGHT, start = 20.dp, end = 20.dp),
+        remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value,
+        viewModel::loadPokemonMove
+      )
+      Column {
+        HeaderLayout(viewPagerState, viewModel, items, pokemon, offset, navigateBack)
+        TabLayout(tabState) { tabState = it }
+      }
+    }
+
+    LaunchedEffect(viewPagerState.currentPage) {
+      viewModel.setCurrentItem(items[viewPagerState.currentPage])
+    }
   }
 }
 
@@ -112,7 +114,7 @@ fun DetailScreen(
 private fun HeaderLayout(
   viewPagerState: ViewPagerState,
   viewModel: PokemonDetailViewModel,
-  items: List<Int>,
+  items: List<String>,
   pokemon: PokemonDetail,
   offset: Float,
   navigateBack: () -> Unit
@@ -170,8 +172,8 @@ private fun DetailAppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit)
 private fun PokemonImagePager(
   modifier: Modifier = Modifier,
   viewPagerState: ViewPagerState = rememberViewPagerState(),
-  items: List<Int> = listOf(),
-  loadImage: (Int) -> Flow<String>
+  items: List<String> = listOf(),
+  loadImage: (String) -> Flow<String>
 ) {
   Log.d("composable update", "PokemonImagePager")
   val loadImage by rememberUpdatedState(newValue = loadImage)

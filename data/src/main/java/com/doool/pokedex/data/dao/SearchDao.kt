@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SearchDao {
 
-  @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%' ORDER by name ASC LIMIT :limit")
+  @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%' ORDER BY `index` ASC LIMIT :limit")
   fun searchPokemon(query: String, limit: Int = -1): Flow<List<PokemonDetailEntity>>
 
   @Query("SELECT * FROM pokemon_move WHERE name LIKE '%' || :query || '%' ORDER by name ASC LIMIT :limit")
@@ -18,4 +18,7 @@ interface SearchDao {
 
   @Query("SELECT * FROM item WHERE name LIKE '%' || :query || '%' ORDER by name ASC LIMIT :limit")
   fun searchItem(query: String, limit: Int = -1): Flow<List<ItemEntity>>
+
+  @Query("SELECT name FROM pokemon_detail WHERE name LIKE '%' || :query || '%' ORDER BY `index` ASC")
+  suspend fun searchPokemonNames(query: String = ""): List<String>
 }

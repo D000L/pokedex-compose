@@ -1,16 +1,28 @@
 package com.doool.pokedex.presentation.ui.main.menu
 
+import android.view.KeyEvent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +32,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.main.common.*
-import com.doool.pokedex.presentation.ui.main.pokemon.Search
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 enum class Menu {
@@ -28,10 +39,10 @@ enum class Menu {
 }
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu, String?) -> Unit) {
   val isSearching by remember { viewModel.isSearching }.collectAsState(initial = false)
 
-  Column {
+  Column(Modifier.fillMaxWidth()) {
     Search(doSearch = viewModel::search)
 
     if (isSearching) {
@@ -41,12 +52,88 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu) -
           initial = SearchUIState(
             isLoading = true
           )
-        ).value,
-        onClickMenu
-      )
+        ).value
+      ) {
+        onClickMenu(it, viewModel.query.value)
+      }
       Space(height = 20.dp)
     } else {
-      MenuScreen(onClickMenu = onClickMenu)
+      MenuScreen() {
+        onClickMenu(it, null)
+      }
+    }
+  }
+}
+
+@Composable
+fun Search(modifier: Modifier = Modifier, doSearch: (String) -> Unit) {
+  var query by remember { mutableStateOf("") }
+  val focus = LocalFocusManager.current
+
+  val searchAndKeyboardHide by rememberUpdatedState {
+    doSearch(query)
+    focus.clearFocus()
+  }
+
+  BasicTextField(
+    modifier = modifier
+      .height(40.dp)
+      .background(color = Color.LightGray.copy(alpha = 0.4f), shape = RoundedCornerShape(20.dp))
+      .onPreviewKeyEvent {
+        if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+          searchAndKeyboardHide()
+          true
+        } else false
+      },
+    value = query,
+    onValueChange = {
+      query = it
+      doSearch(query)
+    },
+    singleLine = true,
+    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+    keyboardActions = KeyboardActions {
+      searchAndKeyboardHide()
+    },
+    decorationBox = {
+      SearchLayout(
+        showHint = query.isEmpty(),
+        onClickSearch = searchAndKeyboardHide,
+        onClickClear = {
+          query = ""
+          searchAndKeyboardHide()
+        },
+        textField = it
+      )
+    })
+}
+
+@Composable
+fun SearchLayout(
+  showHint: Boolean,
+  onClickSearch: () -> Unit,
+  onClickClear: () -> Unit,
+  textField: @Composable () -> Unit
+) {
+  Row(
+    Modifier.padding(horizontal = 10.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    IconButton(modifier = Modifier.size(24.dp), onClick = onClickSearch) {
+      Icon(imageVector = Icons.Default.Search, contentDescription = null)
+    }
+    Box(
+      Modifier
+        .padding(horizontal = 10.dp)
+        .weight(1f)
+    ) {
+      if (showHint) Text("Let's go pokemon")
+      textField()
+    }
+    if (!showHint) {
+      IconButton(modifier = Modifier.size(28.dp), onClick = onClickClear) {
+        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+      }
     }
   }
 }
@@ -80,11 +167,10 @@ fun SearchScreen(
 }
 
 @Composable
-fun Title(title: String, hasMore: Boolean = false, onClickMore: () -> Unit = {}) {
-  Row(verticalAlignment = Alignment.CenterVertically) {
+fun Title(title: String, onClickMore: () -> Unit = {}) {
+  Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
     Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-    if (hasMore)
-      SpaceFill()
+    SpaceFill()
     Box(modifier = Modifier.clickable { onClickMore() }) {
       Text(
         text = "See More",
@@ -103,13 +189,11 @@ fun <T> ThumbnailItem(
   content: @Composable (T) -> Unit = {}
 ) {
   val state = rememberScrollState()
-  var hasMore by remember { mutableStateOf(false) }
 
   item?.let {
     Column(Modifier.fillMaxWidth()) {
-      Title(title, hasMore, onClickMore)
+      Title(title, onClickMore)
       Space(height = 10.dp)
-      hasMore = it.size > 5
       Row(
         modifier = Modifier.horizontalScroll(state),
         horizontalArrangement = Arrangement.spacedBy(8.dp)

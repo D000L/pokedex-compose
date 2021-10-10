@@ -1,40 +1,31 @@
 package com.doool.pokedex.presentation.ui.main.pokemon
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
-import androidx.paging.cachedIn
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.usecase.GetPokemonPagingSource
+import com.doool.pokedex.domain.usecase.GetPokemonNames
+import com.doool.pokedex.domain.usecase.LoadState
+import com.doool.pokedex.domain.usecase.search.SearchPokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
-  private val getPokemonList: GetPokemonPagingSource
+  private val getPokemonList: GetPokemonNames,
+  private val searchPokemon: SearchPokemon,
+  savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-  private var searchQuery: String? = null
-  private var pagingSource: PagingSource<Int, PokemonDetail>? = null
+  private var searchQuery: String? = savedStateHandle.get<String?>("QUERY")
 
-  val pokemonList = Pager(
-    PagingConfig(
-      20,
-      prefetchDistance = 5,
-      initialLoadSize = 20,
-      enablePlaceholders = false
-    )
-  ) {
-    getPokemonList(searchQuery).also { pagingSource = it }
-  }.flow.cachedIn(viewModelScope)
+  val pokemonList = flow {
+    emit(getPokemonList(searchQuery))
+  }
 
-  fun search(query: String) {
-    viewModelScope.launch {
-      searchQuery = query
-      pagingSource?.invalidate()
-    }
+  fun getPokemon(name: String): Flow<PokemonDetail> = flow {
+    emitAll(searchPokemon(name, 1).filterIsInstance<LoadState.Success<List<PokemonDetail>>>().map {
+      it.data.first()
+    })
   }
 }

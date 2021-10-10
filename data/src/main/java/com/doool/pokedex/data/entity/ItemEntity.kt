@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "item")
 data class ItemEntity(
   @PrimaryKey val name: String,
-  val id: Int = 0,
+  val id: Int = -1,
   val json: String? = null
 )

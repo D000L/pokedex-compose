@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
     private const val SEARCH_ITEM_LIMIT = 6
   }
 
-  private val query = MutableStateFlow("")
+  val query = MutableStateFlow("")
   val isSearching = query.map { it.isNotBlank() }
 
   fun searchUIState() = query.flatMapLatest {

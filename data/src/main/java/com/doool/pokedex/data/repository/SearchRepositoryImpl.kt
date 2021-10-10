@@ -29,4 +29,8 @@ class SearchRepositoryImpl @Inject constructor(private val searchDao: SearchDao)
     return searchDao.searchItem(query ?: "", limit).map { it.map { it.toModel() } }
       .flowOn(Dispatchers.IO)
   }
+
+  override suspend fun searchPokemonNames(query: String?): List<String> {
+    return searchDao.searchPokemonNames(query ?: "")
+  }
 }

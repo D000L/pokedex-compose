@@ -1,6 +1,5 @@
 package com.doool.pokedex.data.repository
 
-import androidx.paging.DataSource
 import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
 import com.doool.pokedex.data.entity.*
@@ -22,33 +21,24 @@ class PokemonRepositoryImpl @Inject constructor(
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
-  override fun searchPokemonList(query: String?): DataSource.Factory<Int, PokemonDetail> {
-    val dataSourceFactory = pokemonDetailDao.getAllPokemon()
-
-    return dataSourceFactory.mapByPage {
-      it.mapNotNull { it.json?.toResponse<PokemonDetailResponse>()?.toModel() }
-    }
+  override suspend fun getPokemon(name: String): PokemonDetail {
+    return pokemonDetailDao.getPokemon(name).toModel()
   }
 
-  override suspend fun getPokemon(id: Int): PokemonDetail {
-    return pokemonDetailDao.getPokemon(id).json?.toResponse<PokemonDetailResponse>()?.toModel()
-      ?: PokemonDetail()
+  override suspend fun getPokemonSpecies(name: String): PokemonSpecies {
+    return fetchPokemonSpecies(name).toModel()
   }
 
-  override suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
-    return fetchPokemonSpecies(id).toModel()
-  }
-
-  private suspend fun fetchPokemonSpecies(id: Int): PokemonSpeciesResponse {
-    val localResult = pokemonDao.getPokemonSpecies(id)
+  private suspend fun fetchPokemonSpecies(name: String): PokemonSpeciesResponse {
+    val localResult = pokemonDao.getPokemonSpecies(name)
 
     if (localResult == null) {
-      val remoteResult = pokeApiService.getPokemonSpecies(id)
+      val remoteResult = pokeApiService.getPokemonSpecies(name)
       val model = remoteResult.toJson()
       pokemonDao.insertPokemonSpecies(
         PokemonSpeciesEntity(
-          remoteResult.id,
           remoteResult.name,
+          remoteResult.id,
           model
         )
       )
@@ -147,6 +137,7 @@ class PokemonRepositoryImpl @Inject constructor(
       val model = remoteResult.toJson()
       PokemonDetailEntity(
         remoteResult.name,
+        remoteResult.id,
         remoteResult.id,
         model
       )

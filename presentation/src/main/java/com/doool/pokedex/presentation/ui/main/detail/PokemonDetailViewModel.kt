@@ -24,22 +24,29 @@ class PokemonDetailViewModel @Inject constructor(
   private val getPokemonSpecies: GetPokemonSpecies,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
   private val getDamageRelations: GetDamageRelations,
-  private val getPokemonMove: GetPokemonMove
+  private val getPokemonMove: GetPokemonMove,
+  private val getPokemonNames: GetPokemonNames
 ) : ViewModel() {
 
-  private val currentItem = MutableStateFlow(1)
+  private val currentItem = MutableStateFlow("")
 
-  private val pokemonMap: Map<Int, Flow<PokemonDetail>> = lazyMap { id ->
-    return@lazyMap getPokemon(id).stateIn(
+  private val pokemonMap: Map<String, Flow<PokemonDetail>> = lazyMap { name ->
+    return@lazyMap getPokemon(name).stateIn(
       viewModelScope,
       SharingStarted.Lazily,
       PokemonDetail()
     )
   }
 
-  fun setCurrentItem(id: Int) {
+  val pokemonList = flow {
+    val names = getPokemonNames()
+    currentItem.emit(names.first())
+    emit(names)
+  }
+
+  fun setCurrentItem(name: String) {
     viewModelScope.launch {
-      currentItem.emit(id)
+      currentItem.emit(name)
     }
   }
 
@@ -50,9 +57,9 @@ class PokemonDetailViewModel @Inject constructor(
   }
 
   fun getUiState(): Flow<DetailUiState> {
-    return currentItem.flatMapLatest { id ->
-      val pokemon = getPokemon(id)
-      val species = getPokemonSpecies(id)
+    return currentItem.flatMapLatest { name ->
+      val pokemon = getPokemon(name)
+      val species = getPokemonSpecies(name)
 
       val evolutionChain = species.flatMapLatest {
         getPokemonEvolutionChain(it.evolutionUrl)
@@ -80,8 +87,8 @@ class PokemonDetailViewModel @Inject constructor(
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  fun loadPokemonImage(id: Int): Flow<String> {
-    return pokemonMap.getValue(id).map { it.image }
+  fun loadPokemonImage(name: String): Flow<String> {
+    return pokemonMap.getValue(name).map { it.image }
   }
 
   fun loadPokemonMove(name: String): Flow<PokemonMove> {

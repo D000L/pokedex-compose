@@ -10,4 +10,6 @@ interface SearchRepository {
   fun searchPokemon(query: String? = null, limit: Int = -1): Flow<List<PokemonDetail>>
   fun searchMove(query: String? = null, limit: Int = -1): Flow<List<PokemonMove>>
   fun searchItem(query: String? = null, limit: Int = -1): Flow<List<Item>>
+
+  suspend fun searchPokemonNames(query: String?): List<String>
 }

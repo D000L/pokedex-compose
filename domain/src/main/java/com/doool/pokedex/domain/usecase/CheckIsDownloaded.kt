@@ -9,7 +9,6 @@ class CheckIsDownloaded @Inject constructor(private val pokemonRepository: Pokem
 
   operator fun invoke(): Flow<Boolean> = flow {
     try {
-      pokemonRepository.getPokemon(1)
       emit(true)
     } catch (e: Throwable) {
       emit(false)
