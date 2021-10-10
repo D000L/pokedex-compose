@@ -15,13 +15,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
-fun TypeList(types: List<Info>) {
-  Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+fun TypeList(modifier: Modifier = Modifier, types: List<Info>) {
+  Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
       type.name.toPokemonType()?.let { Type(it) }
     }
@@ -64,7 +66,7 @@ fun Type(type: PokemonType, size: Dp = 26.dp, text: String? = null) {
 
 
 @Composable
-fun Type(@ColorRes color: Int, size: Dp = 26.dp, text: String) {
+fun Type(@ColorRes color: Int, size: Dp = 26.dp, fontSize: TextUnit = 14.sp, text: String) {
   val color = colorResource(id = color)
 
   Row(
@@ -75,7 +77,7 @@ fun Type(@ColorRes color: Int, size: Dp = 26.dp, text: String) {
       .padding(horizontal = size / 4),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Text(text = text, color = Color.White)
+    Text(text = text, color = Color.White, fontSize = fontSize)
   }
 }
 

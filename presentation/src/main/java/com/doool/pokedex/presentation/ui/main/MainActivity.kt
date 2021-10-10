@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       PokedexTheme {
-        HomeScreen(onClickMenu = {})
+        App()
       }
     }
   }
@@ -46,7 +46,7 @@ fun App() {
 
   NavHost(navController, NavDestination.Menu.name) {
     composable(NavDestination.Menu.name){
-      MenuScreen(){
+      HomeScreen(){
         when(it){
           Menu.Pokemon -> navActions.navigateList()
           Menu.Berry -> navActions.navigateList()

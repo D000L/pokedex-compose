@@ -5,87 +5,74 @@ import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.domain.usecase.fetch.FetchItem
-import com.doool.pokedex.domain.usecase.fetch.FetchMove
-import com.doool.pokedex.domain.usecase.fetch.FetchPokemon
+import com.doool.pokedex.domain.usecase.LoadState
 import com.doool.pokedex.domain.usecase.search.SearchItem
 import com.doool.pokedex.domain.usecase.search.SearchMove
 import com.doool.pokedex.domain.usecase.search.SearchPokemon
-import com.doool.pokedex.presentation.utils.process
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+data class SearchUIState(
+  var isLoading: Boolean = false,
+  var isError: Boolean = false,
+  var pokemon: List<PokemonDetail>? = null,
+  var items: List<Item>? = null,
+  var moves: List<PokemonMove>? = null
+) {
+  fun process(
+    pokemon: LoadState<List<PokemonDetail>>,
+    items: LoadState<List<Item>>,
+    moves: LoadState<List<PokemonMove>>
+  ): SearchUIState {
+    val isError = pokemon is LoadState.Error || items is LoadState.Error || moves is LoadState.Error
+    val isLoading =
+      pokemon is LoadState.Loading || items is LoadState.Loading || moves is LoadState.Loading
+
+    val pokemon = (pokemon as? LoadState.Success)?.data
+    val items = (items as? LoadState.Success)?.data
+    val moves = (moves as? LoadState.Success)?.data
+
+    return copy(
+      isLoading = isLoading,
+      isError = isError,
+      pokemon = pokemon,
+      items = items,
+      moves = moves
+    )
+  }
+}
+
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
   private val searchMove: SearchMove,
   private val searchItem: SearchItem,
-  private val searchPokemon: SearchPokemon,
-  private val fetchMove: FetchMove,
-  private val fetchItem: FetchItem,
-  private val fetchPokemon: FetchPokemon
+  private val searchPokemon: SearchPokemon
 ) : ViewModel() {
 
   companion object {
-    private const val SEARCH_ITEM_LIMIT = 4
+    private const val SEARCH_ITEM_LIMIT = 6
   }
 
   private val query = MutableStateFlow("")
   val isSearching = query.map { it.isNotBlank() }
 
-  fun searchedPokemon() = query.flatMapLatest {
-    searchPokemon(it, SEARCH_ITEM_LIMIT)
-  }.onEach { data ->
-    data.process {
-      fetchPokemon(it)
-    }
-  }.flowOn(Dispatchers.IO)
-
-  fun searchedMoves() = query.flatMapLatest {
-    searchMove(it, SEARCH_ITEM_LIMIT)
-  }.onEach { data ->
-    data.process {
-      fetchMoves(it)
-    }
-  }.flowOn(Dispatchers.IO)
-
-  fun searchedItems() = query.flatMapLatest {
-    searchItem(it, SEARCH_ITEM_LIMIT)
-  }.onEach { data ->
-    data.process {
-      fetchItems(it)
-    }
-  }.flowOn(Dispatchers.IO)
+  fun searchUIState() = query.flatMapLatest {
+    val uiState = SearchUIState(isLoading = true)
+    combine(
+      searchPokemon(it, SEARCH_ITEM_LIMIT),
+      searchItem(it, SEARCH_ITEM_LIMIT),
+      searchMove(it, SEARCH_ITEM_LIMIT)
+    ) { pokemon, items, moves ->
+      uiState.process(pokemon, items, moves)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, uiState)
+  }
 
   fun search(query: String) {
     viewModelScope.launch {
       this@HomeViewModel.query.emit(query)
-    }
-  }
-
-  private fun fetchPokemon(list: List<PokemonDetail>) {
-    viewModelScope.launch {
-      list.forEach {
-        if (it.isPlaceholder) fetchPokemon(it.name)
-      }
-    }
-  }
-
-  private fun fetchMoves(list: List<PokemonMove>) {
-    viewModelScope.launch {
-      list.forEach {
-        if (it.isPlaceholder) fetchMove(it.name)
-      }
-    }
-  }
-
-  private fun fetchItems(list: List<Item>) {
-    viewModelScope.launch {
-      list.forEach {
-        if (it.isPlaceholder) fetchItem(it.name)
-      }
     }
   }
 }

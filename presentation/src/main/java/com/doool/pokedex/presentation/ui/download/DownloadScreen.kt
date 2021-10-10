@@ -30,6 +30,6 @@ fun DownloadScreen(viewModel: DownloadViewModel = hiltViewModel(), completeDownl
   }
 
   LaunchedEffect(uiState) {
-    if (uiState is LoadState.Complete) completeDownload()
+    if (uiState is LoadState.Success) completeDownload()
   }
 }

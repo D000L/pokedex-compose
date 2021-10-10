@@ -10,7 +10,6 @@ import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
 import com.doool.pokedex.data.service.PokeApiService
-import com.doool.pokedex.data.service.StaticApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.*
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
   private val pokeApiService: PokeApiService,
-  private val staticApiService: StaticApiService,
   private val pokemonDetailDao: PokemonDetailDao,
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
@@ -35,27 +33,6 @@ class PokemonRepositoryImpl @Inject constructor(
   override suspend fun getPokemon(id: Int): PokemonDetail {
     return pokemonDetailDao.getPokemon(id).json?.toResponse<PokemonDetailResponse>()?.toModel()
       ?: PokemonDetail()
-  }
-
-  override suspend fun getPokemon(name: String): PokemonDetail {
-    val result = pokemonDetailDao.getPokemon(name)
-    return if (result?.json == null) loadPokemon(name) else result.toModel()
-  }
-
-  private suspend fun loadPokemon(name: String): PokemonDetail {
-    val remoteResult = staticApiService.getPokemon(name)
-    val model = remoteResult.toJson()
-    val entity = PokemonDetailEntity(
-      remoteResult.name,
-      remoteResult.id,
-      model
-    )
-    pokemonDetailDao.insertPokemonDetail(entity)
-    return entity.toModel()
-  }
-
-  override suspend fun fetchPokemon(name: String) {
-    loadPokemon(name)
   }
 
   override suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
@@ -135,43 +112,45 @@ class PokemonRepositoryImpl @Inject constructor(
 
   override suspend fun getPokemonMove(name: String): PokemonMove {
     val result = pokemonDao.getPokemonMoveEntity(name)
-    return if (result?.json == null) loadMove(name) else result.toModel()
+    return if (result?.json == null) PokemonMove() else result.toModel()
   }
 
-  private suspend fun loadMove(name: String): PokemonMove {
-    val remoteResult = pokeApiService.getPokemonMove(name)
-    val model = remoteResult.toJson()
-    val entity = PokemonMoveEntity(
-      remoteResult.name,
-      remoteResult.id,
-      model
-    )
-    pokemonDao.insertPokemonMoveEntity(entity)
-    return entity.toModel()
+  override suspend fun fetchMove(names: List<String>) {
+    val results = names.map {
+      val remoteResult = pokeApiService.getPokemonMove(it)
+      val model = remoteResult.toJson()
+      PokemonMoveEntity(
+        remoteResult.name,
+        remoteResult.id,
+        model
+      )
+    }
+    pokemonDao.insertPokemonMoveEntity(results)
   }
 
-  override suspend fun fetchMove(name: String) {
-    loadMove(name)
+  override suspend fun fetchItem(names: List<String>) {
+    val results = names.map {
+      val remoteResult = pokeApiService.getItem(it)
+      val model = remoteResult.toJson()
+      ItemEntity(
+        remoteResult.name,
+        remoteResult.id,
+        model
+      )
+    }
+    pokemonDao.insertItemEntity(results)
   }
 
-  override suspend fun getItem(name: String): Item {
-    val result = pokemonDao.getItemEntity(name)
-    return if (result?.json == null) loadItem(name) else result.toModel()
-  }
-
-  private suspend fun loadItem(name: String): Item {
-    val remoteResult = pokeApiService.getItem(name)
-    val model = remoteResult.toJson()
-    val entity = ItemEntity(
-      remoteResult.name,
-      remoteResult.id,
-      model
-    )
-    pokemonDao.insertItemEntity(entity)
-    return entity.toModel()
-  }
-
-  override suspend fun fetchItem(name: String) {
-    loadItem(name)
+  override suspend fun fetchPokemon(names: List<String>) {
+    val results = names.map {
+      val remoteResult = pokeApiService.getPokemon(it)
+      val model = remoteResult.toJson()
+      PokemonDetailEntity(
+        remoteResult.name,
+        remoteResult.id,
+        model
+      )
+    }
+    pokemonDetailDao.insertPokemonDetail(results)
   }
 }

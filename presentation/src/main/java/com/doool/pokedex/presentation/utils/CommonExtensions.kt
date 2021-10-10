@@ -23,20 +23,12 @@ fun <T : Any> LoadState<T>.Process(
   onComplete: @Composable (T) -> Unit = {}
 ) {
   when (this) {
-    is LoadState.Complete -> onComplete(data)
+    is LoadState.Success -> onComplete(data)
     LoadState.Error -> onError()
     is LoadState.Loading -> onLoading()
   }
 }
 
-suspend fun <T : Any> LoadState<T>.process(
-  onError: suspend () -> Unit = {},
-  onLoading: suspend () -> Unit = {},
-  onComplete: suspend (T) -> Unit = {}
-) {
-  when (this) {
-    is LoadState.Complete -> onComplete(data)
-    LoadState.Error -> onError()
-    is LoadState.Loading -> onLoading()
-  }
-}
+inline fun <reified T> List<*>.asType(): List<T>? =
+  if (all { it is T }) this as List<T>
+  else null

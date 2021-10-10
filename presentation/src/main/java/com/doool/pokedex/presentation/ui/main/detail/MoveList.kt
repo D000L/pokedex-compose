@@ -43,7 +43,7 @@ fun Move(move: PokemonMove) {
       Item(title = "PP", amount = move.pp)
       Space(width = 10.dp)
       Column {
-        move.type.name.toPokemonType()?.let { Type(it.colorResId, size = 18.dp, it.name) }
+        move.type.name.toPokemonType()?.let { Type(it.colorResId, size = 18.dp, text = it.name) }
         Text(text = move.damageClass.name.capitalizeAndRemoveHyphen())
       }
     }

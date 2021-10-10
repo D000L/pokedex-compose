@@ -203,7 +203,7 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
           color = fontColor
         )
         Space(height = 10.dp)
-        TypeList(pokemon.types)
+        TypeList(types = pokemon.types)
       }
     }
     Text(

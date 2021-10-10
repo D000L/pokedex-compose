@@ -11,12 +11,10 @@ class DownloadStaticData @Inject constructor(private val downloadRepository: Dow
   operator fun invoke(): Flow<LoadState<Unit>> = flow {
     try {
       emit(LoadState.Loading)
-      for (page in 0..8) {
-        downloadRepository.downloadPokemonDetail(page)
-      }
+      downloadRepository.downloadPokemonDetail()
       downloadRepository.downloadAllMove()
       downloadRepository.downloadAllItem()
-      emit(LoadState.Complete(Unit))
+      emit(LoadState.Success(Unit))
     } catch (e: Throwable) {
       emit(LoadState.Error)
     }

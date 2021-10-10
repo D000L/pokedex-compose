@@ -1,17 +1,22 @@
 package com.doool.pokedex.domain.usecase.search
 
+import androidx.annotation.WorkerThread
+import com.doool.pokedex.domain.networkBoundResource
+import com.doool.pokedex.domain.repository.PokemonRepository
 import com.doool.pokedex.domain.repository.SearchRepository
-import com.doool.pokedex.domain.usecase.LoadState
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
-class SearchPokemon @Inject constructor(private val searchRepository: SearchRepository) {
+class SearchPokemon @Inject constructor(
+  private val searchRepository: SearchRepository,
+  private val pokemonRepository: PokemonRepository
+) {
 
-  suspend operator fun invoke(query: String?, limit: Int = -1) = flow {
-    emit(LoadState.Loading)
-    val result = searchRepository.searchPokemon(query, limit).mapLatest { LoadState.Complete(it) }
-    emitAll(result)
-  }
+  @WorkerThread
+  suspend operator fun invoke(query: String?, limit: Int = -1) = networkBoundResource(query = {
+    searchRepository.searchPokemon(query, limit)
+  }, fetch = {
+    pokemonRepository.fetchPokemon(it.map { it.name })
+  }, shouldFetch = {
+    it.isPlaceholder
+  })
 }
