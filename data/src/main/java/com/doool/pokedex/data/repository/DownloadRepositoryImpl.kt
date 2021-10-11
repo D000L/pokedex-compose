@@ -15,6 +15,10 @@ class DownloadRepositoryImpl @Inject constructor(
   private val pokemonDao: PokemonDao
 ) : DownloadRepository {
 
+  override suspend fun shouldDownload(): Boolean {
+    return pokemonDao.getPokemonCount() == 0 || pokemonDao.getItemCount() == 0 || pokemonDao.getMoveCount() == 0
+  }
+
   override suspend fun downloadPokemonDetail() {
     val remoteResult = pokeApiService.getAllPokemonInfo()
     val entityList = remoteResult.results.mapIndexed { index, pokemon ->

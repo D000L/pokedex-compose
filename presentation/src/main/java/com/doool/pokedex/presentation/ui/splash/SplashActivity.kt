@@ -34,8 +34,7 @@ class SplashActivity : ComponentActivity() {
   }
 
   private fun goNextActivity() {
-    goMain()
-//    if (viewModel.isDownloaded) goMain() else goDownload()
+    if (viewModel.isDownloaded) goMain() else goDownload()
     finish()
   }
 }

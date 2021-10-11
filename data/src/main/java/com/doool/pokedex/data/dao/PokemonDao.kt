@@ -5,9 +5,22 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.doool.pokedex.data.entity.*
+import androidx.lifecycle.LiveData
+
+
+
 
 @Dao
 interface PokemonDao {
+
+  @Query("SELECT COUNT() FROM pokemon_move")
+  suspend fun getMoveCount(): Int
+
+  @Query("SELECT COUNT() FROM pokemon_detail")
+  suspend fun getPokemonCount(): Int
+
+  @Query("SELECT COUNT() FROM item")
+  suspend fun getItemCount(): Int
 
   @Query("SELECT * FROM pokemon_species WHERE name = :name")
   suspend fun getPokemonSpecies(name: String): PokemonSpeciesEntity?
