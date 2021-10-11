@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.main.detail
+package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

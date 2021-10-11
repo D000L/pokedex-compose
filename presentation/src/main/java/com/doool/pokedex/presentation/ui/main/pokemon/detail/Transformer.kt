@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.main.detail
+package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import android.view.View
 import com.doool.viewpager.PageModifier

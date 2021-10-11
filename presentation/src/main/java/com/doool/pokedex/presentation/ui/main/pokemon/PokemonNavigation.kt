@@ -1,8 +1,9 @@
-package com.doool.pokedex.presentation.ui.pokemon
+package com.doool.pokedex.presentation.ui.main.pokemon
 
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.doool.pokedex.presentation.ui.main.detail.DetailScreen
+import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoScreen
+import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListScreen
 
 private sealed class PokemonNavigation {
   companion object {
@@ -57,7 +58,7 @@ fun NavGraphBuilder.pokemonNavGraph(
       route = PokemonNavigation.List.route,
       arguments = PokemonNavigation.List.arguments()
     ) {
-      PokemonScreen(navigateDetail = navActions::navigateDetail)
+      PokemonListScreen(navigateDetail = navActions::navigateInfo)
     }
 
     composable(
@@ -65,7 +66,7 @@ fun NavGraphBuilder.pokemonNavGraph(
       arguments = PokemonNavigation.Detail.arguments()
     ) {
       val pokemonId = it.arguments?.getInt(PokemonNavigation.Detail.idArgument) ?: 1
-      DetailScreen(initPokemonId = pokemonId, navigateBack = navController::navigateUp)
+      PokemonInfoScreen(initPokemonId = pokemonId, navigateBack = navController::navigateUp)
     }
   }
 }
@@ -75,7 +76,7 @@ class PokemonNavActions(private val navController: NavController) {
     navController.navigate(PokemonNavigation.List.getRouteWithQuery(query))
   }
 
-  fun navigateDetail(id: Int) {
+  fun navigateInfo(id: Int) {
     navController.navigate(PokemonNavigation.Detail.getRouteWithId(id))
   }
 }

@@ -8,11 +8,11 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.doool.pokedex.presentation.ui.main.menu.HomeScreen
-import com.doool.pokedex.presentation.ui.main.menu.Menu
+import com.doool.pokedex.presentation.ui.main.home.HomeScreen
+import com.doool.pokedex.presentation.ui.main.home.Menu
 import com.doool.pokedex.presentation.ui.main.news.NewsScreen
-import com.doool.pokedex.presentation.ui.pokemon.PokemonNavActions
-import com.doool.pokedex.presentation.ui.pokemon.pokemonNavGraph
+import com.doool.pokedex.presentation.ui.main.pokemon.PokemonNavActions
+import com.doool.pokedex.presentation.ui.main.pokemon.pokemonNavGraph
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
 

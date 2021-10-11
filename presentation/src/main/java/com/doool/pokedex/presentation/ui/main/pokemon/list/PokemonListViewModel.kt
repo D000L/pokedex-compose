@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.pokemon
+package com.doool.pokedex.presentation.ui.main.pokemon.list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
-class PokemonViewModel @Inject constructor(
+class PokemonListViewModel @Inject constructor(
   private val getPokemonList: GetPokemonNames,
   private val searchPokemon: SearchPokemon,
   savedStateHandle: SavedStateHandle

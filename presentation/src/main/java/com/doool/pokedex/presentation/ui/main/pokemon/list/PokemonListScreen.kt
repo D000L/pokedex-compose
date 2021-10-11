@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.pokemon
+package com.doool.pokedex.presentation.ui.main.pokemon.list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,12 +27,12 @@ import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun PokemonScreen(
-  pokemonViewModel: PokemonViewModel = hiltViewModel(),
+fun PokemonListScreen(
+  pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
   navigateDetail: (Int) -> Unit
 ) {
 
-  val pokemonList by pokemonViewModel.pokemonList.collectAsState(initial = emptyList())
+  val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
 
   Column(Modifier.padding(horizontal = 20.dp)) {
     Space(height = 20.dp)
@@ -42,7 +42,7 @@ fun PokemonScreen(
       fontWeight = FontWeight.Bold
     )
     Space(height = 18.dp)
-    PokemonList(list = pokemonList, pokemonViewModel::getPokemon, navigateDetail)
+    PokemonList(list = pokemonList, pokemonListViewModel::getPokemon, navigateDetail)
   }
 }
 
@@ -55,7 +55,6 @@ fun Filter() {
     }
   }
 }
-
 
 @Composable
 fun PokemonList(list: List<String>, getPokemon: (String) -> Flow<PokemonDetail>, navigateDetail: (Int) -> Unit) {

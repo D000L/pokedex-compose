@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.main.menu
+package com.doool.pokedex.presentation.ui.main.home
 
 import android.view.KeyEvent
 import androidx.compose.foundation.*

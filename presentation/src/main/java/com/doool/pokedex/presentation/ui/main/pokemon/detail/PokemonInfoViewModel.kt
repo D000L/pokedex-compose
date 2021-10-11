@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.main.detail
+package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ data class DetailUiState(
 )
 
 @HiltViewModel
-class PokemonDetailViewModel @Inject constructor(
+class PokemonInfoViewModel @Inject constructor(
   private val getPokemon: GetPokemon,
   private val getPokemonSpecies: GetPokemonSpecies,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,

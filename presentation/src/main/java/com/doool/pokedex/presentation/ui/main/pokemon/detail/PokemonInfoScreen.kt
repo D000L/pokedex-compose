@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.main.detail
+package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
@@ -59,9 +59,9 @@ enum class TabState {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DetailScreen(
+fun PokemonInfoScreen(
   initPokemonId: Int = 1,
-  viewModel: PokemonDetailViewModel = hiltViewModel(),
+  viewModel: PokemonInfoViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
   Log.d("composable update", "DetailScreen")
@@ -113,7 +113,7 @@ fun DetailScreen(
 @Composable
 private fun HeaderLayout(
   viewPagerState: ViewPagerState,
-  viewModel: PokemonDetailViewModel,
+  viewModel: PokemonInfoViewModel,
   items: List<String>,
   pokemon: PokemonDetail,
   offset: Float,
