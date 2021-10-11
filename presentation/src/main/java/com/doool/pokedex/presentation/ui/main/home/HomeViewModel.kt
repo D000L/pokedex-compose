@@ -1,5 +1,6 @@
 package com.doool.pokedex.presentation.ui.main.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.Item
@@ -58,7 +59,7 @@ class HomeViewModel @Inject constructor(
   val query = MutableStateFlow("")
   val isSearching = query.map { it.isNotBlank() }
 
-  fun searchUIState() = query.flatMapLatest {
+  fun searchUIState() = query.filter { it.isNotBlank() }.flatMapLatest {
     val uiState = SearchUIState(isLoading = true)
     combine(
       searchPokemon(it, SEARCH_ITEM_LIMIT),

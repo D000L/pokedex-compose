@@ -66,7 +66,7 @@ fun PokemonInfoScreen(
 ) {
   Log.d("composable update", "DetailScreen")
   val items by viewModel.pokemonList.collectAsState(initial = emptyList())
-  val initIndex = remember (items, initPokemonName) { items.indexOf(initPokemonName) }
+  val initIndex = remember(items, initPokemonName) { items.indexOf(initPokemonName) }
 
   if (items.isNotEmpty()) {
     val viewPagerState = rememberViewPagerState(currentPage = initIndex)
@@ -138,10 +138,9 @@ private fun HeaderLayout(
             alpha = (offset * 3).coerceIn(0f, 1f)
           },
         viewPagerState = viewPagerState,
-        items = items
-      ) {
-        viewModel.loadPokemonImage(it)
-      }
+        items = items,
+        loadImage = viewModel::loadPokemonImage
+      )
     }
 
     TitleLayout(
@@ -198,7 +197,7 @@ private fun PokemonImagePager(
         val pageOffset = (1 - abs(getPagePosition())).coerceIn(0f, 1f)
         val sizePercent = 0.5f + pageOffset / 2f
 
-        val imageUrl by loadImage(pokemonId).collectAsState(initial = "")
+        val imageUrl by remember { loadImage(pokemonId) }.collectAsState(initial = "")
 
         Image(
           modifier = Modifier

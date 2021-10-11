@@ -31,13 +31,10 @@ class PokemonInfoViewModel @Inject constructor(
   private val currentItem = MutableStateFlow("")
 
   private val pokemonMap: Map<String, Flow<PokemonDetail>> = lazyMap { name ->
-    return@lazyMap getPokemonUsecase(name).filterIsInstance<LoadState.Success<PokemonDetail>>().map {
-      it.data
-    }.stateIn(
-      viewModelScope,
-      SharingStarted.Lazily,
-      PokemonDetail()
-    )
+    return@lazyMap getPokemonUsecase(name).filterIsInstance<LoadState.Success<PokemonDetail>>()
+      .map {
+        it.data
+      }
   }
 
   val pokemonList = flow {
