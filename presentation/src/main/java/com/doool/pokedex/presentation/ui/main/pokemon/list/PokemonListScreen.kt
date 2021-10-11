@@ -8,7 +8,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -29,7 +32,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun PokemonListScreen(
   pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
-  navigateDetail: (Int) -> Unit
+  navigateDetail: (String) -> Unit
 ) {
 
   val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
@@ -57,13 +60,17 @@ fun Filter() {
 }
 
 @Composable
-fun PokemonList(list: List<String>, getPokemon: (String) -> Flow<PokemonDetail>, navigateDetail: (Int) -> Unit) {
+fun PokemonList(
+  list: List<String>,
+  getPokemon: (String) -> Flow<PokemonDetail>,
+  navigateDetail: (String) -> Unit
+) {
   LazyColumn(contentPadding = PaddingValues(top = 20.dp)) {
     items(list) {
-      it?.let {
-        val pokemon by remember { getPokemon(it) }.collectAsState(initial = PokemonDetail().apply { isPlaceholder = true })
-        Pokemon(pokemon = pokemon, onClick = navigateDetail)
-      }
+      val pokemon by remember { getPokemon(it) }.collectAsState(initial = PokemonDetail().apply {
+        isPlaceholder = true
+      })
+      Pokemon(pokemon = pokemon, onClick = navigateDetail)
     }
   }
 }
@@ -85,7 +92,7 @@ fun PokemonPreview() {
 }
 
 @Composable
-fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
+fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
   Box(
     Modifier
       .padding(vertical = 6.dp)
@@ -102,7 +109,7 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (Int) -> Unit) {
     Row(
       modifier = Modifier
         .fillMaxSize()
-        .clickable { onClick(pokemon.id) },
+        .clickable { onClick(pokemon.name) },
       verticalAlignment = Alignment.CenterVertically
     ) {
       PokemonThumbnail(pokemon.image)

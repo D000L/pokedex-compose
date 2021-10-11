@@ -44,7 +44,6 @@ data class SearchUIState(
   }
 }
 
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
   private val searchMove: SearchMove,
@@ -67,7 +66,7 @@ class HomeViewModel @Inject constructor(
       searchMove(it, SEARCH_ITEM_LIMIT)
     ) { pokemon, items, moves ->
       uiState.process(pokemon, items, moves)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, uiState)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), uiState)
   }
 
   fun search(query: String) {

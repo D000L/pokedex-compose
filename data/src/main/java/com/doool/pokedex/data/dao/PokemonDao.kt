@@ -41,7 +41,7 @@ interface PokemonDao {
   suspend fun insertPokemonTypeResistanceEntity(typeResistance: PokemonTypeResistanceEntity)
 
   @Query("SELECT * FROM pokemon_move WHERE name = :name")
-  suspend fun getPokemonMoveEntity(name: String): PokemonMoveEntity?
+  suspend fun getPokemonMoveEntity(name: String): PokemonMoveEntity
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertPokemonMoveEntity(move: PokemonMoveEntity)

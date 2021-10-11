@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 
 @WorkerThread
-fun <R : Placeholdable> networkBoundResource(
+fun <R : Placeholdable> networkBoundResources(
   query: () -> Flow<List<R>>,
   fetch: suspend (List<R>) -> Unit,
   shouldFetch: (R) -> Boolean = { true }
@@ -26,6 +26,28 @@ fun <R : Placeholdable> networkBoundResource(
       emitAll(query().map {
         LoadState.Success(it)
       })
+    }
+  } catch (e: Throwable) {
+    emit(LoadState.Error)
+  }
+}.flowOn(Dispatchers.IO)
+
+@WorkerThread
+fun <R : Placeholdable> networkBoundResource(
+  query: suspend () -> R,
+  fetch: suspend (R) -> Unit,
+  shouldFetch: (R) -> Boolean = { true }
+) = flow {
+  emit(LoadState.Loading)
+
+  try {
+    val data = query()
+    emit(LoadState.Success(data))
+
+    if (shouldFetch(data)) {
+      fetch(data)
+
+      emit(LoadState.Success(query()))
     }
   } catch (e: Throwable) {
     emit(LoadState.Error)

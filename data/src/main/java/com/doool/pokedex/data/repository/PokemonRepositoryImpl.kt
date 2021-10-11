@@ -101,8 +101,7 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override suspend fun getPokemonMove(name: String): PokemonMove {
-    val result = pokemonDao.getPokemonMoveEntity(name)
-    return if (result?.json == null) PokemonMove() else result.toModel()
+    return pokemonDao.getPokemonMoveEntity(name).toModel()
   }
 
   override suspend fun fetchMove(names: List<String>) {

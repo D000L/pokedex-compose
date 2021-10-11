@@ -17,7 +17,7 @@ private sealed class PokemonNavigation {
 
     fun getRouteWithQuery(query: String? = null): String {
       return query?.let {
-        route.replace("{${queryArgument}}", query)
+        route.replace("{$queryArgument}", query)
       } ?: route
     }
 
@@ -34,16 +34,16 @@ private sealed class PokemonNavigation {
 
   object Detail : PokemonNavigation() {
 
-    const val idArgument = "id"
-    const val route = "Detail/{$idArgument}"
+    const val nameArgument = "name"
+    const val route = "Detail/{$nameArgument}"
 
-    fun getRouteWithId(id: Int) = route.replace("{${idArgument}}", id.toString())
+    fun getRouteByName(name: String) = route.replace("{$nameArgument}", name)
 
     fun arguments() = listOf(
       navArgument(
-        idArgument
+        nameArgument
       ) {
-        this.type = NavType.IntType
+        this.type = NavType.StringType
       }
     )
   }
@@ -65,8 +65,8 @@ fun NavGraphBuilder.pokemonNavGraph(
       route = PokemonNavigation.Detail.route,
       arguments = PokemonNavigation.Detail.arguments()
     ) {
-      val pokemonId = it.arguments?.getInt(PokemonNavigation.Detail.idArgument) ?: 1
-      PokemonInfoScreen(initPokemonId = pokemonId, navigateBack = navController::navigateUp)
+      val pokemonName = it.arguments?.getString(PokemonNavigation.Detail.nameArgument) ?: ""
+      PokemonInfoScreen(initPokemonName = pokemonName, navigateBack = navController::navigateUp)
     }
   }
 }
@@ -76,7 +76,7 @@ class PokemonNavActions(private val navController: NavController) {
     navController.navigate(PokemonNavigation.List.getRouteWithQuery(query))
   }
 
-  fun navigateInfo(id: Int) {
-    navController.navigate(PokemonNavigation.Detail.getRouteWithId(id))
+  fun navigateInfo(name: String) {
+    navController.navigate(PokemonNavigation.Detail.getRouteByName(name))
   }
 }

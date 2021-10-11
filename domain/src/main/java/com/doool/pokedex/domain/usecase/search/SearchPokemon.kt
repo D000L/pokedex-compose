@@ -1,7 +1,7 @@
 package com.doool.pokedex.domain.usecase.search
 
 import androidx.annotation.WorkerThread
-import com.doool.pokedex.domain.networkBoundResource
+import com.doool.pokedex.domain.networkBoundResources
 import com.doool.pokedex.domain.repository.PokemonRepository
 import com.doool.pokedex.domain.repository.SearchRepository
 import javax.inject.Inject
@@ -12,7 +12,7 @@ class SearchPokemon @Inject constructor(
 ) {
 
   @WorkerThread
-  suspend operator fun invoke(query: String?, limit: Int = -1) = networkBoundResource(query = {
+  suspend operator fun invoke(query: String?, limit: Int = -1) = networkBoundResources(query = {
     searchRepository.searchPokemon(query, limit)
   }, fetch = {
     pokemonRepository.fetchPokemon(it.map { it.name })

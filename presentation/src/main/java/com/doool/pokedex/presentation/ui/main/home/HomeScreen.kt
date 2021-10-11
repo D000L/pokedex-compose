@@ -35,11 +35,15 @@ import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 enum class Menu {
-  Pokemon, Games, Move, Item, Berry, Location
+  News, Pokemon, Games, Move, Item, Berry, Location
 }
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu, String?) -> Unit) {
+fun HomeScreen(
+  viewModel: HomeViewModel = hiltViewModel(),
+  onClickMenu: (Menu, String?) -> Unit,
+  onClickDetail: (Menu, String) -> Unit
+) {
   val isSearching by remember { viewModel.isSearching }.collectAsState(initial = false)
 
   Column(Modifier.fillMaxWidth()) {
@@ -52,10 +56,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onClickMenu: (Menu, S
           initial = SearchUIState(
             isLoading = true
           )
-        ).value
-      ) {
-        onClickMenu(it, viewModel.query.value)
-      }
+        ).value, onClickMore = {
+          onClickMenu(it, viewModel.query.value)
+        }, onClickItem = { menu, item ->
+          onClickDetail(menu, item)
+        }
+      )
       Space(height = 20.dp)
     } else {
       MenuScreen() {
@@ -141,7 +147,8 @@ fun SearchLayout(
 @Composable
 fun SearchScreen(
   uiState: SearchUIState,
-  onClickMenu: (Menu) -> Unit
+  onClickMore: (Menu) -> Unit,
+  onClickItem: (Menu, String) -> Unit
 ) {
   Column(
     Modifier
@@ -151,16 +158,22 @@ fun SearchScreen(
     if (uiState.isLoading) {
       CircularProgressIndicator()
     } else {
-      ThumbnailItem("Pokemon", uiState.pokemon, { onClickMenu(Menu.Pokemon) }, {
-        PokemonThumbnail(pokemon = it) {}
+      ThumbnailItem("Pokemon", uiState.pokemon, { onClickMore(Menu.Pokemon) }, {
+        PokemonThumbnail(pokemon = it) {
+          onClickItem(Menu.Pokemon, it.name)
+        }
       })
 
-      ThumbnailItem("Items", uiState.items, { onClickMenu(Menu.Item) }, {
-        ItemThumbnail(item = it) {}
+      ThumbnailItem("Items", uiState.items, { onClickMore(Menu.Item) }, {
+        ItemThumbnail(item = it) {
+          onClickItem(Menu.Item, it.name)
+        }
       })
 
-      ThumbnailItem("Moves", uiState.moves, { onClickMenu(Menu.Move) }, {
-        MoveThumbnail(move = it) {}
+      ThumbnailItem("Moves", uiState.moves, { onClickMore(Menu.Move) }, {
+        MoveThumbnail(move = it) {
+          onClickItem(Menu.Item, it.name)
+        }
       })
     }
   }

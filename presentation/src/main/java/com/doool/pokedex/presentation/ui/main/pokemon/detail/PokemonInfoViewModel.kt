@@ -20,7 +20,7 @@ data class DetailUiState(
 
 @HiltViewModel
 class PokemonInfoViewModel @Inject constructor(
-  private val getPokemon: GetPokemon,
+  private val getPokemonUsecase: GetPokemon,
   private val getPokemonSpecies: GetPokemonSpecies,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
   private val getDamageRelations: GetDamageRelations,
@@ -31,7 +31,9 @@ class PokemonInfoViewModel @Inject constructor(
   private val currentItem = MutableStateFlow("")
 
   private val pokemonMap: Map<String, Flow<PokemonDetail>> = lazyMap { name ->
-    return@lazyMap getPokemon(name).stateIn(
+    return@lazyMap getPokemonUsecase(name).filterIsInstance<LoadState.Success<PokemonDetail>>().map {
+      it.data
+    }.stateIn(
       viewModelScope,
       SharingStarted.Lazily,
       PokemonDetail()
@@ -58,7 +60,7 @@ class PokemonInfoViewModel @Inject constructor(
 
   fun getUiState(): Flow<DetailUiState> {
     return currentItem.flatMapLatest { name ->
-      val pokemon = getPokemon(name)
+      val pokemon = pokemonMap.getValue(name)
       val species = getPokemonSpecies(name)
 
       val evolutionChain = species.flatMapLatest {
@@ -92,6 +94,8 @@ class PokemonInfoViewModel @Inject constructor(
   }
 
   fun loadPokemonMove(name: String): Flow<PokemonMove> {
-    return getPokemonMove(name)
+    return getPokemonMove(name).filterIsInstance<LoadState.Success<PokemonMove>>().map {
+      it.data
+    }
   }
 }
