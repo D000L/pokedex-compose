@@ -5,17 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.doool.pokedex.presentation.ui.main.detail.DetailScreen
 import com.doool.pokedex.presentation.ui.main.menu.HomeScreen
 import com.doool.pokedex.presentation.ui.main.menu.Menu
 import com.doool.pokedex.presentation.ui.main.news.NewsScreen
-import com.doool.pokedex.presentation.ui.main.pokemon.PokemonScreen
+import com.doool.pokedex.presentation.ui.pokemon.PokemonNavActions
+import com.doool.pokedex.presentation.ui.pokemon.pokemonNavGraph
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,68 +24,41 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       PokedexTheme {
-        App()
+        MainNavHost()
       }
     }
   }
-}
-
-enum class NavDestination(val argument: Pair<NavType<*>, String>? = null) {
-  Menu, List(Pair(NavType.StringType, "QUERY")), Detail(Pair(NavType.IntType, "POKEMON_ID")), News
 }
 
 @Composable
-fun App() {
+fun MainNavHost() {
   val navController = rememberNavController()
-  val navActions = remember(navController) { NavActions(navController) }
+  val pokemonNavActions = remember(navController) { PokemonNavActions(navController) }
 
-  NavHost(navController, NavDestination.Menu.name) {
-    composable(NavDestination.Menu.name) {
-      HomeScreen { menu, query->
+  NavHost(navController, MainNavigation.Home.route) {
+    composable(MainNavigation.Home.route) {
+      HomeScreen { menu, query ->
         when (menu) {
-          Menu.Pokemon -> navActions.navigateList(query)
-          Menu.Berry -> navActions.navigateList()
-          Menu.Move -> navActions.navigateList()
+          Menu.Pokemon -> pokemonNavActions.navigateList(query)
+          Menu.Berry -> pokemonNavActions.navigateList(query)
+          Menu.Move -> pokemonNavActions.navigateList(query)
         }
       }
     }
-    composable(
-      route = "${NavDestination.List.name}?${NavDestination.List.argument!!.second}={${NavDestination.List.argument!!.second}}",
-      arguments = listOf(navArgument(NavDestination.List.argument!!.second) {
-        type = NavDestination.List.argument!!.first
-        nullable = true
-        defaultValue = null
-      })
-    ) {
-      PokemonScreen(navigateDetail = navActions::navigateDetail)
-    }
-    composable(NavDestination.News.name) {
+    pokemonNavGraph(navController, pokemonNavActions)
+    composable(MainNavigation.News.route) {
       NewsScreen()
-    }
-    composable(
-      route = "${NavDestination.Detail.name}/{${NavDestination.Detail.argument!!.second}}",
-      arguments = listOf(navArgument(NavDestination.Detail.argument!!.second) {
-        type = NavDestination.Detail.argument!!.first
-      })
-    ) {
-      val pokemonId = it.arguments?.getInt(NavDestination.Detail.argument!!.second) ?: 1
-      DetailScreen(initPokemonId = pokemonId, navigateBack = navActions::navigateBack)
     }
   }
 }
 
-class NavActions(private val navController: NavController) {
-  fun navigateBack() {
-    navController.navigateUp()
+sealed class MainNavigation {
+
+  object Home : MainNavigation() {
+    const val route = "Home"
   }
 
-  fun navigateList(query: String? = null) {
-    var route = NavDestination.List.name
-    if (query != null) route += "?${NavDestination.List.argument!!.second}=$query"
-    navController.navigate(route)
-  }
-
-  fun navigateDetail(id: Int) {
-    navController.navigate("${NavDestination.Detail.name}/$id")
+  object News : MainNavigation() {
+    const val route = "News"
   }
 }
