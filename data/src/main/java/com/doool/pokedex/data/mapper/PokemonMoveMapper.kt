@@ -5,6 +5,7 @@ import com.doool.pokedex.data.response.PokemonMoveResponse
 import com.doool.pokedex.data.response.common.EffectResponse
 import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.Effect
+import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonMove
 
 fun PokemonMoveEntity.toModel(): PokemonMove = with(this) {
@@ -23,6 +24,8 @@ fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {
     flavorTextEntries = flavorTextEntries.map {
       it.flavorText
     },
+    learnedPokemon = learnedPokemon.map { it.toModel() },
+    machines = machines.firstOrNull()?.machine?.toModel() ?: Info(),
     power = power,
     pp = pp,
     type = type.toModel()

@@ -7,18 +7,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.doool.pokedex.presentation.ui.main.home.HomeScreen
-import com.doool.pokedex.presentation.ui.main.home.Menu
-import com.doool.pokedex.presentation.ui.main.news.NewsScreen
-import com.doool.pokedex.presentation.ui.main.pokemon.PokemonNavActions
-import com.doool.pokedex.presentation.ui.main.pokemon.pokemonNavGraph
+import com.doool.pokedex.presentation.ui.main.home.HomeDestination
+import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
+import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
+import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
+import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,48 +38,17 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainNavHost() {
   val navController = rememberNavController()
-  val navActions = remember(navController) { MainNavActions(navController) }
-  val pokemonNavActions = remember(navController) { PokemonNavActions(navController) }
 
-  NavHost(navController, MainNavigation.Home.route) {
-    composable(MainNavigation.Home.route) {
-      HomeScreen( onClickMenu = { menu, query ->
-        when (menu) {
-          Menu.News -> navActions.navigateNews()
-          Menu.Pokemon -> pokemonNavActions.navigateList(query)
-          Menu.Games -> navActions.navigateGames()
-          Menu.Move -> navActions.navigateMove()
-          Menu.Item -> navActions.navigateItem()
-          Menu.Berry -> navActions.navigateBerry()
-          Menu.Location -> navActions.navigateLocation()
-        }
-      },onClickDetail = { menu, item ->
-        when (menu) {
-          Menu.Pokemon -> pokemonNavActions.navigateInfo(item)
-          Menu.Move -> navActions.navigateMove()
-          Menu.Item -> navActions.navigateItem()
-        }
-      })
-    }
-    pokemonNavGraph(navController, pokemonNavActions)
-
-    composable(MainNavigation.Games.route) {
-      NotDevelop()
-    }
-    composable(MainNavigation.News.route) {
-      NewsScreen()
-    }
-    composable(MainNavigation.Move.route) {
-      NotDevelop()
-    }
-    composable(MainNavigation.Item.route) {
-      NotDevelop()
-    }
-    composable(MainNavigation.Berry.route) {
-      NotDevelop()
-    }
-    composable(MainNavigation.Location.route) {
-      NotDevelop()
+  NavHost(navController, HomeDestination.route) {
+    (mainNav + listOf(
+      PokemonInfoDestination,
+      PokemonListDestination,
+      MoveListDestination,
+      MoveInfoDestination
+    )).forEach { destination ->
+      composable(destination.route, arguments = destination.arguments) {
+        destination.content(navController)
+      }
     }
   }
 }
@@ -92,60 +60,29 @@ fun NotDevelop() {
   }
 }
 
-sealed class MainNavigation {
+val mainNav = listOf(HomeDestination, News, Games, Item, Berry, Location)
 
-  object Home : MainNavigation() {
-    const val route = "Home"
-  }
-
-  object News : MainNavigation() {
-    const val route = "News"
-  }
-
-  object Games : MainNavigation() {
-    const val route = "Games"
-  }
-
-  object Move : MainNavigation() {
-    const val route = "Move"
-  }
-
-  object Item : MainNavigation() {
-    const val route = "Item"
-  }
-
-  object Berry : MainNavigation() {
-    const val route = "Berry"
-  }
-
-  object Location : MainNavigation() {
-    const val route = "Location"
-  }
+object News : NavDestination() {
+  override val route = "News"
+  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
 }
 
-class MainNavActions(private val navController: NavController) {
-  fun navigateGames() {
-    navController.navigate(MainNavigation.Games.route)
-  }
+object Games : NavDestination() {
+  override val route = "Games"
+  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+}
 
-  fun navigateNews() {
-    navController.navigate(MainNavigation.News.route)
-  }
+object Item : NavDestination() {
+  override val route = "Item"
+  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+}
 
-  fun navigateMove() {
-    navController.navigate(MainNavigation.Move.route)
-  }
+object Berry : NavDestination() {
+  override val route = "Berry"
+  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+}
 
-  fun navigateItem() {
-    navController.navigate(MainNavigation.Item.route)
-  }
-
-  fun navigateBerry() {
-    navController.navigate(MainNavigation.Berry.route)
-  }
-
-  fun navigateLocation() {
-    navController.navigate(MainNavigation.Location.route)
-  }
-
+object Location : NavDestination() {
+  override val route = "Location"
+  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
 }

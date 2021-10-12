@@ -13,7 +13,7 @@ interface SearchDao {
   @Query("SELECT * FROM pokemon_detail WHERE name LIKE '%' || :query || '%' ORDER BY `index` ASC LIMIT :limit")
   fun searchPokemon(query: String, limit: Int = -1): Flow<List<PokemonDetailEntity>>
 
-  @Query("SELECT * FROM pokemon_move WHERE name LIKE '%' || :query || '%' ORDER by name ASC LIMIT :limit")
+  @Query("SELECT * FROM pokemon_move WHERE name LIKE '%' || :query || '%' ORDER by `index` ASC LIMIT :limit")
   fun searchPokemonMove(query: String, limit: Int = -1): Flow<List<PokemonMoveEntity>>
 
   @Query("SELECT * FROM item WHERE name LIKE '%' || :query || '%' ORDER by name ASC LIMIT :limit")
@@ -21,4 +21,7 @@ interface SearchDao {
 
   @Query("SELECT name FROM pokemon_detail WHERE name LIKE '%' || :query || '%' ORDER BY `index` ASC")
   suspend fun searchPokemonNames(query: String = ""): List<String>
+
+  @Query("SELECT name FROM pokemon_move WHERE name LIKE '%' || :query || '%' ORDER BY `index` ASC")
+  suspend fun searchMoveNames(query: String = ""): List<String>
 }

@@ -29,8 +29,8 @@ class DownloadRepositoryImpl @Inject constructor(
 
   override suspend fun downloadAllMove() {
     val remoteResult = pokeApiService.getAllPokemonMoveInfo()
-    val moveList = remoteResult.results.map { move ->
-      PokemonMoveEntity(name = move.name)
+    val moveList = remoteResult.results.mapIndexed { index, move ->
+      PokemonMoveEntity(name = move.name, index = index + 1)
     }
     pokemonDao.insertPokemonMoveEntity(moveList)
   }

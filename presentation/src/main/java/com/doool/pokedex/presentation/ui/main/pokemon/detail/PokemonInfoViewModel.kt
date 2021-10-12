@@ -1,6 +1,8 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.domain.usecase.*
@@ -24,11 +26,27 @@ class PokemonInfoViewModel @Inject constructor(
   private val getPokemonSpecies: GetPokemonSpecies,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
   private val getDamageRelations: GetDamageRelations,
-  private val getPokemonMove: GetPokemonMove,
-  private val getPokemonNames: GetPokemonNames
+  private val getMove: GetMove,
+  private val getPokemonNames: GetPokemonNames,
+  private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-  private val currentItem = MutableStateFlow("")
+  private val _currentItem = savedStateHandle.getLiveData<String>(NAME_PARAM)
+  private val currentItem = _currentItem.asFlow()
+
+  val pokemonList = flow {
+    val names = getPokemonNames()
+    _currentItem.postValue(names.first())
+    emit(names)
+  }
+
+  var initIndex = 0
+
+  init {
+    viewModelScope.launch {
+      initIndex = pokemonList.single().indexOf(_currentItem.value)
+    }
+  }
 
   private val pokemonMap: Map<String, Flow<PokemonDetail>> = lazyMap { name ->
     return@lazyMap getPokemonUsecase(name).filterIsInstance<LoadState.Success<PokemonDetail>>()
@@ -37,15 +55,9 @@ class PokemonInfoViewModel @Inject constructor(
       }
   }
 
-  val pokemonList = flow {
-    val names = getPokemonNames()
-    currentItem.emit(names.first())
-    emit(names)
-  }
-
   fun setCurrentItem(name: String) {
     viewModelScope.launch {
-      currentItem.emit(name)
+      _currentItem.postValue(name)
     }
   }
 
@@ -91,7 +103,7 @@ class PokemonInfoViewModel @Inject constructor(
   }
 
   fun loadPokemonMove(name: String): Flow<PokemonMove> {
-    return getPokemonMove(name).filterIsInstance<LoadState.Success<PokemonMove>>().map {
+    return getMove(name).filterIsInstance<LoadState.Success<PokemonMove>>().map {
       it.data
     }
   }

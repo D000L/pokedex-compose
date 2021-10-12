@@ -111,6 +111,7 @@ class PokemonRepositoryImpl @Inject constructor(
       PokemonMoveEntity(
         remoteResult.name,
         remoteResult.id,
+        remoteResult.id,
         model
       )
     }

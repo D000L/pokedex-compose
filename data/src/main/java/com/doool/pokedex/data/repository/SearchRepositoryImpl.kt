@@ -33,4 +33,8 @@ class SearchRepositoryImpl @Inject constructor(private val searchDao: SearchDao)
   override suspend fun searchPokemonNames(query: String?): List<String> {
     return searchDao.searchPokemonNames(query ?: "")
   }
+
+  override suspend fun searchMoveNames(query: String?): List<String> {
+    return searchDao.searchMoveNames(query ?: "")
+  }
 }

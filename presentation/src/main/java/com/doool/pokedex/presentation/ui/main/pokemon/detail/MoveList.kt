@@ -1,6 +1,7 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -23,11 +24,12 @@ import com.doool.pokedex.presentation.ui.main.common.toPokemonType
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
-fun Move(move: PokemonMove) {
+fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
   Column(
     Modifier
       .background(color = Color.White, shape = RoundedCornerShape(6.dp))
       .padding(horizontal = 6.dp)
+      .clickable { onItemClicked() }
   ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(

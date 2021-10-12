@@ -60,16 +60,14 @@ enum class TabState {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PokemonInfoScreen(
-  initPokemonName: String,
   viewModel: PokemonInfoViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
   Log.d("composable update", "DetailScreen")
   val items by viewModel.pokemonList.collectAsState(initial = emptyList())
-  val initIndex = remember(items, initPokemonName) { items.indexOf(initPokemonName) }
 
   if (items.isNotEmpty()) {
-    val viewPagerState = rememberViewPagerState(currentPage = initIndex)
+    val viewPagerState = rememberViewPagerState(currentPage = viewModel.initIndex)
     val lazyListState = rememberLazyListState()
 
     val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())

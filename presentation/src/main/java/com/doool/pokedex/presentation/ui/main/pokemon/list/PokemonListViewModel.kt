@@ -20,7 +20,7 @@ class PokemonListViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-  private var searchQuery: String? = savedStateHandle.get<String?>("query")
+  private var searchQuery: String? = savedStateHandle.get<String?>(QUERY_PARAM)
 
   val pokemonList = flow {
     emit(getPokemonList(searchQuery))

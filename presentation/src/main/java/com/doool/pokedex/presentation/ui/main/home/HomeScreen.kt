@@ -172,7 +172,7 @@ fun SearchScreen(
 
       ThumbnailItem("Moves", uiState.moves, { onClickMore(Menu.Move) }, {
         MoveThumbnail(move = it) {
-          onClickItem(Menu.Item, it.name)
+          onClickItem(Menu.Move, it.name)
         }
       })
     }

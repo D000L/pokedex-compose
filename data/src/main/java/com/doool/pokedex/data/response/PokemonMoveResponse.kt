@@ -16,11 +16,17 @@ data class PokemonMoveResponse(
   @SerializedName("damage_class") val damageClass: InfoResponse = InfoResponse(),
   @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorText> = emptyList(),
   @SerializedName("effect_entries") val effectEntries: List<EffectResponse> = emptyList(),
+  @SerializedName("learned_by_pokemon") val learnedPokemon: List<InfoResponse> = emptyList(),
+  val machines: List<MachinesResponse> = emptyList(),
+  val generation: InfoResponse,
   val names: List<Names> = emptyList(),
   val power: Int = 0,
   val pp: Int = 0,
   val type: InfoResponse = InfoResponse()
 )
 
-
-
+@Keep
+data class MachinesResponse(
+  val machine: InfoResponse,
+  @SerializedName("version_group") val versionGroup: InfoResponse = InfoResponse()
+)

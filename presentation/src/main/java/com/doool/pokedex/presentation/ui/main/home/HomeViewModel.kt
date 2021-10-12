@@ -64,10 +64,9 @@ class HomeViewModel @Inject constructor(
     combine(
       searchPokemon(it, SEARCH_ITEM_LIMIT),
       searchItem(it, SEARCH_ITEM_LIMIT),
-      searchMove(it, SEARCH_ITEM_LIMIT)
-    ) { pokemon, items, moves ->
-      uiState.process(pokemon, items, moves)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), uiState)
+      searchMove(it, SEARCH_ITEM_LIMIT),
+      uiState::process
+    ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), uiState)
   }
 
   fun search(query: String) {
