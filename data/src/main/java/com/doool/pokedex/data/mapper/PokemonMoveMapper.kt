@@ -9,9 +9,7 @@ import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonMove
 
 fun PokemonMoveEntity.toModel(): PokemonMove = with(this) {
-  json?.toResponse<PokemonMoveResponse>()?.toModel() ?: PokemonMove(name = name).apply {
-    isPlaceholder = true
-  }
+  json?.toResponse<PokemonMoveResponse>()?.toModel() ?: PokemonMove(name = name)
 }
 
 fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {

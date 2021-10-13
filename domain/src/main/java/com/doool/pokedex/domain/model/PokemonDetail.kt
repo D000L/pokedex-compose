@@ -1,7 +1,7 @@
 package com.doool.pokedex.domain.model
 
 data class PokemonDetail(
-  val id: Int = 0,
+  val id: Int = -1,
   val name: String = "",
   val height: Int = 0,
   val weight: Int = 0,
@@ -11,7 +11,7 @@ data class PokemonDetail(
   val moves: List<Move> = listOf(),
   val color: Info = Info(),
   val abilities: List<Ability> = listOf()
-) : Placeholdable()
+)
 
 data class Stat(
   val amount: Int = 0,

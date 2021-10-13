@@ -1,12 +1,11 @@
 package com.doool.pokedex.presentation.ui.main.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.domain.usecase.LoadState
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.usecase.search.SearchItem
 import com.doool.pokedex.domain.usecase.search.SearchMove
 import com.doool.pokedex.domain.usecase.search.SearchPokemon

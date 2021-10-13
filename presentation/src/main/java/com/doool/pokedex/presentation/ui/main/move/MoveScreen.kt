@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.domain.usecase.LoadState
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.presentation.ui.main.common.Type
 import com.doool.pokedex.presentation.ui.main.common.toPokemonType
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.Move
@@ -40,7 +40,7 @@ fun MoveScreen(viewModel: MoveViewModel = hiltViewModel(), navigateInfo: (String
 @Composable
 fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
 
-  val move by viewModel.move.collectAsState(initial = LoadState.Loading)
+  val move by viewModel.move.collectAsState(initial = LoadState.Loading())
 
   move.Process(onLoading = {
 

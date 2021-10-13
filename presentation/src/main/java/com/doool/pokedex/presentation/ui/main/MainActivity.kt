@@ -16,6 +16,8 @@ import androidx.navigation.compose.rememberNavController
 import com.doool.pokedex.presentation.ui.main.home.HomeDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
+import com.doool.pokedex.presentation.ui.main.news.NewsDestination
+import com.doool.pokedex.presentation.ui.main.news.NewsScreen
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
@@ -60,12 +62,7 @@ fun NotDevelop() {
   }
 }
 
-val mainNav = listOf(HomeDestination, News, Games, Item, Berry, Location)
-
-object News : NavDestination() {
-  override val route = "News"
-  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
-}
+val mainNav = listOf(HomeDestination, NewsDestination, Games, Item, Berry, Location)
 
 object Games : NavDestination() {
   override val route = "Games"

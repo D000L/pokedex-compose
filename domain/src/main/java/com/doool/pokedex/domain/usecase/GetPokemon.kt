@@ -5,7 +5,6 @@ import com.doool.pokedex.domain.networkBoundResource
 import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
-@WorkerThread
 class GetPokemon @Inject constructor(private val pokemonRepository: PokemonRepository) {
 
   @WorkerThread
@@ -14,6 +13,6 @@ class GetPokemon @Inject constructor(private val pokemonRepository: PokemonRepos
   }, fetch = {
     pokemonRepository.fetchPokemon(listOf(it.name))
   }, shouldFetch = {
-    it.isPlaceholder
+    it.id == -1
   })
 }

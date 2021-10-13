@@ -17,6 +17,6 @@ class SearchPokemon @Inject constructor(
   }, fetch = {
     pokemonRepository.fetchPokemon(it.map { it.name })
   }, shouldFetch = {
-    it.isPlaceholder
+    it.id == -1
   })
 }

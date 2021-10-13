@@ -17,6 +17,6 @@ class SearchMove @Inject constructor(
   }, fetch = {
     pokemonRepository.fetchMove(it.map { it.name })
   }, shouldFetch = {
-    it.isPlaceholder
+    it.id == -1
   })
 }

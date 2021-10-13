@@ -17,6 +17,6 @@ class SearchItem @Inject constructor(
   }, fetch = {
     pokemonRepository.fetchItem(it.map { it.name })
   }, shouldFetch = {
-    it.isPlaceholder
+    it.id == -1
   })
 }

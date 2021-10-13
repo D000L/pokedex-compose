@@ -1,5 +1,6 @@
 package com.doool.pokedex.domain.usecase
 
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.repository.DownloadRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -10,7 +11,7 @@ class DownloadStaticData @Inject constructor(private val downloadRepository: Dow
 
   operator fun invoke(): Flow<LoadState<Unit>> = flow {
     try {
-      emit(LoadState.Loading)
+      emit(LoadState.Loading())
       downloadRepository.downloadPokemonDetail()
       downloadRepository.downloadAllMove()
       downloadRepository.downloadAllItem()

@@ -1,6 +1,8 @@
 package com.doool.pokedex.presentation.ui.main.home
 
+import android.util.Size
 import android.view.KeyEvent
+import androidx.annotation.ColorRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,8 +19,20 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.DrawModifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.withSaveLayer
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.layout.LayoutModifier
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.MeasureResult
+import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,10 +40,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
@@ -46,7 +62,18 @@ fun HomeScreen(
 ) {
   val isSearching by remember { viewModel.isSearching }.collectAsState(initial = false)
 
-  Column(Modifier.fillMaxWidth()) {
+  Column(
+    Modifier
+      .fillMaxWidth()
+      .padding(20.dp)
+  ) {
+    Text(
+      text = "Pokedex",
+      fontSize = 28.sp,
+      fontWeight = FontWeight.Bold
+    )
+    Space(height = 18.dp)
+
     Search(doSearch = viewModel::search)
 
     if (isSearching) {
@@ -64,6 +91,7 @@ fun HomeScreen(
       )
       Space(height = 20.dp)
     } else {
+      Space(height = 20.dp)
       MenuScreen() {
         onClickMenu(it, null)
       }
@@ -150,11 +178,7 @@ fun SearchScreen(
   onClickMore: (Menu) -> Unit,
   onClickItem: (Menu, String) -> Unit
 ) {
-  Column(
-    Modifier
-      .padding(horizontal = 20.dp)
-      .fillMaxSize()
-  ) {
+  Column(Modifier.fillMaxSize()) {
     if (uiState.isLoading) {
       CircularProgressIndicator()
     } else {
@@ -238,7 +262,7 @@ fun PokemonThumbnauilPreview() {
 
 @Composable
 fun PokemonThumbnail(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
-  if (pokemon.isPlaceholder) {
+  if (pokemon.id == -1) {
     Box(
       Modifier
         .size(220.dp)
@@ -292,7 +316,7 @@ fun ItemThumbnailPreview() {
 
 @Composable
 fun ItemThumbnail(item: Item, onClick: () -> Unit = {}) {
-  if (item.isPlaceholder) {
+  if (item.id == -1) {
     Box(
       Modifier
         .size(92.dp)
@@ -354,7 +378,7 @@ fun PreviewMove() {
 
 @Composable
 fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
-  if (move.isPlaceholder) {
+  if (move.id == -1) {
     Box(
       Modifier
         .size(92.dp)
@@ -420,24 +444,56 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
 
 @Composable
 fun MenuScreen(onClickMenu: (Menu) -> Unit) {
-  Column {
-    Menu.values().forEach {
-      MenuItem(it, onClickMenu)
+  Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    MenuItem(
+      Modifier.fillMaxWidth(), Menu.News, R.color.pokemon_red, onClickMenu
+    )
+
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+      MenuItem(
+        Modifier.weight(1f), Menu.Pokemon, R.color.pokemon_blue, onClickMenu
+      )
+      MenuItem(
+        Modifier.weight(1f), Menu.Move, R.color.pokemon_green, onClickMenu
+      )
+    }
+
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+      MenuItem(
+        Modifier.weight(1f), Menu.Item, R.color.pokemon_purple, onClickMenu
+      )
+      MenuItem(
+        Modifier.weight(1f), Menu.Berry, R.color.pokemon_gray, onClickMenu
+      )
+    }
+
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+      MenuItem(
+        Modifier.weight(1f), Menu.Games, R.color.pokemon_brown, onClickMenu
+      )
+      MenuItem(
+        Modifier.weight(1f), Menu.Location, R.color.pokemon_yellow, onClickMenu
+      )
     }
   }
 }
 
 @Composable
-private fun MenuItem(menu: Menu, onClickMenu: (Menu) -> Unit) {
+private fun MenuItem(
+  modifier: Modifier = Modifier,
+  menu: Menu,
+  @ColorRes color: Int,
+  onClickMenu: (Menu) -> Unit
+) {
   Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(40.dp)
+    modifier = modifier
+      .height(72.dp)
+      .background(colorResource(id = color), shape = RoundedCornerShape(8.dp))
       .clickable {
         onClickMenu(menu)
       },
     contentAlignment = Alignment.Center
   ) {
-    Text(text = menu.name)
+    Text(text = menu.name, fontSize = 26.sp)
   }
 }

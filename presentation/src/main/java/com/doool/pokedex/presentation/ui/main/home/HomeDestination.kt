@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import com.doool.pokedex.presentation.ui.main.*
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
+import com.doool.pokedex.presentation.ui.main.news.NewsDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
 
@@ -13,7 +14,7 @@ object HomeDestination : NavDestination() {
   override val content: @Composable (NavController) -> Unit = { navController ->
     HomeScreen(onClickMenu = { menu, query ->
       when (menu) {
-        Menu.News -> navController.navigate(News.route)
+        Menu.News -> navController.navigate(NewsDestination.route)
         Menu.Pokemon -> navController.navigate(PokemonListDestination.getRouteWithQuery(query))
         Menu.Games -> navController.navigate(Games.route)
         Menu.Move -> navController.navigate(MoveListDestination.getRouteWithQuery(query))

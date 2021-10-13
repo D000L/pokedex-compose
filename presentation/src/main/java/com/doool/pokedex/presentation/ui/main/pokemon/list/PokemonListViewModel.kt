@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonNames
-import com.doool.pokedex.domain.usecase.LoadState
+import com.doool.pokedex.domain.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance

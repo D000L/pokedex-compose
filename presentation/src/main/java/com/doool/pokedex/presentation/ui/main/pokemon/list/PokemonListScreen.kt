@@ -39,12 +39,6 @@ fun PokemonListScreen(
 
   Column(Modifier.padding(horizontal = 20.dp)) {
     Space(height = 20.dp)
-    Text(
-      text = "Pokedex",
-      fontSize = 28.sp,
-      fontWeight = FontWeight.Bold
-    )
-    Space(height = 18.dp)
     PokemonList(list = pokemonList, pokemonListViewModel::getPokemon, navigateDetail)
   }
 }
@@ -67,9 +61,7 @@ fun PokemonList(
 ) {
   LazyColumn(contentPadding = PaddingValues(top = 20.dp)) {
     items(list) {
-      val pokemon by remember { getPokemon(it) }.collectAsState(initial = PokemonDetail().apply {
-        isPlaceholder = true
-      })
+      val pokemon by remember { getPokemon(it) }.collectAsState(initial = PokemonDetail())
       Pokemon(pokemon = pokemon, onClick = navigateDetail)
     }
   }

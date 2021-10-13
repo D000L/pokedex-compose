@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.usecase.GetMove
-import com.doool.pokedex.domain.usecase.LoadState
+import com.doool.pokedex.domain.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

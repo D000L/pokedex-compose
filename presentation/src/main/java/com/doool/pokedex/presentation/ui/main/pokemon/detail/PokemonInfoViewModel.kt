@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.domain.usecase.*
 import com.doool.pokedex.presentation.utils.lazyMap

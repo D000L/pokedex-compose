@@ -6,9 +6,7 @@ import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.Item
 
 fun ItemEntity.toModel(): Item = with(this) {
-  json?.toResponse<ItemResponse>()?.toModel() ?: Item(name = name).apply {
-    isPlaceholder = true
-  }
+  json?.toResponse<ItemResponse>()?.toModel() ?: Item(name = name)
 }
 
 fun ItemResponse.toModel(): Item = with(this) {
