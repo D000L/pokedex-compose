@@ -1,6 +1,7 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,13 +36,13 @@ private fun ColumnItem(title: String, content: List<String>) {
     Text(
       modifier = Modifier.width(120.dp),
       text = title,
-      fontSize = 14.sp,
+      style = MaterialTheme.typography.body1,
       color = Color.Black.copy(alpha = 0.7f)
     )
     content.forEach {
       Text(
         text = it,
-        fontSize = 14.sp,
+        style = MaterialTheme.typography.body1,
         color = Color.Black
       )
       Space(width = 6.dp)
@@ -54,7 +55,7 @@ fun Description(desc: String) {
   Text(
     modifier = Modifier.fillMaxWidth(),
     text = desc,
-    fontSize = 16.sp,
+    style = MaterialTheme.typography.subtitle2,
     color = Color.Black
   )
 }

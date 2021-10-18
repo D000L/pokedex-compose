@@ -15,7 +15,7 @@ class RoomModule {
 
   @Provides
   @Singleton
-  fun provideRoomData(@ApplicationContext context: Context) = PokeDatabase.getDataBase(context)
+  fun provideRoomDataBase(@ApplicationContext context: Context) = PokeDatabase.getDataBase(context)
 
   @Provides
   fun providePokemonDetailDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonDetailDao()

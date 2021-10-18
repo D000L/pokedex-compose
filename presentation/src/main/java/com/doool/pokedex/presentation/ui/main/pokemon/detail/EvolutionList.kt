@@ -2,6 +2,7 @@ package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,16 +51,16 @@ private fun Pokemon(info: Info) {
       contentDescription = null
     )
     Space(height = 4.dp)
-    Text(text = info.name.capitalizeAndRemoveHyphen(), fontSize = 16.sp)
+    Text(text = info.name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.subtitle2)
   }
 }
 
 @Composable
 fun LevelEvolution(level: Int) {
-  Text(text = "$level Level", fontSize = 16.sp)
+  Text(text = "$level Level", style = MaterialTheme.typography.subtitle2)
 }
 
 @Composable
 fun ItemEvolution(name: String) {
-  Text(text = name.capitalizeAndRemoveHyphen(), fontSize = 16.sp)
+  Text(text = name.capitalizeAndRemoveHyphen(),style = MaterialTheme.typography.subtitle2)
 }

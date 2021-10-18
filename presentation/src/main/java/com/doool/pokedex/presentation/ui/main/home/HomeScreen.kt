@@ -1,6 +1,5 @@
 package com.doool.pokedex.presentation.ui.main.home
 
-import android.util.Size
 import android.view.KeyEvent
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.*
@@ -9,38 +8,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.DrawModifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.drawscope.ContentDrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.withSaveLayer
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.layout.LayoutModifier
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.MeasureResult
-import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,15 +49,16 @@ fun HomeScreen(
 
   Column(
     Modifier
+      .verticalScroll(rememberScrollState())
       .fillMaxWidth()
       .padding(20.dp)
   ) {
+    Space(height = 48.dp)
     Text(
-      text = "Pokedex",
-      fontSize = 28.sp,
-      fontWeight = FontWeight.Bold
+      text = stringResource(id = R.string.home_title),
+      style = MaterialTheme.typography.h1
     )
-    Space(height = 18.dp)
+    Space(height = 24.dp)
 
     Search(doSearch = viewModel::search)
 
@@ -91,8 +77,7 @@ fun HomeScreen(
       )
       Space(height = 20.dp)
     } else {
-      Space(height = 20.dp)
-      MenuScreen() {
+      MenuScreen(Modifier.padding(vertical = 44.dp)) {
         onClickMenu(it, null)
       }
     }
@@ -111,8 +96,8 @@ fun Search(modifier: Modifier = Modifier, doSearch: (String) -> Unit) {
 
   BasicTextField(
     modifier = modifier
-      .height(40.dp)
-      .background(color = Color.LightGray.copy(alpha = 0.4f), shape = RoundedCornerShape(20.dp))
+      .height(52.dp)
+      .background(color = Color.LightGray.copy(alpha = 0.4f), shape = RoundedCornerShape(8.dp))
       .onPreviewKeyEvent {
         if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
           searchAndKeyboardHide()
@@ -150,7 +135,7 @@ fun SearchLayout(
   textField: @Composable () -> Unit
 ) {
   Row(
-    Modifier.padding(horizontal = 10.dp),
+    Modifier.padding(horizontal = 24.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
     IconButton(modifier = Modifier.size(24.dp), onClick = onClickSearch) {
@@ -158,10 +143,10 @@ fun SearchLayout(
     }
     Box(
       Modifier
-        .padding(horizontal = 10.dp)
+        .padding(horizontal = 12.dp)
         .weight(1f)
     ) {
-      if (showHint) Text("Let's go pokemon")
+      if (showHint) Text(stringResource(R.string.search_hint))
       textField()
     }
     if (!showHint) {
@@ -206,12 +191,12 @@ fun SearchScreen(
 @Composable
 fun Title(title: String, onClickMore: () -> Unit = {}) {
   Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-    Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+    Text(text = title,  style = MaterialTheme.typography.subtitle2, fontWeight = FontWeight.Bold)
     SpaceFill()
     Box(modifier = Modifier.clickable { onClickMore() }) {
       Text(
         text = "See More",
-        fontSize = 14.sp,
+        style = MaterialTheme.typography.body1,
         color = Color.Black.copy(alpha = 0.7f)
       )
     }
@@ -284,11 +269,11 @@ fun PokemonThumbnail(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
     ) {
       Text(
         text = "#%03d".format(pokemon.id),
-        fontSize = 14.sp,
+        style = MaterialTheme.typography.body1,
         color = Color.White.copy(0.6f),
         fontWeight = FontWeight.Bold
       )
-      Text(text = pokemon.name.capitalizeAndRemoveHyphen(), fontSize = 20.sp, color = Color.White)
+      Text(text = pokemon.name.capitalizeAndRemoveHyphen(),style = MaterialTheme.typography.h4, color = Color.White)
       Space(height = 4.dp)
       Image(
         modifier = Modifier
@@ -344,7 +329,7 @@ fun ItemThumbnail(item: Item, onClick: () -> Unit = {}) {
       Box(Modifier.weight(1f, fill = true), contentAlignment = Alignment.Center) {
         Text(
           text = item.name.capitalizeAndRemoveHyphen(),
-          fontSize = 14.sp,
+          style = MaterialTheme.typography.body1,
           color = Color.White,
           textAlign = TextAlign.Center,
           overflow = TextOverflow.Ellipsis
@@ -401,7 +386,7 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
       Box(Modifier.weight(1f, fill = true), contentAlignment = Alignment.Center) {
         Text(
           text = move.name.capitalizeAndRemoveHyphen(),
-          fontSize = 14.sp,
+          style = MaterialTheme.typography.body1,
           color = Color.White,
           textAlign = TextAlign.Center,
           maxLines = 3,
@@ -412,25 +397,25 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
           text = "Power",
-          fontSize = 12.sp,
+          style = MaterialTheme.typography.body2,
           color = Color.White.copy(0.7f)
         )
         Space(width = 4.dp)
         Text(
           text = move.power.toString(),
-          fontSize = 14.sp,
+          style = MaterialTheme.typography.body1,
           color = Color.White
         )
         Space(width = 4.dp)
         Text(
           text = "PP",
-          fontSize = 12.sp,
+          style = MaterialTheme.typography.body2,
           color = Color.White.copy(0.7f)
         )
         Space(width = 4.dp)
         Text(
           text = move.pp.toString(),
-          fontSize = 14.sp,
+          style = MaterialTheme.typography.body1,
           color = Color.White
         )
       }
@@ -443,13 +428,13 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun MenuScreen(onClickMenu: (Menu) -> Unit) {
-  Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+fun MenuScreen(modifier : Modifier = Modifier,onClickMenu: (Menu) -> Unit) {
+  Column(modifier = modifier,verticalArrangement = Arrangement.spacedBy(20.dp)) {
     MenuItem(
       Modifier.fillMaxWidth(), Menu.News, R.color.pokemon_red, onClickMenu
     )
 
-    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
       MenuItem(
         Modifier.weight(1f), Menu.Pokemon, R.color.pokemon_blue, onClickMenu
       )
@@ -458,7 +443,7 @@ fun MenuScreen(onClickMenu: (Menu) -> Unit) {
       )
     }
 
-    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
       MenuItem(
         Modifier.weight(1f), Menu.Item, R.color.pokemon_purple, onClickMenu
       )
@@ -467,7 +452,7 @@ fun MenuScreen(onClickMenu: (Menu) -> Unit) {
       )
     }
 
-    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
       MenuItem(
         Modifier.weight(1f), Menu.Games, R.color.pokemon_brown, onClickMenu
       )
@@ -485,15 +470,18 @@ private fun MenuItem(
   @ColorRes color: Int,
   onClickMenu: (Menu) -> Unit
 ) {
+
+
   Box(
     modifier = modifier
-      .height(72.dp)
+      .height(92.dp)
       .background(colorResource(id = color), shape = RoundedCornerShape(8.dp))
       .clickable {
         onClickMenu(menu)
       },
     contentAlignment = Alignment.Center
   ) {
-    Text(text = menu.name, fontSize = 26.sp)
+    Pokeball(120.dp, Alignment.CenterEnd, DpOffset(x = 23.dp, y = -25.dp), rotate = 220f)
+    Text(text = menu.name, style = MaterialTheme.typography.h4)
   }
 }

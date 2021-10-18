@@ -3,12 +3,15 @@ package com.doool.pokedex.presentation.ui.main.pokemon.detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +32,7 @@ fun Stats(modifier: Modifier = Modifier, stats: List<Stat>, damageRelations: Lis
     }
 
     Space(height = 20.dp)
-    Text(text = "Damage Relations", fontSize = 18.sp)
+    Text(text = "Damage Relations",   style = MaterialTheme.typography.subtitle2)
     Space(height = 10.dp)
 
     FlowRow {
@@ -50,18 +53,18 @@ fun DamageType(type: PokemonType, damage: Float) {
   ) {
     Type(type = type, size = 30.dp)
     Space(width = 6.dp)
-    Text(text = "%.0fx".format(damage), fontSize = 13.sp)
+    Text(text = "%.0fx".format(damage), style = MaterialTheme.typography.body2)
   }
 }
 
 @Composable
 fun Stat(stat: StatType, amount: Int) {
   Row(verticalAlignment = Alignment.CenterVertically) {
-    Text(text = stat.text, fontSize = 14.sp, modifier = Modifier.width(64.dp))
+    Text(text = stat.text, style = MaterialTheme.typography.body1, modifier = Modifier.width(64.dp))
     Spacer(modifier = Modifier.width(6.dp))
     Text(
       text = amount.toString(),
-      fontSize = 14.sp,
+      style = MaterialTheme.typography.body1,
       modifier = Modifier.width(28.dp),
       textAlign = TextAlign.End
     )

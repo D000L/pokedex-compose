@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -226,7 +227,7 @@ private fun TitleLayout(modifier: Modifier, pokemon: PokemonDetail) {
       SpaceFill()
       Text(
         text = "#%03d".format(pokemon.id),
-        fontSize = 24.sp,
+        style = MaterialTheme.typography.h3,
         color = Color.White.copy(alpha = 0.7f)
       )
     }

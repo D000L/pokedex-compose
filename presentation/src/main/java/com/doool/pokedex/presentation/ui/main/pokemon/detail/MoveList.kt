@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.presentation.ui.main.common.Space
@@ -34,7 +34,7 @@ fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
         text = move.name.capitalizeAndRemoveHyphen(),
-        fontSize = 18.sp,
+        style = MaterialTheme.typography.subtitle1,
         fontWeight = FontWeight.Bold
       )
       SpaceFill()
@@ -57,8 +57,12 @@ fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
 @Composable
 private fun Item(title: String, amount: Int) {
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Text(text = title, fontSize = 14.sp, color = Color.Black.copy(alpha = 0.8f))
-    Text(text = amount.toString(), fontSize = 16.sp)
+    Text(
+      text = title,
+      style = MaterialTheme.typography.body1,
+      color = Color.Black.copy(alpha = 0.8f)
+    )
+    Text(text = amount.toString(), style = MaterialTheme.typography.subtitle2)
   }
 }
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,19 +15,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.presentation.ui.main.common.*
+import com.doool.pokedex.presentation.ui.main.common.Pokeball
+import com.doool.pokedex.presentation.ui.main.common.Space
+import com.doool.pokedex.presentation.ui.main.common.TypeList
+import com.doool.pokedex.presentation.ui.main.common.toPokemonColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -38,18 +49,7 @@ fun PokemonListScreen(
   val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
 
   Column(Modifier.padding(horizontal = 20.dp)) {
-    Space(height = 20.dp)
     PokemonList(list = pokemonList, pokemonListViewModel::getPokemon, navigateDetail)
-  }
-}
-
-@Preview
-@Composable
-fun Filter() {
-  FlowRow(mainAxisSpacing = 6.dp, crossAxisSpacing = 6.dp) {
-    PokemonType.values().forEach {
-      Type(type = it)
-    }
   }
 }
 
@@ -59,7 +59,10 @@ fun PokemonList(
   getPokemon: (String) -> Flow<PokemonDetail>,
   navigateDetail: (String) -> Unit
 ) {
-  LazyColumn(contentPadding = PaddingValues(top = 20.dp)) {
+  LazyColumn(
+    contentPadding = PaddingValues(top = 20.dp),
+    verticalArrangement = Arrangement.spacedBy(12.dp)
+  ) {
     items(list) {
       val pokemon by remember { getPokemon(it) }.collectAsState(initial = PokemonDetail())
       Pokemon(pokemon = pokemon, onClick = navigateDetail)
@@ -85,45 +88,67 @@ fun PokemonPreview() {
 
 @Composable
 fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
-  Box(
-    Modifier
-      .padding(vertical = 6.dp)
-      .fillMaxWidth()
-      .height(96.dp)
-      .shadow(4.dp, RoundedCornerShape(16.dp))
-      .background(
-        color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes),
-        shape = RoundedCornerShape(16.dp)
-      )
-  ) {
-    val fontColor = colorResource(id = pokemon.color.name.toPokemonColor().fontColorRes)
-
-    Row(
-      modifier = Modifier
-        .fillMaxSize()
-        .clickable { onClick(pokemon.name) },
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      PokemonThumbnail(pokemon.image)
-      Column {
-        Text(
-          text = pokemon.name.capitalizeAndRemoveHyphen(),
-          fontSize = 20.sp,
-          color = fontColor
+  Box(Modifier.clickable { onClick(pokemon.name) }) {
+    val density = LocalDensity.current
+    val color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes)
+    Box(
+      Modifier
+        .align(Alignment.BottomStart)
+        .fillMaxWidth()
+        .height(96.dp)
+        .drawWithContent {
+          withTransform({
+            translate(left = density.run { 5.dp.toPx() }, top = density.run { 10.dp.toPx() })
+            scale(1.00f)
+          }) {
+            drawRoundRect(
+              brush = Brush.verticalGradient(
+                colors = listOf(
+                  color.copy(0.3f),
+                  color.copy(0.2f)
+                )
+              ), cornerRadius = CornerRadius(60f, 60f)
+            )
+          }
+          drawContent()
+        }
+        .background(
+          color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes),
+          shape = RoundedCornerShape(16.dp)
         )
-        Space(height = 10.dp)
-        TypeList(types = pokemon.types)
+    ) {
+      val fontColor = colorResource(id = pokemon.color.name.toPokemonColor().fontColorRes)
+
+      Box {
+        Pokeball(180.dp, Alignment.CenterStart, DpOffset(-35.dp, 32.dp))
+        Row(
+          modifier = Modifier
+            .padding(start = 140.dp)
+            .fillMaxSize(),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Column {
+            Text(
+              text = pokemon.name.capitalizeAndRemoveHyphen(),
+              color = fontColor,
+              style = MaterialTheme.typography.h4
+            )
+            Space(height = 10.dp)
+            TypeList(types = pokemon.types)
+          }
+        }
+        Text(
+          modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(end = 10.dp),
+          text = "#%03d".format(pokemon.id),
+          fontSize = 52.sp,
+          color = fontColor.copy(alpha = 0.4f),
+          fontWeight = FontWeight.Bold
+        )
       }
     }
-    Text(
-      modifier = Modifier
-        .align(Alignment.BottomEnd)
-        .padding(end = 10.dp),
-      text = "#%03d".format(pokemon.id),
-      fontSize = 52.sp,
-      color = fontColor.copy(alpha = 0.4f),
-      fontWeight = FontWeight.Bold
-    )
+    PokemonThumbnail(pokemon.image)
   }
 }
 
@@ -131,8 +156,8 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
 fun PokemonThumbnail(url: String) {
   Image(
     modifier = Modifier
-      .padding(10.dp)
-      .size(76.dp),
+      .padding(horizontal = 10.dp)
+      .requiredSize(120.dp),
     painter = rememberImagePainter(url),
     contentDescription = null
   )
