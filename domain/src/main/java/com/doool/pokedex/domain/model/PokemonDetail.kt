@@ -9,7 +9,6 @@ data class PokemonDetail(
   val stats: List<Stat> = listOf(),
   val types: List<Info> = listOf(),
   val moves: List<Move> = listOf(),
-  val color: Info = Info(),
   val abilities: List<Ability> = listOf()
 )
 

@@ -20,9 +20,6 @@ class RetrofitModule {
     internal annotation class PokeApiRetrofit
 
     @Qualifier
-    internal annotation class StaticApiRetrofit
-
-    @Qualifier
     internal annotation class NewsRetrofit
 
     @Provides
@@ -44,16 +41,6 @@ class RetrofitModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://pokeapi.co/api/v2/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @StaticApiRetrofit
-    @Provides
-    fun provideStaticApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl("https://raw.githubusercontent.com/D000L/pokedex-compose/main/staticApi/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

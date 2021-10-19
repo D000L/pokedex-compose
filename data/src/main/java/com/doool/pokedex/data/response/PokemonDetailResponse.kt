@@ -26,8 +26,7 @@ data class PokemonDetailResponse(
   val sprites: Sprites = Sprites(),
   val stats: List<StatResponse> = listOf(),
   val types: List<TypeResponse> = listOf(),
-  val weight: Int = 0,
-  val color: InfoResponse = InfoResponse()
+  val weight: Int = 0
 )
 
 @Keep

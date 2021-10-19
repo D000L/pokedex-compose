@@ -9,7 +9,6 @@ import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.data.response.PokemonSpeciesResponse
 import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
 import com.doool.pokedex.data.service.PokeApiService
-import com.doool.pokedex.data.service.StaticApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.*
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
   private val pokeApiService: PokeApiService,
-  private val staticApiService: StaticApiService,
   private val pokemonDetailDao: PokemonDetailDao,
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
@@ -135,7 +133,7 @@ class PokemonRepositoryImpl @Inject constructor(
 
   override suspend fun fetchPokemon(names: List<String>) {
     val results = names.map {
-      val remoteResult = staticApiService.getPokemon(it)
+      val remoteResult = pokeApiService.getPokemon(it)
       val model = remoteResult.toJson()
       PokemonDetailEntity(
         remoteResult.name,

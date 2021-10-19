@@ -26,7 +26,6 @@ fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
     moves = moves.map {
       it.toModel()
     },
-    color = color.toModel(),
     abilities = abilities.map {
       it.toModel()
     }

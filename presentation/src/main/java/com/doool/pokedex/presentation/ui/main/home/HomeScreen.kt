@@ -241,8 +241,7 @@ fun PokemonThumbnauilPreview() {
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
     listOf(),
     listOf(Info("bug"), Info("fairy")),
-    listOf(),
-    Info("Red")
+    listOf()
   ), {})
 }
 
