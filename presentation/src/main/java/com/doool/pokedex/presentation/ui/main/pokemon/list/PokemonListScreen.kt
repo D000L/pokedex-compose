@@ -15,11 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.platform.LocalDensity
@@ -36,7 +35,7 @@ import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.presentation.ui.main.common.Pokeball
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.TypeList
-import com.doool.pokedex.presentation.ui.main.common.toPokemonColor
+import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import kotlinx.coroutines.flow.Flow
 
@@ -90,7 +89,7 @@ fun PokemonPreview() {
 fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
   Box(Modifier.clickable { onClick(pokemon.name) }) {
     val density = LocalDensity.current
-    val color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes)
+    val color = colorResource(id = pokemon.getBackgroundColor())
     Box(
       Modifier
         .align(Alignment.BottomStart)
@@ -113,50 +112,49 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
           drawContent()
         }
         .background(
-          color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes),
-          shape = RoundedCornerShape(16.dp)
+          color = colorResource(id = pokemon.getBackgroundColor()),
+          shape = RoundedCornerShape(10.dp)
         )
     ) {
-      val fontColor = colorResource(id = pokemon.color.name.toPokemonColor().fontColorRes)
-
       Box {
-        Pokeball(180.dp, Alignment.CenterStart, DpOffset(-35.dp, 32.dp))
+        Pokeball(180.dp, Alignment.CenterEnd, DpOffset(35.dp, 32.dp))
         Row(
           modifier = Modifier
-            .padding(start = 140.dp)
+            .padding(start = 20.dp)
             .fillMaxSize(),
           verticalAlignment = Alignment.CenterVertically
         ) {
           Column {
             Text(
-              text = pokemon.name.capitalizeAndRemoveHyphen(),
-              color = fontColor,
-              style = MaterialTheme.typography.h4
+              modifier = Modifier
+                .padding(end = 10.dp),
+              text = "#%03d".format(pokemon.id),
+              fontSize = 12.sp,
+              color = Color.White.copy(alpha = 0.4f),
+              fontWeight = FontWeight.Bold
             )
-            Space(height = 10.dp)
+            Text(
+              text = pokemon.name.capitalizeAndRemoveHyphen(),
+              color = Color.White,
+              style = MaterialTheme.typography.h3
+            )
+            Space(height = 2.dp)
             TypeList(types = pokemon.types)
           }
         }
-        Text(
-          modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(end = 10.dp),
-          text = "#%03d".format(pokemon.id),
-          fontSize = 52.sp,
-          color = fontColor.copy(alpha = 0.4f),
-          fontWeight = FontWeight.Bold
-        )
       }
     }
-    PokemonThumbnail(pokemon.image)
+    PokemonThumbnail(
+      Modifier
+        .align(Alignment.CenterEnd)
+        .padding(end = 10.dp), pokemon.image)
   }
 }
 
 @Composable
-fun PokemonThumbnail(url: String) {
+fun PokemonThumbnail(modifier: Modifier = Modifier, url: String) {
   Image(
-    modifier = Modifier
-      .padding(horizontal = 10.dp)
+    modifier = modifier
       .requiredSize(120.dp),
     painter = rememberImagePainter(url),
     contentDescription = null

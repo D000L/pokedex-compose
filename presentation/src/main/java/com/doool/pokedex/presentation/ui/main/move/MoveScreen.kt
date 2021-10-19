@@ -51,7 +51,7 @@ fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
       Text(text = it.flavorTextEntries.first())
       Text(text = it.power.toString())
       Text(text = it.pp.toString())
-      it.type.name.toPokemonType()?.let { Type(it.colorResId, size = 18.dp, text = it.name) }
+      it.type.name.toPokemonType().let { Type(it.typeColorResId, size = 18.dp, text = it.name) }
       Text(text = it.damageClass.name.capitalizeAndRemoveHyphen())
       Text(text = it.effectEntries.effect)
       Text(text = it.accuracy.toString())

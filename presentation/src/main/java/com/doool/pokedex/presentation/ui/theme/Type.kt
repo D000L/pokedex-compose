@@ -24,23 +24,29 @@ val Typography = Typography(
     fontWeight = FontWeight.Bold
   ),
   h3 = TextStyle(
-    fontSize = 24.sp
+    fontSize = 24.sp,
+    fontWeight = FontWeight.Normal
   ),
   h4 = TextStyle(
-    fontSize = 20.sp
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Normal
   ),
   subtitle1 = TextStyle(
-    fontSize = 18.sp
+    fontSize = 18.sp,
+    fontWeight = FontWeight.Normal
   ),
   subtitle2 = TextStyle(
-    fontSize = 16.sp
+    fontSize = 16.sp,
+    fontWeight = FontWeight.Normal
   ),
   body1 = TextStyle(
     fontSize = 14.sp,
-    fontWeight = FontWeight.Light
+    fontWeight = FontWeight.Light,
+    color = Black
   ),
   body2 = TextStyle(
-    fontSize = 13.sp,
-    fontWeight = FontWeight.Light
+    fontSize = 12.sp,
+    fontWeight = FontWeight.Bold,
+    color = Gray
   )
 )

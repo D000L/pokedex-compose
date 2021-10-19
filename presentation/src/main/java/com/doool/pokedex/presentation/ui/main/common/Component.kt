@@ -25,7 +25,7 @@ import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 fun TypeList(modifier: Modifier = Modifier, types: List<Info>) {
   Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
-      type.name.toPokemonType()?.let { Type(it) }
+      Type(type.name.toPokemonType())
     }
   }
 }
@@ -34,14 +34,15 @@ fun TypeList(modifier: Modifier = Modifier, types: List<Info>) {
 fun TypeListWithTitle(modifier: Modifier = Modifier, types: List<Info>) {
   Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     types.forEach { type ->
-      type.name.toPokemonType()?.let { Type(it, text = type.name.capitalizeAndRemoveHyphen()) }
+      val pokemonType = type.name.toPokemonType()
+      Type(pokemonType, text = pokemonType.name.capitalizeAndRemoveHyphen())
     }
   }
 }
 
 @Composable
 fun Type(type: PokemonType, size: Dp = 26.dp, text: String? = null) {
-  val color = colorResource(id = type.colorResId)
+  val color = colorResource(id = type.typeColorResId)
 
   Row(
     Modifier
@@ -83,7 +84,17 @@ fun Type(@ColorRes color: Int, size: Dp = 26.dp, fontSize: TextUnit = 14.sp, tex
 
 @Composable
 fun Space(width: Dp = 0.dp, height: Dp = 0.dp) {
-  Spacer(modifier = Modifier.size(width, height))
+  Spacer(modifier = Modifier.size(height))
+}
+
+@Composable
+fun ColumnScope.Space(height: Dp = 0.dp) {
+  Spacer(modifier = Modifier.height(height))
+}
+
+@Composable
+fun RowScope.Space(width: Dp = 0.dp) {
+  Spacer(modifier = Modifier.width(width))
 }
 
 @Composable

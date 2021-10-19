@@ -15,8 +15,8 @@ fun PokemonTypeResistanceResponse.toModel(): PokemonTypeResistance = with(this) 
 
 fun DamageRelationsResponse.toModel(): List<Damage> = with(this) {
   val list = mutableListOf<Damage>()
-  doubleDamageTo.map { list.add(Damage(it.name, 2f)) }
-  halfDamageTo.map { list.add(Damage(it.name, 0.5f)) }
-  noDamageTo.map { list.add(Damage(it.name, 0f)) }
+  doubleDamageFrom.map { list.add(Damage(it.name, 2f)) }
+  halfDamageFrom.map { list.add(Damage(it.name, 0.5f)) }
+  noDamageFrom.map { list.add(Damage(it.name, 0f)) }
   list
 }

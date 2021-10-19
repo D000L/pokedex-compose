@@ -7,18 +7,23 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
+import com.doool.pokedex.presentation.ui.main.common.DarkPokeball
 import com.doool.pokedex.presentation.ui.main.common.EvolutionType
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
 fun EvolutionList(modifier: Modifier = Modifier, chainList: List<PokemonEvolutionChain>) {
-  Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+  Column(
+    modifier = modifier.padding(vertical = 20.dp),
+    verticalArrangement = Arrangement.spacedBy(12.dp),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
     chainList.forEach {
       Evolution(it)
     }
@@ -29,7 +34,7 @@ fun EvolutionList(modifier: Modifier = Modifier, chainList: List<PokemonEvolutio
 fun Evolution(chain: PokemonEvolutionChain) {
   val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
 
-  Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+  Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
     Pokemon(chain.from)
     Column(Modifier.align(Alignment.CenterVertically)) {
       when (evolutionType) {
@@ -43,24 +48,27 @@ fun Evolution(chain: PokemonEvolutionChain) {
 
 @Composable
 private fun Pokemon(info: Info) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Image(
-      modifier = Modifier
-        .size(96.dp),
-      painter = rememberImagePainter(info.url),
-      contentDescription = null
-    )
-    Space(height = 4.dp)
-    Text(text = info.name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.subtitle2)
+  Box(modifier = Modifier.height(160.dp), contentAlignment = Alignment.Center) {
+    DarkPokeball(size = 96.dp, translateOffset = DpOffset(x = 0.dp, y = -16.dp), rotate =0f)
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      Image(
+        modifier = Modifier
+          .size(76.dp),
+        painter = rememberImagePainter(info.url),
+        contentDescription = null
+      )
+      Space(height = 4.dp)
+      Text(text = info.name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body1)
+    }
   }
 }
 
 @Composable
 fun LevelEvolution(level: Int) {
-  Text(text = "$level Level", style = MaterialTheme.typography.subtitle2)
+  Text(text = "$level Level", style = MaterialTheme.typography.body2)
 }
 
 @Composable
 fun ItemEvolution(name: String) {
-  Text(text = name.capitalizeAndRemoveHyphen(),style = MaterialTheme.typography.subtitle2)
+  Text(text = name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body2)
 }

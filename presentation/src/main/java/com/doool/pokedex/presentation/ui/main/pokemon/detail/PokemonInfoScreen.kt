@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,7 +35,7 @@ import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
-import com.doool.pokedex.presentation.ui.main.common.toPokemonColor
+import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.doool.viewpager.ViewPager
@@ -47,7 +46,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.math.abs
 
 private val TOOLBAR_HEIGHT = 56.dp
-private val THUMBNAIL_VIEWPAGER_HEIGHT = 180.dp
+private val THUMBNAIL_VIEWPAGER_HEIGHT = 130.dp
 private val TITLE_HEIGHT = 92.dp
 private val TAB_HEIGHT = 42.dp
 
@@ -55,7 +54,7 @@ private val HEADER_HEIGHT = TOOLBAR_HEIGHT + THUMBNAIL_VIEWPAGER_HEIGHT + TITLE_
 private val HEADER_HEIGHT_EXCLUDE_PAGER = HEADER_HEIGHT - THUMBNAIL_VIEWPAGER_HEIGHT
 
 enum class TabState {
-  Detail, Stats, Move, Evolution
+  About, Stats, Move, Evolution
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -72,7 +71,7 @@ fun PokemonInfoScreen(
     val lazyListState = rememberLazyListState()
 
     val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
-    var tabState by remember { mutableStateOf(TabState.Detail) }
+    var tabState by remember { mutableStateOf(TabState.About) }
 
     val density = LocalDensity.current
     val offset by derivedStateOf {
@@ -94,11 +93,12 @@ fun PokemonInfoScreen(
         Modifier.fillMaxSize(),
         tabState,
         lazyListState,
-        PaddingValues(top = HEADER_HEIGHT, start = 20.dp, end = 20.dp),
+        PaddingValues(top = HEADER_HEIGHT + 20.dp, start = 30.dp, end = 30.dp),
         remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value,
         viewModel::loadPokemonMove
       )
-      Column {
+      val mainColor by animateColorAsState(targetValue = colorResource(pokemon.getBackgroundColor()))
+      Column(modifier = Modifier.background(color = mainColor)) {
         HeaderLayout(viewPagerState, viewModel, items, pokemon, offset, navigateBack)
         TabLayout(tabState) { tabState = it }
       }
@@ -119,11 +119,7 @@ private fun HeaderLayout(
   offset: Float,
   navigateBack: () -> Unit
 ) {
-  val mainColor by animateColorAsState(targetValue = colorResource(pokemon.color.name.toPokemonColor().colorRes))
-
-  Box(
-    modifier = Modifier.background(color = mainColor)
-  ) {
+  Box {
     val viewPagerHeight = THUMBNAIL_VIEWPAGER_HEIGHT * offset
 
     DetailAppBar(modifier = Modifier.height(TOOLBAR_HEIGHT), onClickBack = navigateBack)
@@ -200,7 +196,7 @@ private fun PokemonImagePager(
 
         Image(
           modifier = Modifier
-            .size(180.dp * sizePercent)
+            .fillMaxSize(sizePercent)
             .alpha((pageOffset).coerceIn(0.1f, 1f)),
           colorFilter = ColorFilter.tint(
             Color.Black.copy(alpha = 1f - pageOffset),
@@ -241,7 +237,7 @@ private fun TabLayout(tabState: TabState, changeTab: (TabState) -> Unit) {
   TabRow(
     modifier = Modifier.height(TAB_HEIGHT),
     selectedTabIndex = tabState.ordinal,
-    backgroundColor = Color.White,
+    backgroundColor = Color.Transparent,
     contentColor = Color.White
   ) {
     TabState.values().forEach { tab ->
@@ -276,10 +272,10 @@ private fun BoxWithConstraintsScope.BodyLayout(
     modifier = modifier,
     state = state,
     contentPadding = contentPadding,
-    verticalArrangement = Arrangement.spacedBy(26.dp)
+    verticalArrangement = Arrangement.spacedBy(14.dp)
   ) {
     when (currentTab) {
-      TabState.Detail -> {
+      TabState.About -> {
         item {
           Info(
             modifier = defaultModifier,
@@ -292,16 +288,19 @@ private fun BoxWithConstraintsScope.BodyLayout(
         item {
           Stats(
             modifier = defaultModifier,
+            color = uiState.pokemon.getBackgroundColor(),
             stats = uiState.pokemon.stats,
             damageRelations = uiState.damageRelations
           )
         }
       TabState.Move -> {
         item { Space(height = 10.dp) }
+        item { MoveHeader() }
         items(uiState.pokemon.moves) {
           val moveDetail by remember(it.name) { loadMove(it.name) }.collectAsState(initial = PokemonMove())
           Move(moveDetail)
         }
+        item { Space(height = 20.dp) }
       }
       TabState.Evolution -> item {
         EvolutionList(

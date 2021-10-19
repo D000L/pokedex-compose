@@ -51,7 +51,7 @@ fun HomeScreen(
     Modifier
       .verticalScroll(rememberScrollState())
       .fillMaxWidth()
-      .padding(20.dp)
+      .padding(horizontal = 20.dp)
   ) {
     Space(height = 48.dp)
     Text(
@@ -109,6 +109,7 @@ fun Search(modifier: Modifier = Modifier, doSearch: (String) -> Unit) {
       query = it
       doSearch(query)
     },
+    textStyle = MaterialTheme.typography.body1,
     singleLine = true,
     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
     keyboardActions = KeyboardActions {
@@ -258,7 +259,7 @@ fun PokemonThumbnail(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
       modifier = Modifier
         .size(220.dp)
         .background(
-          color = colorResource(id = pokemon.color.name.toPokemonColor().colorRes),
+          color = colorResource(id = pokemon.getBackgroundColor()),
           shape = RoundedCornerShape(24.dp)
         )
         .clickable {
@@ -421,7 +422,7 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
       }
       Space(height = 4.dp)
       move.type.name.toPokemonType()
-        ?.let { Type(it.colorResId, size = 20.dp, fontSize = 13.sp, it.name) }
+        .let { Type(it.typeColorResId, size = 20.dp, fontSize = 13.sp, it.name) }
       Space(height = 4.dp)
     }
   }
@@ -431,33 +432,33 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
 fun MenuScreen(modifier : Modifier = Modifier,onClickMenu: (Menu) -> Unit) {
   Column(modifier = modifier,verticalArrangement = Arrangement.spacedBy(20.dp)) {
     MenuItem(
-      Modifier.fillMaxWidth(), Menu.News, R.color.pokemon_red, onClickMenu
+      Modifier.fillMaxWidth(), Menu.News, R.color.background_psychic, onClickMenu
     )
 
     Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
       MenuItem(
-        Modifier.weight(1f), Menu.Pokemon, R.color.pokemon_blue, onClickMenu
+        Modifier.weight(1f), Menu.Pokemon, R.color.background_flying, onClickMenu
       )
       MenuItem(
-        Modifier.weight(1f), Menu.Move, R.color.pokemon_green, onClickMenu
-      )
-    }
-
-    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-      MenuItem(
-        Modifier.weight(1f), Menu.Item, R.color.pokemon_purple, onClickMenu
-      )
-      MenuItem(
-        Modifier.weight(1f), Menu.Berry, R.color.pokemon_gray, onClickMenu
+        Modifier.weight(1f), Menu.Move, R.color.background_grass, onClickMenu
       )
     }
 
     Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
       MenuItem(
-        Modifier.weight(1f), Menu.Games, R.color.pokemon_brown, onClickMenu
+        Modifier.weight(1f), Menu.Item, R.color.background_poison, onClickMenu
       )
       MenuItem(
-        Modifier.weight(1f), Menu.Location, R.color.pokemon_yellow, onClickMenu
+        Modifier.weight(1f), Menu.Berry, R.color.background_normal, onClickMenu
+      )
+    }
+
+    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+      MenuItem(
+        Modifier.weight(1f), Menu.Games, R.color.background_rock, onClickMenu
+      )
+      MenuItem(
+        Modifier.weight(1f), Menu.Location, R.color.background_electric, onClickMenu
       )
     }
   }

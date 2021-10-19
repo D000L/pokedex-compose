@@ -2,74 +2,92 @@ package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
-import com.doool.pokedex.presentation.ui.main.common.Type
 import com.doool.pokedex.presentation.ui.main.common.toPokemonType
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
-fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
-  Column(
-    Modifier
-      .background(color = Color.White, shape = RoundedCornerShape(6.dp))
-      .padding(horizontal = 6.dp)
-      .clickable { onItemClicked() }
-  ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-      Text(
-        text = move.name.capitalizeAndRemoveHyphen(),
-        style = MaterialTheme.typography.subtitle1,
-        fontWeight = FontWeight.Bold
-      )
-      SpaceFill()
-      Item(title = "Power", amount = move.power)
-      Space(width = 10.dp)
-      Item(title = "Acc", amount = move.accuracy)
-      Space(width = 10.dp)
-      Item(title = "PP", amount = move.pp)
-      Space(width = 10.dp)
-      Column {
-        move.type.name.toPokemonType()?.let { Type(it.colorResId, size = 18.dp, text = it.name) }
-        Text(text = move.damageClass.name.capitalizeAndRemoveHyphen())
-      }
-    }
-    Space(height = 14.dp)
-    Text(text = move.effectEntries.shortEffect)
+fun MoveHeader() {
+  Row(verticalAlignment = Alignment.CenterVertically) {
+    Text(text = "Move Name", style = MaterialTheme.typography.body2)
+    SpaceFill()
+    MoveHeaderItem("Power", 40.dp)
+    MoveHeaderItem("Acc", 40.dp)
+    MoveHeaderItem("PP", 40.dp)
+    MoveHeaderItem("Type", 80.dp)
   }
 }
 
 @Composable
-private fun Item(title: String, amount: Int) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+private fun MoveHeaderItem(title: String, width: Dp) {
+  Text(
+    modifier = Modifier.width(width),
+    textAlign = TextAlign.Center,
+    text = title,
+    style = MaterialTheme.typography.body2
+  )
+}
+
+@Composable
+private fun MoveItem(title: String, width: Dp) {
+  Text(
+    modifier = Modifier.width(width),
+    textAlign = TextAlign.Center,
+    text = title,
+    style = MaterialTheme.typography.body1
+  )
+}
+
+@Composable
+fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
+  val type = remember(move.type.name) { move.type.name.toPokemonType() }
+
+  Row(verticalAlignment = Alignment.CenterVertically) {
     Text(
-      text = title,
-      style = MaterialTheme.typography.body1,
-      color = Color.Black.copy(alpha = 0.8f)
+      modifier = Modifier
+        .weight(1f)
+        .clickable { onItemClicked() },
+      text = move.name.capitalizeAndRemoveHyphen(),
+      style = MaterialTheme.typography.body1
     )
-    Text(text = amount.toString(), style = MaterialTheme.typography.subtitle2)
+    MoveItem(move.power.toString(), 40.dp)
+    MoveItem(move.accuracy.toString(), 40.dp)
+    MoveItem(move.pp.toString(), 40.dp)
+    Box(
+      Modifier
+        .width(80.dp)
+        .shadow(4.dp, CircleShape)
+        .background(colorResource(id = type.typeColorResId), CircleShape),
+      contentAlignment = Alignment.Center
+    ) {
+      Text(text = type.name)
+    }
   }
 }
 
 @Composable
 @Preview
 fun MovePreview() {
-  Move(
+   Move(
     PokemonMove(
       name = "Mega Punch",
       id = 1,

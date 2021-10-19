@@ -3,6 +3,7 @@ package com.doool.pokedex.presentation.ui.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
@@ -10,6 +11,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,23 +21,38 @@ import com.doool.pokedex.presentation.ui.main.home.HomeDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
 import com.doool.pokedex.presentation.ui.main.news.NewsDestination
-import com.doool.pokedex.presentation.ui.main.news.NewsScreen
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
+import com.doool.pokedex.presentation.utils.goDownload
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+  private val viewModel: MainViewModel by viewModels()
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    installSplashScreen().run {
+      setKeepVisibleCondition {
+        !viewModel.isReady
+      }
+    }
 
     setContent {
       PokedexTheme {
         Surface(Modifier.fillMaxSize()) {
           MainNavHost()
         }
+      }
+    }
+
+    lifecycleScope.launchWhenResumed {
+      viewModel.needDownload.collectLatest {
+        goDownload()
       }
     }
   }
