@@ -26,8 +26,5 @@ class PokemonListViewModel @Inject constructor(
     emit(getPokemonList(searchQuery))
   }
 
-  fun getPokemon(name: String): Flow<PokemonDetail> =
-    getPokemonUsecase(name).filterIsInstance<LoadState.Success<PokemonDetail>>().map {
-      it.data
-    }
+  fun getPokemon(name: String): Flow<PokemonDetail> = getPokemonUsecase(name)
 }

@@ -4,10 +4,7 @@ import com.doool.pokedex.data.dao.PokemonDao
 import com.doool.pokedex.data.dao.PokemonDetailDao
 import com.doool.pokedex.data.entity.*
 import com.doool.pokedex.data.mapper.toModel
-import com.doool.pokedex.data.response.PokemonDetailResponse
-import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
-import com.doool.pokedex.data.response.PokemonSpeciesResponse
-import com.doool.pokedex.data.response.PokemonTypeResistanceResponse
+import com.doool.pokedex.data.response.*
 import com.doool.pokedex.data.service.PokeApiService
 import com.doool.pokedex.data.toJson
 import com.doool.pokedex.data.toResponse
@@ -22,7 +19,25 @@ class PokemonRepositoryImpl @Inject constructor(
 ) : PokemonRepository {
 
   override suspend fun getPokemon(name: String): PokemonDetail {
-    return pokemonDetailDao.getPokemon(name).toModel()
+    return fetchPokemon(name).toModel()
+  }
+
+  private suspend fun fetchPokemon(name: String): PokemonDetailResponse {
+    val localResult = pokemonDetailDao.getPokemon(name)
+
+    if (localResult.json == null) {
+      val remoteResult = pokeApiService.getPokemon(name)
+      pokemonDetailDao.insertPokemonDetail(
+        PokemonDetailEntity(
+          remoteResult.name,
+          remoteResult.id,
+          remoteResult.id,
+          remoteResult.toJson()
+        )
+      )
+      return remoteResult
+    }
+    return localResult.json.toResponse()
   }
 
   override suspend fun getPokemonSpecies(name: String): PokemonSpecies {
@@ -73,11 +88,6 @@ class PokemonRepositoryImpl @Inject constructor(
     return localResult.json.toResponse()
   }
 
-  override suspend fun getPokemonThumbnail(name: String): String {
-    val pokemon = pokemonDetailDao.getPokemon(name)?.json?.toResponse<PokemonDetailResponse>()
-    return pokemon?.sprites?.other?.artwork?.frontDefault ?: ""
-  }
-
   override suspend fun getPokemonTypeResistance(name: String): PokemonTypeResistance {
     return fetchPokemonTypeResistance(name).toModel()
   }
@@ -101,47 +111,51 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override suspend fun getPokemonMove(name: String): PokemonMove {
-    return pokemonDao.getPokemonMoveEntity(name).toModel()
+    return fetchMove(name).toModel()
   }
 
-  override suspend fun fetchMove(names: List<String>) {
-    val results = names.map {
-      val remoteResult = pokeApiService.getPokemonMove(it)
-      val model = remoteResult.toJson()
-      PokemonMoveEntity(
-        remoteResult.name,
-        remoteResult.id,
-        remoteResult.id,
-        model
+  private suspend fun fetchMove(names: String): PokemonMoveResponse {
+    val localResult = pokemonDao.getPokemonMoveEntity(names)
+
+    if (localResult?.json == null) {
+      val remoteResult = pokeApiService.getPokemonMove(names)
+      pokemonDao.insertPokemonMoveEntity(
+        PokemonMoveEntity(
+          remoteResult.name,
+          remoteResult.id,
+          remoteResult.id,
+          remoteResult.toJson()
+        )
       )
+      return remoteResult
     }
-    pokemonDao.insertPokemonMoveEntity(results)
+    return localResult.json.toResponse()
   }
 
-  override suspend fun fetchItem(names: List<String>) {
-    val results = names.map {
-      val remoteResult = pokeApiService.getItem(it)
-      val model = remoteResult.toJson()
-      ItemEntity(
-        remoteResult.name,
-        remoteResult.id,
-        model
-      )
-    }
-    pokemonDao.insertItemEntity(results)
+  override suspend fun getItem(name: String): Item {
+    return fetchItem(name).toModel()
   }
 
-  override suspend fun fetchPokemon(names: List<String>) {
-    val results = names.map {
-      val remoteResult = pokeApiService.getPokemon(it)
-      val model = remoteResult.toJson()
-      PokemonDetailEntity(
-        remoteResult.name,
-        remoteResult.id,
-        remoteResult.id,
-        model
+  private suspend fun fetchItem(names: String): ItemResponse {
+    val localResult = pokemonDao.getItemEntity(names)
+
+    if (localResult?.json == null) {
+      val remoteResult = pokeApiService.getItem(names)
+      pokemonDao.insertItemEntity(
+        ItemEntity(
+          remoteResult.name,
+          remoteResult.id,
+          remoteResult.id,
+          remoteResult.toJson()
+        )
       )
+      return remoteResult
     }
-    pokemonDetailDao.insertPokemonDetail(results)
+    return localResult.json.toResponse()
+  }
+
+  override suspend fun getPokemonThumbnail(name: String): String {
+    val pokemon = pokemonDetailDao.getPokemon(name)?.json?.toResponse<PokemonDetailResponse>()
+    return pokemon?.sprites?.other?.artwork?.frontDefault ?: ""
   }
 }

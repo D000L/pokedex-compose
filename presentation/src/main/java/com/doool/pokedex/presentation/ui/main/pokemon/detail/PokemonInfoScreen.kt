@@ -29,9 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import coil.compose.rememberImagePainter
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonMove
+import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.*
+import com.doool.pokedex.domain.usecase.GetMove
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
@@ -42,7 +44,12 @@ import com.doool.viewpager.ViewPager
 import com.doool.viewpager.ViewPagerOrientation
 import com.doool.viewpager.ViewPagerState
 import com.doool.viewpager.rememberViewPagerState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 import kotlin.math.abs
 
 private val TOOLBAR_HEIGHT = 56.dp
@@ -57,63 +64,122 @@ enum class TabState {
   About, Stats, Move, Evolution
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PokemonInfoScreen(
   viewModel: PokemonInfoViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
-  Log.d("composable update", "DetailScreen")
-  val items by viewModel.pokemonList.collectAsState(initial = emptyList())
+  val pokemonList by remember { viewModel.pokemonList }.collectAsState(emptyList())
 
-  if (items.isNotEmpty()) {
+  if (pokemonList.isNotEmpty()) {
     val viewPagerState = rememberViewPagerState(currentPage = viewModel.initIndex)
-    val lazyListState = rememberLazyListState()
 
-    val pokemon by remember { viewModel.getPokemon() }.collectAsState(PokemonDetail())
-    var tabState by remember { mutableStateOf(TabState.About) }
-
-    val density = LocalDensity.current
-    val offset by derivedStateOf {
-      val topOffset = lazyListState.getItemTopOffset()
-      val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
-      (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
-    }
-
-    val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
-    LaunchedEffect(dragged) {
-      if (!dragged && offset != 0f && offset != 1f) {
-        val direction = if (offset > 0.5f) -offset else offset
-        lazyListState.animateScrollBy(direction * density.run { THUMBNAIL_VIEWPAGER_HEIGHT.toPx() })
-      }
-    }
-
-    BoxWithConstraints {
-      BodyLayout(
-        Modifier.fillMaxSize(),
-        tabState,
-        lazyListState,
-        PaddingValues(top = HEADER_HEIGHT + 20.dp, start = 30.dp, end = 30.dp),
-        remember { viewModel.getUiState() }.collectAsState(initial = DetailUiState()).value,
-        viewModel::loadPokemonMove
-      )
-      val mainColor by animateColorAsState(targetValue = colorResource(pokemon.getBackgroundColor()))
-      Column(modifier = Modifier.background(color = mainColor)) {
-        HeaderLayout(viewPagerState, viewModel, items, pokemon, offset, navigateBack)
-        TabLayout(tabState) { tabState = it }
-      }
-    }
+    PokemonInfoScreen(
+      viewPagerState,
+      pokemonList,
+      viewModel.pokemon,
+      viewModel.species,
+      viewModel.evolutionChain,
+      viewModel.damageRelations,
+      viewModel.pokemonImageMap,
+      navigateBack
+    )
 
     LaunchedEffect(viewPagerState.currentPage) {
-      viewModel.setCurrentItem(items[viewPagerState.currentPage])
+      viewModel.setCurrentPokemon(pokemonList[viewPagerState.currentPage])
     }
+  }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun PokemonInfoScreen(
+  viewPagerState: ViewPagerState,
+  items: List<String>,
+  pokemon: StateFlow<PokemonDetail>,
+  species: StateFlow<PokemonSpecies>,
+  evolutionChain: StateFlow<List<PokemonEvolutionChain>>,
+  damageRelations: StateFlow<List<Damage>>,
+  pokemonImageMap: Map<String, Flow<String>>,
+  navigateBack: () -> Unit
+) {
+  Log.d("composable update", "DetailScreen $evolutionChain")
+
+  val lazyListState = rememberLazyListState()
+  var tabState by remember { mutableStateOf(TabState.About) }
+
+  val density = LocalDensity.current
+  val offset by derivedStateOf {
+    val topOffset = lazyListState.getItemTopOffset()
+    val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
+    (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
+  }
+
+  val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
+  LaunchedEffect(dragged) {
+    if (!dragged && offset != 0f && offset != 1f) {
+      val direction = if (offset > 0.5f) -offset else offset
+      lazyListState.animateScrollBy(direction * density.run { THUMBNAIL_VIEWPAGER_HEIGHT.toPx() })
+    }
+  }
+
+  BoxWithConstraints {
+    Log.d("composable update", "BoxWithConstraints $tabState $offset")
+    BodyLayout(
+      tabState,
+      lazyListState,
+      remember { PaddingValues(top = HEADER_HEIGHT + 20.dp, start = 30.dp, end = 30.dp) },
+      pokemon,
+      species,
+      evolutionChain,
+      damageRelations
+    )
+    Header(
+      tabState,
+      { tabState = it },
+      viewPagerState,
+      pokemonImageMap,
+      items,
+      pokemon,
+      offset,
+      navigateBack
+    )
+  }
+}
+
+@Composable
+private fun Header(
+  tabState: TabState,
+  changeTab: (TabState) -> Unit,
+  viewPagerState: ViewPagerState,
+  pokemonImageMap: Map<String, Flow<String>>,
+  items: List<String>,
+  pokemon: StateFlow<PokemonDetail>,
+  offset: Float,
+  navigateBack: () -> Unit
+) {
+
+  val pokemon by pokemon.collectAsState()
+
+  val mainColor by animateColorAsState(targetValue = colorResource(pokemon.getBackgroundColor()))
+
+  Column(modifier = Modifier.background(color = mainColor)) {
+    HeaderLayout(
+      viewPagerState,
+      pokemonImageMap,
+      items,
+      pokemon,
+      offset,
+      navigateBack
+    )
+    TabLayout(tabState) { changeTab(it) }
   }
 }
 
 @Composable
 private fun HeaderLayout(
   viewPagerState: ViewPagerState,
-  viewModel: PokemonInfoViewModel,
+  pokemonImageMap: Map<String, Flow<String>>,
   items: List<String>,
   pokemon: PokemonDetail,
   offset: Float,
@@ -134,7 +200,7 @@ private fun HeaderLayout(
           },
         viewPagerState = viewPagerState,
         items = items,
-        loadImage = viewModel::loadPokemonImage
+        imageMap = pokemonImageMap
       )
     }
 
@@ -168,10 +234,9 @@ private fun PokemonImagePager(
   modifier: Modifier = Modifier,
   viewPagerState: ViewPagerState = rememberViewPagerState(),
   items: List<String> = listOf(),
-  loadImage: (String) -> Flow<String>
+  imageMap: Map<String, Flow<String>>
 ) {
   Log.d("composable update", "PokemonImagePager")
-  val loadImage by rememberUpdatedState(newValue = loadImage)
 
   BoxWithConstraints(modifier) {
     val (width, offsetY) = LocalDensity.current.run { Pair(maxWidth.toPx(), -5.dp.toPx()) }
@@ -188,11 +253,11 @@ private fun PokemonImagePager(
       transformer = transformer,
       orientation = ViewPagerOrientation.Horizontal
     ) {
-      items(items) { pokemonId ->
+      items(items) { pokemonName ->
         val pageOffset = (1 - abs(getPagePosition())).coerceIn(0f, 1f)
         val sizePercent = 0.5f + pageOffset / 2f
 
-        val imageUrl by remember { loadImage(pokemonId) }.collectAsState(initial = "")
+        val imageUrl by remember { imageMap.getValue(pokemonName) }.collectAsState(initial = "")
 
         Image(
           modifier = Modifier
@@ -251,16 +316,28 @@ private fun TabLayout(tabState: TabState, changeTab: (TabState) -> Unit) {
   }
 }
 
+@HiltViewModel
+class MoveInfoViewModel @Inject constructor(
+  private val getMove: GetMove
+) : ViewModel() {
+
+  fun loadPokemonMove(name: String): Flow<PokemonMove> {
+    return getMove(name)
+  }
+}
+
 @Composable
 private fun BoxWithConstraintsScope.BodyLayout(
-  modifier: Modifier = Modifier,
   currentTab: TabState,
   state: LazyListState,
   contentPadding: PaddingValues,
-  uiState: DetailUiState,
-  loadMove: (String) -> Flow<PokemonMove>
+  pokemon: StateFlow<PokemonDetail>,
+  species: StateFlow<PokemonSpecies>,
+  evolutionChain: StateFlow<List<PokemonEvolutionChain>>,
+  damageRelations: StateFlow<List<Damage>>,
+  moveViewModel: MoveInfoViewModel = hiltViewModel()
 ) {
-  val loadMove by rememberUpdatedState(newValue = loadMove)
+  val pokemon by pokemon.collectAsState()
 
   val maxHeight =
     LocalDensity.current.run { constraints.maxHeight.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER }
@@ -268,45 +345,61 @@ private fun BoxWithConstraintsScope.BodyLayout(
     .defaultMinSize(minHeight = maxHeight)
     .fillMaxWidth()
 
+  Log.d("composable update", "BodyLayout $defaultModifier $currentTab")
   LazyColumn(
-    modifier = modifier,
+    modifier = Modifier.fillMaxSize(),
     state = state,
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(14.dp)
   ) {
     when (currentTab) {
       TabState.About -> {
+        Log.d("composable update", "LazyColumn About")
         item {
+          val species by species.collectAsState()
+
           Info(
             modifier = defaultModifier,
-            pokemon = uiState.pokemon,
-            pokemonSpecies = uiState.species
+            pokemon = pokemon,
+            pokemonSpecies = species
           )
         }
       }
-      TabState.Stats ->
+      TabState.Stats -> {
+        Log.d("composable update", "LazyColumn Stats")
         item {
+          val damageRelations by damageRelations.collectAsState()
+
           Stats(
             modifier = defaultModifier,
-            color = uiState.pokemon.getBackgroundColor(),
-            stats = uiState.pokemon.stats,
-            damageRelations = uiState.damageRelations
+            color = pokemon.getBackgroundColor(),
+            stats = pokemon.stats,
+            damageRelations = damageRelations
           )
         }
+      }
       TabState.Move -> {
+        Log.d("composable update", "LazyColumn Move")
         item { Space(height = 10.dp) }
         item { MoveHeader() }
-        items(uiState.pokemon.moves) {
-          val moveDetail by remember(it.name) { loadMove(it.name) }.collectAsState(initial = PokemonMove())
+        items(pokemon.moves) {
+          val moveDetail by remember(it.name) { moveViewModel.loadPokemonMove(it.name) }.collectAsState(
+            initial = PokemonMove()
+          )
           Move(moveDetail)
         }
         item { Space(height = 20.dp) }
       }
-      TabState.Evolution -> item {
-        EvolutionList(
-          modifier = defaultModifier,
-          chainList = uiState.evolutionChain
-        )
+      TabState.Evolution -> {
+        Log.d("composable update", "LazyColumn Evolution")
+        item {
+          val evolutionChain by evolutionChain.collectAsState()
+
+          EvolutionList(
+            modifier = defaultModifier,
+            chainList = evolutionChain
+          )
+        }
       }
     }
   }

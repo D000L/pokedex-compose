@@ -1,9 +1,9 @@
 package com.doool.pokedex.domain.usecase.search
 
 import androidx.annotation.WorkerThread
-import com.doool.pokedex.domain.networkBoundResources
 import com.doool.pokedex.domain.repository.PokemonRepository
 import com.doool.pokedex.domain.repository.SearchRepository
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SearchMove @Inject constructor(
@@ -12,11 +12,8 @@ class SearchMove @Inject constructor(
 ) {
 
   @WorkerThread
-  suspend operator fun invoke(query: String?, limit: Int = -1) = networkBoundResources(query = {
-    searchRepository.searchMove(query, limit)
-  }, fetch = {
-    pokemonRepository.fetchMove(it.map { it.name })
-  }, shouldFetch = {
-    it.id == -1
-  })
+  suspend operator fun invoke(query: String?, limit: Int = -1) = flow {
+    emit(
+      searchRepository.searchMoveNames(query, limit).map { pokemonRepository.getPokemonMove(it) })
+  }
 }

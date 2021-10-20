@@ -40,7 +40,7 @@ fun MoveScreen(viewModel: MoveViewModel = hiltViewModel(), navigateInfo: (String
 @Composable
 fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
 
-  val move by viewModel.move.collectAsState(initial = LoadState.Loading())
+  val move by viewModel.move.collectAsState(initial = LoadState.Loading)
 
   move.Process(onLoading = {
 

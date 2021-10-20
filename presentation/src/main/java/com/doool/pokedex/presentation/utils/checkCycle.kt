@@ -5,7 +5,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.isActive
 
-fun <T : Any> Flow<T>.checkCycle(log: String) = this.onStart {
+fun <T : Any> Flow<T>.flowCycleLogging(log: String) = this.onStart {
   Log.d("CheckCycle", "$log Start")
 }.onEach {
   Log.d("CheckCycle", "$log Each ${it.toString().take(20)}")

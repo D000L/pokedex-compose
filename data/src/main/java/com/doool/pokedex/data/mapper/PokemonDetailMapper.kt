@@ -1,14 +1,8 @@
 package com.doool.pokedex.data.mapper
 
-import com.doool.pokedex.data.entity.PokemonDetailEntity
 import com.doool.pokedex.data.response.*
 import com.doool.pokedex.data.response.Ability
-import com.doool.pokedex.data.toResponse
 import com.doool.pokedex.domain.model.*
-
-fun PokemonDetailEntity.toModel(): PokemonDetail = with(this) {
-  json?.toResponse<PokemonDetailResponse>()?.toModel() ?: PokemonDetail(name = name)
-}
 
 fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
   PokemonDetail(

@@ -27,8 +27,6 @@ class MoveViewModel @Inject constructor(
   }
 
   fun getMove(name: String): Flow<PokemonMove> {
-    return getMoveUsecase(name).filterIsInstance<LoadState.Success<PokemonMove>>().map {
-      it.data
-    }
+    return getMoveUsecase(name)
   }
 }

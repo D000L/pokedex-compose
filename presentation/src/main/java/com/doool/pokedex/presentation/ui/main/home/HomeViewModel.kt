@@ -2,13 +2,14 @@ package com.doool.pokedex.presentation.ui.main.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.usecase.search.SearchItem
 import com.doool.pokedex.domain.usecase.search.SearchMove
 import com.doool.pokedex.domain.usecase.search.SearchPokemon
+import com.doool.pokedex.domain.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -61,9 +62,9 @@ class HomeViewModel @Inject constructor(
   fun searchUIState() = query.filter { it.isNotBlank() }.flatMapLatest {
     val uiState = SearchUIState(isLoading = true)
     combine(
-      searchPokemon(it, SEARCH_ITEM_LIMIT),
-      searchItem(it, SEARCH_ITEM_LIMIT),
-      searchMove(it, SEARCH_ITEM_LIMIT),
+      searchPokemon(it, SEARCH_ITEM_LIMIT).withLoadState(),
+      searchItem(it, SEARCH_ITEM_LIMIT).withLoadState(),
+      searchMove(it, SEARCH_ITEM_LIMIT).withLoadState(),
       uiState::process
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), uiState)
   }

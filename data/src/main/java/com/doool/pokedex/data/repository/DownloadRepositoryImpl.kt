@@ -37,8 +37,8 @@ class DownloadRepositoryImpl @Inject constructor(
 
   override suspend fun downloadAllItem() {
     val remoteResult = pokeApiService.getAllItemInfo()
-    val items = remoteResult.results.map { item ->
-      ItemEntity(name = item.name)
+    val items = remoteResult.results.mapIndexed { index, item ->
+      ItemEntity(name = item.name, index = index + 1)
     }
     pokemonDao.insertItemEntity(items)
   }

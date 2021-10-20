@@ -2,8 +2,8 @@ package com.doool.pokedex.data.mapper
 
 import com.doool.pokedex.data.response.EvolutionDetail
 import com.doool.pokedex.data.response.EvolvesTo
-import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
+import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.domain.model.Condition
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 
@@ -11,7 +11,10 @@ fun PokemonEvolutionChainResponse.toModel(): List<PokemonEvolutionChain> = with(
   return parseChain(this.chain.species, this.chain.evolvesTo)
 }
 
-private fun parseChain(from: InfoResponse, evolvesTo: List<EvolvesTo>): List<PokemonEvolutionChain> {
+private fun parseChain(
+  from: InfoResponse,
+  evolvesTo: List<EvolvesTo>
+): List<PokemonEvolutionChain> {
   val list = mutableListOf<PokemonEvolutionChain>()
   val from = from.toModel()
 
