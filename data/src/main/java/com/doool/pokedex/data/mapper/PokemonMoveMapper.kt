@@ -12,7 +12,7 @@ fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {
     name = name,
     accuracy = accuracy,
     effectEntries = effectEntries.firstOrNull()?.toModel(effectChance) ?: Effect(),
-    damageClass = damageClass.toModel(),
+    damageClass = damageClass?.toModel() ?: Info(),
     flavorTextEntries = flavorTextEntries.map {
       it.flavorText
     },

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
@@ -115,9 +116,12 @@ fun PokemonInfo(
       Body(Modifier.defaultMinSize(minHeight = minHeight), lazyListState, tabState, viewModel)
 
       val mainColor by animateColorAsState(targetValue = LocalPokemonColor.current)
-      Column(modifier = Modifier.background(color = mainColor)) {
+      Column(
+        modifier = Modifier
+          .background(color = mainColor)
+          .padding(top = TOOLBAR_HEIGHT)
+      ) {
         Header(
-          Modifier.padding(top = TOOLBAR_HEIGHT),
           viewPagerState,
           viewModel.pokemonImageMap,
           items,
@@ -185,16 +189,14 @@ private fun Body(
 
 @Composable
 private fun Header(
-  modifier: Modifier,
   viewPagerState: ViewPagerState,
   pokemonImageMap: Map<String, Flow<String>>,
   items: List<String>,
   pokemon: PokemonDetail,
   offset: Float
 ) {
-  Box(modifier) {
+  Box {
     val viewPagerHeight = THUMBNAIL_VIEWPAGER_HEIGHT * offset
-
     if (offset * 3 >= 1f) {
       PokemonImagePager(
         modifier = Modifier
@@ -278,7 +280,9 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
       Color.Black.copy(alpha = 1f - pageOffset),
       blendMode = BlendMode.SrcAtop
     ),
-    painter = rememberImagePainter(imageUrl),
+    painter = rememberImagePainter(imageUrl) {
+      this.placeholder(R.drawable.ic_pokeball)
+    },
     contentDescription = null
   )
 }

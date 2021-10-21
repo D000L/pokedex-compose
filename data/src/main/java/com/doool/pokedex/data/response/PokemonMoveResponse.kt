@@ -13,7 +13,7 @@ data class PokemonMoveResponse(
   val name: String = "",
   val accuracy: Int = 0,
   @SerializedName("effect_chance") val effectChance: Int = 0,
-  @SerializedName("damage_class") val damageClass: InfoResponse = InfoResponse(),
+  @SerializedName("damage_class") val damageClass: InfoResponse? = null,
   @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorText> = emptyList(),
   @SerializedName("effect_entries") val effectEntries: List<EffectResponse> = emptyList(),
   @SerializedName("learned_by_pokemon") val learnedPokemon: List<InfoResponse> = emptyList(),
