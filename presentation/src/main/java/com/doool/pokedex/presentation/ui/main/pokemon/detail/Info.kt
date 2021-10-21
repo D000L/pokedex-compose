@@ -14,41 +14,54 @@ import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
-fun Info(modifier: Modifier = Modifier, pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+fun Info(
+  modifier: Modifier = Modifier,
+  pokemon: PokemonDetail,
+  pokemonSpecies: PokemonSpecies
+) {
   Column(
-    modifier = modifier.padding(vertical = 20.dp),
-    verticalArrangement = Arrangement.spacedBy(15.dp)
+    modifier = modifier.fillMaxWidth(),
+    verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
     Description(pokemonSpecies.flavorText.firstOrNull() ?: "")
-    Space(height = 5.dp)
+    Space(height = 12.dp)
+    PokedexData(pokemon, pokemonSpecies)
+    Space(height = 12.dp)
+    Breeding(pokemon, pokemonSpecies)
+  }
+}
 
-    DetailHeader("Pokedex Data", pokemon.getBackgroundColor())
-    InfoItem("Species", pokemonSpecies.genera.genus)
-    InfoItem("Height", "%.1f m".format(pokemon.height / 10f))
-    InfoItem("Weight", "%.1f kg".format(pokemon.weight / 10f))
-    InfoItem(
-      "Abilities",
-      pokemon.abilities.sortedBy { it.slot }.map { it.ability.name.capitalizeAndRemoveHyphen() }
-        .joinToString(
-          separator = ", "
-        )
-    )
-    Space(height = 5.dp)
-    DetailHeader("Breeding", pokemon.getBackgroundColor())
-    InfoItem(
-      "Gender",
-      "♀ %.1f%%, ♂ %.1f%%".format(
-        pokemonSpecies.maleRate.toFloat(),
-        pokemonSpecies.femaleRate.toFloat()
-      )
-    )
-    InfoItem(
-      "Egg Groups",
-      pokemonSpecies.eggGroups.map { it.name.capitalizeAndRemoveHyphen() }.joinToString(
+@Composable
+private fun PokedexData(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+  CommonSubTitle("Pokedex Data")
+  InfoItem("Species", pokemonSpecies.genera.genus)
+  InfoItem("Height", "%.1f m".format(pokemon.height / 10f))
+  InfoItem("Weight", "%.1f kg".format(pokemon.weight / 10f))
+  InfoItem(
+    "Abilities",
+    pokemon.abilities.sortedBy { it.slot }.map { it.ability.name.capitalizeAndRemoveHyphen() }
+      .joinToString(
         separator = ", "
       )
+  )
+}
+
+@Composable
+private fun Breeding(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+  CommonSubTitle("Breeding")
+  InfoItem(
+    "Gender",
+    "♀ %.1f%%, ♂ %.1f%%".format(
+      pokemonSpecies.maleRate.toFloat(),
+      pokemonSpecies.femaleRate.toFloat()
     )
-  }
+  )
+  InfoItem(
+    "Egg Groups",
+    pokemonSpecies.eggGroups.map { it.name.capitalizeAndRemoveHyphen() }.joinToString(
+      separator = ", "
+    )
+  )
 }
 
 @Composable

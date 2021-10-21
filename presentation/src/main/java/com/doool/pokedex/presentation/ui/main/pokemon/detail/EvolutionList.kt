@@ -20,7 +20,7 @@ import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 @Composable
 fun EvolutionList(modifier: Modifier = Modifier, chainList: List<PokemonEvolutionChain>) {
   Column(
-    modifier = modifier.padding(vertical = 20.dp),
+    modifier = modifier.fillMaxWidth(),
     verticalArrangement = Arrangement.spacedBy(12.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -31,7 +31,7 @@ fun EvolutionList(modifier: Modifier = Modifier, chainList: List<PokemonEvolutio
 }
 
 @Composable
-fun Evolution(chain: PokemonEvolutionChain) {
+private fun Evolution(chain: PokemonEvolutionChain) {
   val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
 
   Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
@@ -48,7 +48,7 @@ fun Evolution(chain: PokemonEvolutionChain) {
 
 @Composable
 private fun Pokemon(info: Info) {
-  Box(modifier = Modifier.height(160.dp), contentAlignment = Alignment.Center) {
+  Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
     DarkPokeball(size = 96.dp, translateOffset = DpOffset(x = 0.dp, y = -16.dp), rotate =0f)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Image(
@@ -64,11 +64,11 @@ private fun Pokemon(info: Info) {
 }
 
 @Composable
-fun LevelEvolution(level: Int) {
+private fun LevelEvolution(level: Int) {
   Text(text = "$level Level", style = MaterialTheme.typography.body2)
 }
 
 @Composable
-fun ItemEvolution(name: String) {
+private fun ItemEvolution(name: String) {
   Text(text = name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body2)
 }

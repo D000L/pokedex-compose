@@ -3,7 +3,6 @@ package com.doool.pokedex.presentation.ui.main.pokemon.detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -28,7 +27,11 @@ import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 @Composable
 fun MoveHeader() {
   Row(verticalAlignment = Alignment.CenterVertically) {
-    Text(text = "Move Name", style = MaterialTheme.typography.body2)
+    Text(
+      text = "Move Name",
+      style = MaterialTheme.typography.body2,
+      color = LocalPokemonColor.current
+    )
     SpaceFill()
     MoveHeaderItem("Power", 40.dp)
     MoveHeaderItem("Acc", 40.dp)
@@ -43,7 +46,8 @@ private fun MoveHeaderItem(title: String, width: Dp) {
     modifier = Modifier.width(width),
     textAlign = TextAlign.Center,
     text = title,
-    style = MaterialTheme.typography.body2
+    style = MaterialTheme.typography.body2,
+    color = LocalPokemonColor.current
   )
 }
 
@@ -87,7 +91,7 @@ fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
 @Composable
 @Preview
 fun MovePreview() {
-   Move(
+  Move(
     PokemonMove(
       name = "Mega Punch",
       id = 1,

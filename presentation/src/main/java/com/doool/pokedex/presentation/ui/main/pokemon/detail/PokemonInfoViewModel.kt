@@ -1,9 +1,9 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.domain.usecase.*
 import com.doool.pokedex.presentation.base.BaseViewModel
@@ -22,47 +22,42 @@ class PokemonInfoViewModel @Inject constructor(
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
   private val getDamageRelations: GetDamageRelations,
   private val getPokemonNames: GetPokemonNames,
-  private val savedStateHandle: SavedStateHandle
+  private val getMove: GetMove,
+  savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-  private val _currentItem = savedStateHandle.getLiveData<String>(NAME_PARAM)
-  private val currentItem = _currentItem.asFlow()
-
-  val pokemonList = flow {
-    val names = getPokemonNames()
-    _currentItem.postValue(names.first())
-    emit(names)
-  }
+  private val _currentPokemon = savedStateHandle.getLiveData<String>(NAME_PARAM)
+  private val currentPokemon = _currentPokemon.asFlow()
 
   var initIndex = 0
 
-  init {
-    viewModelScope.launch {
-      initIndex = pokemonList.single().indexOf(_currentItem.value)
-    }
+  val pokemonList = flow {
+    val names = getPokemonNames()
+    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = names.first()
+    initIndex = names.indexOf(_currentPokemon.value)
+    emit(names)
   }
 
-  val pokemon = currentItem.flatMapLatest { getPokemonUsecase(it) }.stateInWhileSubscribed()
-  val species = currentItem.flatMapLatest { getPokemonSpecies(it) }.stateInWhileSubscribed()
+  val pokemon = currentPokemon.flatMapLatest { getPokemonUsecase(it) }.stateInWhileSubscribed()
+  val species = currentPokemon.flatMapLatest { getPokemonSpecies(it) }.stateInWhileSubscribed()
 
   val evolutionChain = species.filter { it.evolutionUrl.isNotBlank() }
     .flatMapLatest { getPokemonEvolutionChain(it.evolutionUrl) }
     .stateInWhileSubscribed { emptyList() }
 
-  val damageRelations = pokemon.flatMapLatest { getDamageRelations(it.types.map { it.name }) }
+  val damageRelations = pokemon.map { it.types.map { it.name } }
+    .flatMapLatest { getDamageRelations(it) }
     .stateInWhileSubscribed { emptyList() }
-
-  private val pokemonMap: Map<String, Flow<PokemonDetail>> = lazyMap { name ->
-    return@lazyMap getPokemonUsecase(name)
-  }
 
   fun setCurrentPokemon(name: String) {
     viewModelScope.launch {
-      _currentItem.postValue(name)
+      _currentPokemon.postValue(name)
     }
   }
 
   val pokemonImageMap: Map<String, Flow<String>> = lazyMap { name ->
-    return@lazyMap pokemonMap.getValue(name).map { it.image }
+    return@lazyMap getPokemonUsecase(name).map { it.image }
   }
+
+  fun loadPokemonMove(name: String) = getMove(name).stateInWhileSubscribed(1000)
 }
