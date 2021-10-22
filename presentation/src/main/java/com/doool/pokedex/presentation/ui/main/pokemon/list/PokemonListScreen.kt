@@ -30,12 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.ui.main.common.Pokeball
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.TypeList
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
+import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import kotlinx.coroutines.flow.Flow
 
@@ -63,8 +66,17 @@ fun PokemonList(
     verticalArrangement = Arrangement.spacedBy(12.dp)
   ) {
     items(list) {
-      val pokemon by remember { getPokemon(it) }.collectAsState(initial = PokemonDetail())
-      Pokemon(pokemon = pokemon, onClick = navigateDetail)
+      val pokemon by remember { getPokemon(it).withLoadState() }.collectAsState(initial = LoadState.Loading)
+      pokemon.Process(onLoading = {
+        Box(
+          Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
+        )
+      }, onComplete = {
+        Pokemon(pokemon = it, onClick = navigateDetail)
+      })
     }
   }
 }
@@ -146,7 +158,8 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
     PokemonThumbnail(
       Modifier
         .align(Alignment.CenterEnd)
-        .padding(end = 10.dp), pokemon.image)
+        .padding(end = 10.dp), pokemon.image
+    )
   }
 }
 
