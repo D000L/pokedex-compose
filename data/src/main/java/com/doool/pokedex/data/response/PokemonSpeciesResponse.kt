@@ -15,7 +15,7 @@ data class PokemonSpeciesResponse(
   @SerializedName("evolution_chain") val evolutionChain: EvolutionChain? = null,
   @SerializedName("evolves_from_species") val evolvesFromSpecies: InfoResponse? = null,
   @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorText> = emptyList(),
-  @SerializedName("form_descriptions") val formDescriptions: List<String> = emptyList(),
+  @SerializedName("form_descriptions") val formDescriptions: List<FormDescription> = emptyList(),
   @SerializedName("forms_switchable") val formsSwitchable: Boolean = false,
   @SerializedName("gender_rate") val genderRate: Int = 0,
   val genera: List<Genera> = emptyList(),
@@ -38,5 +38,11 @@ data class EvolutionChain(
 @Keep
 data class Genera(
   val genus: String = "",
+  val language: InfoResponse = InfoResponse()
+)
+
+@Keep
+data class FormDescription(
+  val description: String = "",
   val language: InfoResponse = InfoResponse()
 )
