@@ -27,7 +27,7 @@ class PokemonInfoViewModel @Inject constructor(
 ) : BaseViewModel() {
 
   private val _currentPokemon = savedStateHandle.getLiveData<String>(NAME_PARAM)
-  private val currentPokemon = _currentPokemon.asFlow()
+  private val currentPokemon = _currentPokemon.asFlow().distinctUntilChanged()
 
   var initIndex = 0
 

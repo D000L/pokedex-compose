@@ -85,9 +85,6 @@ dependencies {
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
     implementation 'androidx.palette:palette-ktx:1.0.0'
-    implementation "com.google.accompanist:accompanist-flowlayout:0.18.0"
-
-    implementation('com.github.D000L:compose-viewpager:master-SNAPSHOT') {
-        changing = true
-    }
+    implementation "com.google.accompanist:accompanist-flowlayout:0.20.0"
+    implementation "com.google.accompanist:accompanist-pager:0.20.0"
 }

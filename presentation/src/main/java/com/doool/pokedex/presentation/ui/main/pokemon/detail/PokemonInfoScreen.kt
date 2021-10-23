@@ -1,8 +1,6 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
@@ -39,11 +37,9 @@ import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.getItemTopOffset
-import com.doool.viewpager.ViewPager
-import com.doool.viewpager.ViewPagerOrientation
-import com.doool.viewpager.ViewPagerState
-import com.doool.viewpager.rememberViewPagerState
+import com.google.accompanist.pager.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 private val TOOLBAR_HEIGHT = 56.dp
@@ -58,37 +54,39 @@ enum class TabState {
   About, Stats, Move, Evolution
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PokemonInfoScreen(
   viewModel: PokemonInfoViewModel = hiltViewModel(),
   navigateBack: () -> Unit = {}
 ) {
-  val pokemonList by remember { viewModel.pokemonList }.collectAsState(emptyList())
+  val pokemonList by viewModel.pokemonList.collectAsState(emptyList())
 
   if (pokemonList.isNotEmpty()) {
-    val viewPagerState = rememberViewPagerState(currentPage = viewModel.initIndex)
+    val pagerState = rememberPagerState(initialPage = viewModel.initIndex)
 
     PokemonInfo(
-      viewPagerState,
+      pagerState,
       viewModel,
       pokemonList,
       navigateBack
     )
 
-    LaunchedEffect(viewPagerState.currentPage) {
-      viewModel.setCurrentPokemon(pokemonList[viewPagerState.currentPage])
+    LaunchedEffect(pagerState.currentPage) {
+      viewModel.setCurrentPokemon(pokemonList[pagerState.currentPage])
     }
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalPagerApi
 @Composable
 fun PokemonInfo(
-  viewPagerState: ViewPagerState,
+  pagerState: PagerState = rememberPagerState(),
   viewModel: PokemonInfoViewModel,
   items: List<String>,
   navigateBack: () -> Unit
 ) {
+  val coroutine = rememberCoroutineScope()
   val density = LocalDensity.current
 
   val lazyListState = rememberLazyListState()
@@ -113,7 +111,9 @@ fun PokemonInfo(
     val pokemon by viewModel.pokemon.collectAsState()
 
     CompositionLocalProvider(LocalPokemonColor provides colorResource(id = pokemon.getBackgroundColor())) {
-      Body(Modifier.defaultMinSize(minHeight = minHeight), lazyListState, tabState, viewModel)
+      Body(Modifier.defaultMinSize(minHeight = minHeight), lazyListState, tabState, viewModel){
+        coroutine.launch { pagerState.scrollToPage(items.indexOf(it)) }
+      }
 
       val mainColor by animateColorAsState(targetValue = LocalPokemonColor.current)
       Column(
@@ -122,7 +122,7 @@ fun PokemonInfo(
           .padding(top = TOOLBAR_HEIGHT)
       ) {
         Header(
-          viewPagerState,
+          pagerState,
           viewModel.pokemonImageMap,
           items,
           pokemon,
@@ -140,7 +140,8 @@ private fun Body(
   modifier: Modifier,
   state: LazyListState = rememberLazyListState(),
   tabState: TabState,
-  viewModel: PokemonInfoViewModel
+  viewModel: PokemonInfoViewModel,
+  onClickPokemon: (String)->Unit,
 ) {
   val pokemon by viewModel.pokemon.collectAsState()
 
@@ -180,16 +181,18 @@ private fun Body(
 
         EvolutionList(
           modifier = modifier,
-          chainList = evolutionChain
+          chainList = evolutionChain,
+          onClickPokemon = onClickPokemon
         )
       }
     }
   }
 }
 
+@ExperimentalPagerApi
 @Composable
 private fun Header(
-  viewPagerState: ViewPagerState,
+  pagerState: PagerState = rememberPagerState(),
   pokemonImageMap: Map<String, Flow<String>>,
   items: List<String>,
   pokemon: PokemonDetail,
@@ -197,17 +200,22 @@ private fun Header(
 ) {
   Box {
     val viewPagerHeight = THUMBNAIL_VIEWPAGER_HEIGHT * offset
+
     if (offset * 3 >= 1f) {
-      PokemonImagePager(
+      HorizontalPager(
         modifier = Modifier
           .height(viewPagerHeight)
           .graphicsLayer {
             alpha = (offset * 3).coerceIn(0f, 1f)
           },
-        viewPagerState = viewPagerState,
-        items = items,
-        imageMap = pokemonImageMap
-      )
+        count = items.size,
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 100.dp)
+      ) { index ->
+        val pokemonName = items[index]
+        val imageUrl by remember { pokemonImageMap.getValue(pokemonName) }.collectAsState(initial = "")
+        PokemonImage(imageUrl, calculateCurrentOffsetForPage(index))
+      }
     }
 
     TitleLayout(
@@ -231,38 +239,6 @@ private fun AppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
     SpaceFill()
     IconButton(onClick = onClickBack) {
       Icon(Icons.Default.Share, contentDescription = null, tint = Color.White)
-    }
-  }
-}
-
-@Composable
-private fun PokemonImagePager(
-  modifier: Modifier = Modifier,
-  viewPagerState: ViewPagerState = rememberViewPagerState(),
-  items: List<String> = listOf(),
-  imageMap: Map<String, Flow<String>>
-) {
-  Log.d("composable update", "PokemonImagePager")
-
-  BoxWithConstraints(modifier) {
-    val (width, offsetY) = LocalDensity.current.run { Pair(maxWidth.toPx(), -5.dp.toPx()) }
-
-    val transformer = remember {
-      Transformer(
-        mapOf(-2 to -width, -1 to -width / 2f, 0 to 0f, 1 to width / 2f, 2 to width),
-        mapOf(-2 to offsetY * 2, -1 to offsetY, 0 to 0f, 1 to offsetY, 2 to offsetY * 2)
-      )
-    }
-
-    ViewPager(
-      state = viewPagerState,
-      transformer = transformer,
-      orientation = ViewPagerOrientation.Horizontal
-    ) {
-      items(items) { pokemonName ->
-        val imageUrl by remember { imageMap.getValue(pokemonName) }.collectAsState(initial = "")
-        PokemonImage(imageUrl, getPagePosition())
-      }
     }
   }
 }
