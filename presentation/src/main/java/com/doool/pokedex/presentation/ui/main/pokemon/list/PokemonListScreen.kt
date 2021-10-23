@@ -34,10 +34,12 @@ import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.withLoadState
+import com.doool.pokedex.presentation.ui.main.LocalNavController
 import com.doool.pokedex.presentation.ui.main.common.Pokeball
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.TypeList
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
+import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.clipBackground
@@ -45,23 +47,23 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun PokemonListScreen(
-  pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
-  navigateDetail: (String) -> Unit
+  pokemonListViewModel: PokemonListViewModel = hiltViewModel()
 ) {
 
   val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
 
   Column(Modifier.padding(horizontal = 20.dp)) {
-    PokemonList(list = pokemonList, pokemonListViewModel::getPokemon, navigateDetail)
+    PokemonList(list = pokemonList, pokemonListViewModel::getPokemon)
   }
 }
 
 @Composable
 fun PokemonList(
   list: List<String>,
-  getPokemon: (String) -> Flow<PokemonDetail>,
-  navigateDetail: (String) -> Unit
+  getPokemon: (String) -> Flow<PokemonDetail>
 ) {
+  val navController = LocalNavController.current
+
   LazyColumn(
     contentPadding = PaddingValues(top = 20.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -76,7 +78,9 @@ fun PokemonList(
             .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
         )
       }, onComplete = {
-        Pokemon(pokemon = it, onClick = navigateDetail)
+        Pokemon(pokemon = it){
+          navController.navigate(PokemonInfoDestination.getRouteByName(it))
+        }
       })
     }
   }

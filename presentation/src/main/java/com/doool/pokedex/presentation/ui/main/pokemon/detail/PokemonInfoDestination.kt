@@ -15,8 +15,8 @@ object PokemonInfoDestination : NavDestination() {
   override val arguments: List<NamedNavArgument> = listOf(
     navArgument(NAME_PARAM) { type = NavType.StringType }
   )
-  override val content: @Composable (NavController) -> Unit = { navController ->
-    PokemonInfoScreen(navigateBack = navController::navigateUp)
+  override val content: @Composable () -> Unit = {
+    PokemonInfoScreen()
   }
 
   fun getRouteByName(name: String) = route.replace("{$NAME_PARAM}", name)

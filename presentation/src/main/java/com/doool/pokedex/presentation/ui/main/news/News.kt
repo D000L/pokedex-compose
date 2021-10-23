@@ -6,5 +6,5 @@ import com.doool.pokedex.presentation.ui.main.NavDestination
 
 object NewsDestination : NavDestination() {
   override val route = "News"
-  override val content: @Composable (NavController) -> Unit = { NewsScreen() }
+  override val content: @Composable () -> Unit = { NewsScreen() }
 }

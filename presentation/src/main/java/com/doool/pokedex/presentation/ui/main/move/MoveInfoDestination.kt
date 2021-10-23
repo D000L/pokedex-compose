@@ -15,7 +15,7 @@ object MoveInfoDestination : NavDestination() {
   override val arguments: List<NamedNavArgument> = listOf(
     navArgument(NAME_PARAM) { type = NavType.StringType }
   )
-  override val content: @Composable (NavController) -> Unit = { navController ->
+  override val content: @Composable () -> Unit = {
     MoveInfoScreen()
   }
 

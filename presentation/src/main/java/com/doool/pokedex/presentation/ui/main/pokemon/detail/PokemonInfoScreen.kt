@@ -31,10 +31,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.PokemonDetail
+import com.doool.pokedex.presentation.ui.main.LocalNavController
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
+import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.google.accompanist.pager.*
@@ -57,8 +59,7 @@ enum class TabState {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PokemonInfoScreen(
-  viewModel: PokemonInfoViewModel = hiltViewModel(),
-  navigateBack: () -> Unit = {}
+  viewModel: PokemonInfoViewModel = hiltViewModel()
 ) {
   val pokemonList by viewModel.pokemonList.collectAsState(emptyList())
 
@@ -68,8 +69,7 @@ fun PokemonInfoScreen(
     PokemonInfo(
       pagerState,
       viewModel,
-      pokemonList,
-      navigateBack
+      pokemonList
     )
 
     LaunchedEffect(pagerState.currentPage) {
@@ -83,8 +83,7 @@ fun PokemonInfoScreen(
 fun PokemonInfo(
   pagerState: PagerState = rememberPagerState(),
   viewModel: PokemonInfoViewModel,
-  items: List<String>,
-  navigateBack: () -> Unit
+  items: List<String>
 ) {
   val coroutine = rememberCoroutineScope()
   val density = LocalDensity.current
@@ -111,7 +110,7 @@ fun PokemonInfo(
     val pokemon by viewModel.pokemon.collectAsState()
 
     CompositionLocalProvider(LocalPokemonColor provides colorResource(id = pokemon.getBackgroundColor())) {
-      Body(Modifier.defaultMinSize(minHeight = minHeight), lazyListState, tabState, viewModel){
+      Body(Modifier.defaultMinSize(minHeight = minHeight), lazyListState, tabState, viewModel) {
         coroutine.launch { pagerState.scrollToPage(items.indexOf(it)) }
       }
 
@@ -130,7 +129,7 @@ fun PokemonInfo(
         )
         Tab(tabState) { tabState = it }
       }
-      AppBar(modifier = Modifier.height(TOOLBAR_HEIGHT), onClickBack = navigateBack)
+      AppBar(modifier = Modifier.height(TOOLBAR_HEIGHT))
     }
   }
 }
@@ -141,14 +140,16 @@ private fun Body(
   state: LazyListState = rememberLazyListState(),
   tabState: TabState,
   viewModel: PokemonInfoViewModel,
-  onClickPokemon: (String)->Unit,
+  onClickPokemon: (String) -> Unit,
 ) {
+  val navController = LocalNavController.current
   val pokemon by viewModel.pokemon.collectAsState()
 
   LazyColumn(
     state = state,
-    contentPadding = PaddingValues(top = HEADER_HEIGHT + 20.dp)
+    contentPadding = PaddingValues(top = HEADER_HEIGHT)
   ) {
+    item { Space(height = 20.dp) }
     when (tabState) {
       TabState.About -> item {
         val species by viewModel.species.collectAsState()
@@ -172,7 +173,9 @@ private fun Body(
         item { MoveHeader() }
         items(pokemon.moves, key = { it.name }) {
           val moveDetail by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
-          Move(moveDetail)
+          Move(moveDetail) {
+            navController.navigate(MoveInfoDestination.getRouteByName(it.name))
+          }
         }
       }
       TabState.Evolution -> item {
@@ -213,7 +216,9 @@ private fun Header(
         contentPadding = PaddingValues(horizontal = 100.dp)
       ) { index ->
         val pokemonName = items[index]
-        val imageUrl by remember { pokemonImageMap.getValue(pokemonName) }.collectAsState(initial = "")
+        val imageUrl by remember(pokemonName) { pokemonImageMap.getValue(pokemonName) }.collectAsState(
+          initial = ""
+        )
         PokemonImage(imageUrl, calculateCurrentOffsetForPage(index))
       }
     }
@@ -231,13 +236,15 @@ private fun Header(
 }
 
 @Composable
-private fun AppBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
+private fun AppBar(modifier: Modifier = Modifier) {
+  val navController = LocalNavController.current
+
   Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-    IconButton(onClick = onClickBack) {
+    IconButton(onClick = navController::navigateUp) {
       Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.White)
     }
     SpaceFill()
-    IconButton(onClick = onClickBack) {
+    IconButton(onClick = { }) {
       Icon(Icons.Default.Share, contentDescription = null, tint = Color.White)
     }
   }
@@ -257,7 +264,7 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
       blendMode = BlendMode.SrcAtop
     ),
     painter = rememberImagePainter(imageUrl) {
-      this.placeholder(R.drawable.ic_pokeball)
+      placeholder(R.drawable.ic_pokeball)
     },
     contentDescription = null
   )

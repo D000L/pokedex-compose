@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -21,6 +22,7 @@ import com.doool.pokedex.presentation.ui.main.home.HomeDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
 import com.doool.pokedex.presentation.ui.main.news.NewsDestination
+import com.doool.pokedex.presentation.ui.main.pokemon.detail.LocalPokemonColor
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
@@ -62,15 +64,17 @@ class MainActivity : ComponentActivity() {
 fun MainNavHost() {
   val navController = rememberNavController()
 
-  NavHost(navController, HomeDestination.route) {
-    (mainNav + listOf(
-      PokemonInfoDestination,
-      PokemonListDestination,
-      MoveListDestination,
-      MoveInfoDestination
-    )).forEach { destination ->
-      composable(destination.route, arguments = destination.arguments) {
-        destination.content(navController)
+  CompositionLocalProvider(LocalNavController provides navController) {
+    NavHost(navController, HomeDestination.route) {
+      (mainNav + listOf(
+        PokemonInfoDestination,
+        PokemonListDestination,
+        MoveListDestination,
+        MoveInfoDestination
+      )).forEach { destination ->
+        composable(destination.route, arguments = destination.arguments) {
+          destination.content()
+        }
       }
     }
   }
@@ -87,20 +91,20 @@ val mainNav = listOf(HomeDestination, NewsDestination, Games, Item, Berry, Locat
 
 object Games : NavDestination() {
   override val route = "Games"
-  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+  override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 object Item : NavDestination() {
   override val route = "Item"
-  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+  override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 object Berry : NavDestination() {
   override val route = "Berry"
-  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+  override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 object Location : NavDestination() {
   override val route = "Location"
-  override val content: @Composable (NavController) -> Unit = { NotDevelop() }
+  override val content: @Composable () -> Unit = { NotDevelop() }
 }

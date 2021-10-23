@@ -1,15 +1,31 @@
 package com.doool.pokedex.presentation.ui.main
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgumentBuilder
-import androidx.navigation.NavController
-import androidx.navigation.NavType
+import androidx.compose.runtime.ProvidedValue
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.*
 
-abstract class NavDestination() {
+object LocalNavController {
+
+  private val LocalNavController = compositionLocalOf<NavHostController?> { null }
+
+  val current: NavHostController
+    @Composable get() {
+      return LocalNavController.current ?: NavHostController(LocalContext.current)
+    }
+
+  infix fun provides(
+    navHostController: NavHostController
+  ): ProvidedValue<NavHostController?> {
+    return LocalNavController.provides(navHostController)
+  }
+}
+
+abstract class NavDestination {
   abstract val route: String
   open val arguments: List<NamedNavArgument> = emptyList()
-  abstract val content: @Composable (NavController) -> Unit
+  abstract val content: @Composable () -> Unit
 }
 
 fun NavArgumentBuilder.nullableType(navType: NavType<*>) {

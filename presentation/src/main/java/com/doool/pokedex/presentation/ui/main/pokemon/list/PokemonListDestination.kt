@@ -16,10 +16,8 @@ object PokemonListDestination : NavDestination() {
   override val arguments: List<NamedNavArgument> = listOf(
     navArgument(QUERY_PARAM) { nullableType(NavType.StringType) }
   )
-  override val content: @Composable (NavController) -> Unit = { navController ->
-    PokemonListScreen(navigateDetail = {
-      navController.navigate(PokemonInfoDestination.getRouteByName(it))
-    })
+  override val content: @Composable () -> Unit = {
+    PokemonListScreen()
   }
 
   fun getRouteWithQuery(query: String? = null): String {

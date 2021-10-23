@@ -16,10 +16,8 @@ object MoveListDestination : NavDestination() {
   override val arguments: List<NamedNavArgument> = listOf(
     navArgument(QUERY_PARAM) { nullableType(NavType.StringType) }
   )
-  override val content: @Composable (NavController) -> Unit = { navController ->
-    MoveScreen(navigateInfo = {
-      navController.navigate(MoveInfoDestination.getRouteByName(it))
-    })
+  override val content: @Composable () -> Unit = {
+    MoveScreen()
   }
 
   fun getRouteWithQuery(query: String? = null): String {

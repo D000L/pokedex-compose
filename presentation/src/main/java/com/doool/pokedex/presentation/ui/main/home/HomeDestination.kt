@@ -11,7 +11,9 @@ import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestinatio
 
 object HomeDestination : NavDestination() {
   override val route = "Home"
-  override val content: @Composable (NavController) -> Unit = { navController ->
+  override val content: @Composable () -> Unit = {
+    val navController = LocalNavController.current
+
     HomeScreen(onClickMenu = { menu, query ->
       when (menu) {
         Menu.News -> navController.navigate(NewsDestination.route)
