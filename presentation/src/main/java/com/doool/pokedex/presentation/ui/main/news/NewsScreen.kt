@@ -63,7 +63,7 @@ fun NewsList(news: LazyPagingItems<PokemonNews>) {
         )
       }
     }
-    items(news) {
+    items(news, key = { it.title }) {
       it?.let { News(it) }
     }
   }

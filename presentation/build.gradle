@@ -87,4 +87,5 @@ dependencies {
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation "com.google.accompanist:accompanist-flowlayout:0.20.0"
     implementation "com.google.accompanist:accompanist-pager:0.20.0"
+    implementation "com.google.accompanist:accompanist-placeholder:0.20.0"
 }

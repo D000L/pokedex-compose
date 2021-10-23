@@ -1,11 +1,12 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.domain.usecase.*
+import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
 import com.doool.pokedex.presentation.utils.lazyMap
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,5 +60,6 @@ class PokemonInfoViewModel @Inject constructor(
     return@lazyMap getPokemonUsecase(name).map { it.image }
   }
 
-  fun loadPokemonMove(name: String) = getMove(name).stateInWhileSubscribed(1000)
+  fun loadPokemonMove(name: String) =
+    getMove(name).withLoadState().stateInWhileSubscribed(1000) { LoadState.Loading }
 }

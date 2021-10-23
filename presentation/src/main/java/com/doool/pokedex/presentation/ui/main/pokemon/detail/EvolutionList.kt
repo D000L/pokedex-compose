@@ -47,6 +47,7 @@ private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> 
       when (evolutionType) {
         EvolutionType.LevelUp -> LevelEvolution(chain.condition.minLevel)
         EvolutionType.Item -> ItemEvolution(chain.condition.item?.name ?: "")
+        EvolutionType.Trade -> TradeEvolution()
       }
     }
     SpaceFill()
@@ -74,6 +75,11 @@ private fun Pokemon(pokemonInfo: Info, onClick: (String) -> Unit) {
 @Composable
 private fun LevelEvolution(level: Int) {
   Text(text = "$level Level", style = MaterialTheme.typography.body2)
+}
+
+@Composable
+private fun TradeEvolution() {
+  Text(text = "Trade", style = MaterialTheme.typography.body2)
 }
 
 @Composable

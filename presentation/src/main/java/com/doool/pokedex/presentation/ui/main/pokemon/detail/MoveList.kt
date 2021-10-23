@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,11 +17,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.toPokemonType
+import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.defaultPlaceholder
 
 @Composable
 fun MoveHeader() {
@@ -63,35 +67,58 @@ private fun MoveItem(title: String, width: Dp) {
 }
 
 @Composable
-fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
-  val type = remember(move.type.name) { move.type.name.toPokemonType() }
+private fun MovePlaceholder() {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(42.dp)
+      .padding(horizontal = 20.dp, vertical = 8.dp)
+      .defaultPlaceholder(true, RoundedCornerShape(2.dp))
+  )
+}
 
+@Composable
+private fun Move(move: PokemonMove, onItemClicked: (String) -> Unit = {}) {
   Row(
     modifier = Modifier
-      .clickable { onItemClicked() }
+      .fillMaxWidth()
+      .clickable { onItemClicked(move.name) }
       .padding(horizontal = 20.dp)
       .height(42.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Text(
-      modifier = Modifier
-        .weight(1f),
-      text = move.name.capitalizeAndRemoveHyphen(),
-      style = MaterialTheme.typography.body1
-    )
-    MoveItem(move.power.toString(), 40.dp)
-    MoveItem(move.accuracy.toString(), 40.dp)
-    MoveItem(move.pp.toString(), 40.dp)
-    Box(
-      Modifier
-        .width(80.dp)
-        .shadow(4.dp, CircleShape)
-        .background(colorResource(id = type.typeColorResId), CircleShape),
-      contentAlignment = Alignment.Center
-    ) {
-      Text(text = type.name)
+    if (move != null) {
+
+      val type = remember(move.type.name) { move.type.name.toPokemonType() }
+
+      Text(
+        modifier = Modifier.weight(1f),
+        text = move.name.capitalizeAndRemoveHyphen(),
+        style = MaterialTheme.typography.body1
+      )
+      MoveItem(move.power.toString(), 40.dp)
+      MoveItem(move.accuracy.toString(), 40.dp)
+      MoveItem(move.pp.toString(), 40.dp)
+      Box(
+        Modifier
+          .width(80.dp)
+          .shadow(4.dp, CircleShape)
+          .background(colorResource(id = type.typeColorResId), CircleShape),
+        contentAlignment = Alignment.Center
+      ) {
+        Text(text = type.name)
+      }
     }
   }
+}
+
+@Composable
+fun Move(moveState: LoadState<PokemonMove>, onItemClicked: (String) -> Unit = {}) {
+  moveState.Process(onLoading = {
+    MovePlaceholder()
+  }, onComplete = { move ->
+    Move(move, onItemClicked)
+  })
 }
 
 @Composable

@@ -6,6 +6,9 @@ sealed class LoadState<out T> {
   object Error : LoadState<Nothing>()
   object Loading : LoadState<Nothing>()
   data class Success<T>(val data: T) : LoadState<T>()
+
+  val isLoading: Boolean
+    get() = this is LoadState.Loading
 }
 
 fun <T> Flow<T>.withLoadState() = flow {

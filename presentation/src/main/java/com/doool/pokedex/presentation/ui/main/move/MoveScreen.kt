@@ -30,10 +30,10 @@ fun MoveScreen(viewModel: MoveViewModel = hiltViewModel()) {
 
   LazyColumn(contentPadding = PaddingValues(top = 20.dp)) {
     item { MoveHeader() }
-    items(moveList) {
-      val move by remember(it) { viewModel.getMove(it) }.collectAsState(initial = PokemonMove())
+    items(moveList, key = { it }) {
+      val move by remember(it) { viewModel.getMove(it) }.collectAsState()
       Move(move) {
-        navController.navigate(MoveInfoDestination.getRouteByName(move.name))
+        navController.navigate(MoveInfoDestination.getRouteByName(it))
       }
     }
   }
@@ -58,7 +58,7 @@ fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
       Text(text = it.effectEntries.effect)
       Text(text = it.accuracy.toString())
       LazyColumn {
-        items(it.learnedPokemon) {
+        items(it.learnedPokemon, key = { it.name }) {
           Text(text = it.name)
         }
       }

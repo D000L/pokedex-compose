@@ -1,7 +1,6 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.list
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,7 +32,6 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.ui.main.LocalNavController
 import com.doool.pokedex.presentation.ui.main.common.Pokeball
 import com.doool.pokedex.presentation.ui.main.common.Space
@@ -43,7 +41,7 @@ import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestinat
 import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.clipBackground
-import kotlinx.coroutines.flow.Flow
+import com.doool.pokedex.presentation.utils.defaultPlaceholder
 
 @Composable
 fun PokemonListScreen(
@@ -53,14 +51,14 @@ fun PokemonListScreen(
   val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
 
   Column(Modifier.padding(horizontal = 20.dp)) {
-    PokemonList(list = pokemonList, pokemonListViewModel::getPokemon)
+    PokemonList(pokemonListViewModel, pokemonList)
   }
 }
 
 @Composable
 fun PokemonList(
-  list: List<String>,
-  getPokemon: (String) -> Flow<PokemonDetail>
+  viewModel: PokemonListViewModel,
+  list: List<String>
 ) {
   val navController = LocalNavController.current
 
@@ -68,20 +66,12 @@ fun PokemonList(
     contentPadding = PaddingValues(top = 20.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp)
   ) {
-    items(list) {
-      val pokemon by remember { getPokemon(it).withLoadState() }.collectAsState(initial = LoadState.Loading)
-      pokemon.Process(onLoading = {
-        Box(
-          Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-            .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
-        )
-      }, onComplete = {
-        Pokemon(pokemon = it){
-          navController.navigate(PokemonInfoDestination.getRouteByName(it))
-        }
-      })
+    items(list, key = { it }) {
+      val pokemon by remember { viewModel.getPokemon(it) }.collectAsState()
+
+      Pokemon(pokemonState = pokemon) {
+        navController.navigate(PokemonInfoDestination.getRouteByName(it))
+      }
     }
   }
 }
@@ -89,23 +79,39 @@ fun PokemonList(
 @Preview
 @Composable
 fun PokemonPreview() {
-  Pokemon(PokemonDetail(
-    101,
-    "electrode",
-    14,
-    54,
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
-    listOf(),
-    listOf(Info("bug"), Info("fairy")),
-    listOf()
-  ), {})
+  Pokemon(
+    PokemonDetail(
+      101,
+      "electrode",
+      14,
+      54,
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
+      listOf(),
+      listOf(Info("bug"), Info("fairy")),
+      listOf()
+    )
+  ) {}
 }
 
 @Composable
-fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
-  Box {
+private fun PokemonPlaceholder() {
+  Box(Modifier.height(130.dp)) {
+    Box(
+      Modifier
+        .align(Alignment.BottomStart)
+        .fillMaxWidth()
+        .height(96.dp)
+        .defaultPlaceholder(true, RoundedCornerShape(10.dp))
+    )
+  }
+}
+
+@Composable
+private fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit = {}) {
+  Box(Modifier.height(130.dp)) {
     val density = LocalDensity.current
     val color = colorResource(id = pokemon.getBackgroundColor())
+
     Box(
       Modifier
         .align(Alignment.BottomStart)
@@ -117,12 +123,8 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
             scale(1.00f)
           }) {
             drawRoundRect(
-              brush = Brush.verticalGradient(
-                colors = listOf(
-                  color.copy(0.3f),
-                  color.copy(0.2f)
-                )
-              ), cornerRadius = CornerRadius(60f, 60f)
+              brush = Brush.verticalGradient(colors = listOf(color.copy(0.3f), color.copy(0.2f))),
+              cornerRadius = CornerRadius(60f, 60f)
             )
           }
           drawContent()
@@ -136,12 +138,24 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
       Pokeball(180.dp, Alignment.CenterEnd, DpOffset(35.dp, 32.dp))
       PokemonSummary(Modifier.padding(top = 6.dp, start = 16.dp), pokemon)
     }
-    PokemonThumbnail(
-      Modifier
+    Image(
+      modifier = Modifier
         .align(Alignment.CenterEnd)
-        .padding(end = 10.dp), pokemon.image
+        .padding(end = 10.dp)
+        .requiredSize(120.dp),
+      painter = rememberImagePainter(pokemon.image),
+      contentDescription = null
     )
   }
+}
+
+@Composable
+fun Pokemon(pokemonState: LoadState<PokemonDetail>, onClick: (String) -> Unit) {
+  pokemonState.Process(onLoading = {
+    PokemonPlaceholder()
+  }, onComplete = {
+    Pokemon(pokemon = it, onClick = onClick)
+  })
 }
 
 @Composable
@@ -161,14 +175,4 @@ private fun PokemonSummary(modifier: Modifier = Modifier, pokemon: PokemonDetail
     Space(height = 2.dp)
     TypeList(types = pokemon.types)
   }
-}
-
-@Composable
-private fun PokemonThumbnail(modifier: Modifier = Modifier, url: String) {
-  Image(
-    modifier = modifier
-      .requiredSize(120.dp),
-    painter = rememberImagePainter(url),
-    contentDescription = null
-  )
 }

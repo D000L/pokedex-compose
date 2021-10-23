@@ -172,9 +172,9 @@ private fun Body(
       TabState.Move -> {
         item { MoveHeader() }
         items(pokemon.moves, key = { it.name }) {
-          val moveDetail by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
-          Move(moveDetail) {
-            navController.navigate(MoveInfoDestination.getRouteByName(it.name))
+          val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
+          Move(move) {
+            navController.navigate(MoveInfoDestination.getRouteByName(it))
           }
         }
       }
