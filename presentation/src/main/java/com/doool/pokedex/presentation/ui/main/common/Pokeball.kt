@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.ColorFilter
@@ -49,6 +51,7 @@ fun BoxScope.Pokeball(
 
 @Composable
 fun BoxScope.DarkPokeball(
+  modifier: Modifier = Modifier,
   size: Dp,
   alignment: Alignment = Alignment.Center,
   translateOffset: DpOffset = DpOffset.Zero,
@@ -59,7 +62,8 @@ fun BoxScope.DarkPokeball(
       .requiredSize(size)
       .align(alignment)
       .offset(translateOffset.x, translateOffset.y)
-      .rotate(rotate), colorFilter = ColorFilter.tint(
+      .rotate(rotate)
+      .clip(CircleShape).then(modifier), colorFilter = ColorFilter.tint(
       color = colorResource(id = R.color.gray),
       blendMode = BlendMode.DstIn
     ), painter = painterResource(id = R.drawable.ic_pokeball), contentDescription = null

@@ -40,6 +40,7 @@ import com.doool.pokedex.presentation.ui.main.common.TypeList
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.clipBackground
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -98,7 +99,7 @@ fun PokemonPreview() {
 
 @Composable
 fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
-  Box(Modifier.clickable { onClick(pokemon.name) }) {
+  Box {
     val density = LocalDensity.current
     val color = colorResource(id = pokemon.getBackgroundColor())
     Box(
@@ -122,38 +123,14 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
           }
           drawContent()
         }
-        .background(
+        .clipBackground(
           color = colorResource(id = pokemon.getBackgroundColor()),
           shape = RoundedCornerShape(10.dp)
         )
+        .clickable { onClick(pokemon.name) }
     ) {
-      Box {
-        Pokeball(180.dp, Alignment.CenterEnd, DpOffset(35.dp, 32.dp))
-        Row(
-          modifier = Modifier
-            .padding(start = 20.dp)
-            .fillMaxSize(),
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          Column {
-            Text(
-              modifier = Modifier
-                .padding(end = 10.dp),
-              text = "#%03d".format(pokemon.id),
-              fontSize = 12.sp,
-              color = Color.White.copy(alpha = 0.4f),
-              fontWeight = FontWeight.Bold
-            )
-            Text(
-              text = pokemon.name.capitalizeAndRemoveHyphen(),
-              color = Color.White,
-              style = MaterialTheme.typography.h3
-            )
-            Space(height = 2.dp)
-            TypeList(types = pokemon.types)
-          }
-        }
-      }
+      Pokeball(180.dp, Alignment.CenterEnd, DpOffset(35.dp, 32.dp))
+      PokemonSummary(Modifier.padding(top = 6.dp, start = 16.dp), pokemon)
     }
     PokemonThumbnail(
       Modifier
@@ -164,7 +141,26 @@ fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit) {
 }
 
 @Composable
-fun PokemonThumbnail(modifier: Modifier = Modifier, url: String) {
+private fun PokemonSummary(modifier: Modifier = Modifier, pokemon: PokemonDetail) {
+  Column(modifier) {
+    Text(
+      text = "#%03d".format(pokemon.id),
+      fontSize = 12.sp,
+      color = Color.White.copy(alpha = 0.4f),
+      fontWeight = FontWeight.Bold
+    )
+    Text(
+      text = pokemon.name.capitalizeAndRemoveHyphen(),
+      color = Color.White,
+      style = MaterialTheme.typography.h3
+    )
+    Space(height = 2.dp)
+    TypeList(types = pokemon.types)
+  }
+}
+
+@Composable
+private fun PokemonThumbnail(modifier: Modifier = Modifier, url: String) {
   Image(
     modifier = modifier
       .requiredSize(120.dp),

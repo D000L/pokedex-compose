@@ -56,8 +56,8 @@ private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> 
 
 @Composable
 private fun Pokemon(pokemonInfo: Info, onClick: (String) -> Unit) {
-  Box(modifier = Modifier.height(120.dp).clickable { onClick(pokemonInfo.name) }, contentAlignment = Alignment.Center) {
-    DarkPokeball(size = 96.dp, translateOffset = DpOffset(x = 0.dp, y = -16.dp), rotate = 0f)
+  Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
+    DarkPokeball(modifier = Modifier.clickable {  onClick(pokemonInfo.name) }, size = 96.dp, translateOffset = DpOffset(x = 0.dp, y = -16.dp), rotate = 0f)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Image(
         modifier = Modifier

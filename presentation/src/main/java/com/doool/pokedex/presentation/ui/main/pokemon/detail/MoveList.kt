@@ -2,9 +2,7 @@ package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -26,7 +24,10 @@ import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 
 @Composable
 fun MoveHeader() {
-  Row(verticalAlignment = Alignment.CenterVertically) {
+  Row(
+    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
     Text(
       text = "Move Name",
       style = MaterialTheme.typography.body2,
@@ -65,11 +66,16 @@ private fun MoveItem(title: String, width: Dp) {
 fun Move(move: PokemonMove, onItemClicked: () -> Unit = {}) {
   val type = remember(move.type.name) { move.type.name.toPokemonType() }
 
-  Row(verticalAlignment = Alignment.CenterVertically) {
+  Row(
+    modifier = Modifier
+      .clickable { onItemClicked() }
+      .padding(horizontal = 20.dp)
+      .height(42.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
     Text(
       modifier = Modifier
-        .weight(1f)
-        .clickable { onItemClicked() },
+        .weight(1f),
       text = move.name.capitalizeAndRemoveHyphen(),
       style = MaterialTheme.typography.body1
     )

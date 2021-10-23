@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,6 +35,7 @@ import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.clipBackground
 
 enum class Menu {
   News, Pokemon, Games, Move, Item, Berry, Location
@@ -257,7 +259,7 @@ fun PokemonThumbnail(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
     Column(
       modifier = Modifier
         .size(220.dp)
-        .background(
+        .clipBackground(
           color = colorResource(id = pokemon.getBackgroundColor()),
           shape = RoundedCornerShape(24.dp)
         )
@@ -311,7 +313,7 @@ fun ItemThumbnail(item: Item, onClick: () -> Unit = {}) {
     Column(
       Modifier
         .size(92.dp)
-        .background(
+        .clipBackground(
           color = Color.Gray,
           shape = RoundedCornerShape(16.dp)
         )
@@ -373,7 +375,7 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
     Column(
       Modifier
         .size(120.dp)
-        .background(
+        .clipBackground(
           color = colorResource(id = move.damageClass.name.toMoveCategoryColor().colorRes),
           shape = RoundedCornerShape(20.dp)
         )
@@ -475,7 +477,7 @@ private fun MenuItem(
   Box(
     modifier = modifier
       .height(92.dp)
-      .background(colorResource(id = color), shape = RoundedCornerShape(8.dp))
+      .clipBackground(colorResource(id = color), shape = RoundedCornerShape(8.dp))
       .clickable {
         onClickMenu(menu)
       },

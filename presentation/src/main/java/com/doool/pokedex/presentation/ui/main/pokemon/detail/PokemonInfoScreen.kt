@@ -147,15 +147,14 @@ private fun Body(
 
   LazyColumn(
     state = state,
-    contentPadding = PaddingValues(top = HEADER_HEIGHT + 20.dp, start = 30.dp, end = 30.dp),
-    verticalArrangement = Arrangement.spacedBy(18.dp)
+    contentPadding = PaddingValues(top = HEADER_HEIGHT + 20.dp)
   ) {
     when (tabState) {
       TabState.About -> item {
         val species by viewModel.species.collectAsState()
 
         Info(
-          modifier = modifier,
+          modifier = modifier.padding(horizontal = 20.dp),
           pokemon = pokemon,
           pokemonSpecies = species
         )
@@ -164,14 +163,14 @@ private fun Body(
         val damageRelations by viewModel.damageRelations.collectAsState()
 
         Stats(
-          modifier = modifier,
+          modifier = modifier.padding(horizontal = 20.dp),
           stats = pokemon.stats,
           damageRelations = damageRelations
         )
       }
       TabState.Move -> {
         item { MoveHeader() }
-        items(pokemon.moves) {
+        items(pokemon.moves, key = { it.name }) {
           val moveDetail by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
           Move(moveDetail)
         }
@@ -180,7 +179,7 @@ private fun Body(
         val evolutionChain by viewModel.evolutionChain.collectAsState()
 
         EvolutionList(
-          modifier = modifier,
+          modifier = modifier.padding(horizontal = 20.dp),
           chainList = evolutionChain,
           onClickPokemon = onClickPokemon
         )
@@ -209,6 +208,7 @@ private fun Header(
             alpha = (offset * 3).coerceIn(0f, 1f)
           },
         count = items.size,
+        key = { items[it] },
         state = pagerState,
         contentPadding = PaddingValues(horizontal = 100.dp)
       ) { index ->
