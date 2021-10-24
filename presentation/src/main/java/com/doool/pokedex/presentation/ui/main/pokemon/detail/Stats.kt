@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.doool.pokedex.domain.model.Damage
 import com.doool.pokedex.domain.model.Stat
+import com.doool.pokedex.presentation.ui.LocalPokemonColor
 import com.doool.pokedex.presentation.ui.main.common.*
 import com.google.accompanist.flowlayout.FlowRow
 

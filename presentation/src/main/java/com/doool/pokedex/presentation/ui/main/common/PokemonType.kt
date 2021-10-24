@@ -3,6 +3,7 @@ package com.doool.pokedex.presentation.ui.main.common
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.doool.pokedex.R
+import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
 
 enum class PokemonType(
@@ -34,5 +35,5 @@ fun String.toPokemonType() = PokemonType.values().firstOrNull {
   it.name.lowercase() == this.lowercase()
 } ?: PokemonType.Bug
 
-fun PokemonDetail.getBackgroundColor() =
-  types.firstOrNull()?.name?.toPokemonType()?.backgroundResId ?: PokemonType.Bug.backgroundResId
+fun List<Info>.getBackgroundColor() =
+  firstOrNull()?.name?.toPokemonType()?.backgroundResId ?: PokemonType.Bug.backgroundResId

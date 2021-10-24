@@ -1,6 +1,5 @@
 package com.doool.pokedex.presentation.ui.main.pokemon.detail
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,12 +19,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Effect
+import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonMove
+import com.doool.pokedex.presentation.ui.LocalPokemonColor
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.toPokemonType
 import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.defaultPlaceholder
+import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun MoveHeader() {
@@ -88,27 +90,25 @@ private fun Move(move: PokemonMove, onItemClicked: (String) -> Unit = {}) {
       .height(42.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    if (move != null) {
 
-      val type = remember(move.type.name) { move.type.name.toPokemonType() }
+    val type = remember(move.type.name) { move.type.name.toPokemonType() }
 
-      Text(
-        modifier = Modifier.weight(1f),
-        text = move.name.capitalizeAndRemoveHyphen(),
-        style = MaterialTheme.typography.body1
-      )
-      MoveItem(move.power.toString(), 40.dp)
-      MoveItem(move.accuracy.toString(), 40.dp)
-      MoveItem(move.pp.toString(), 40.dp)
-      Box(
-        Modifier
-          .width(80.dp)
-          .shadow(4.dp, CircleShape)
-          .background(colorResource(id = type.typeColorResId), CircleShape),
-        contentAlignment = Alignment.Center
-      ) {
-        Text(text = type.name)
-      }
+    Text(
+      modifier = Modifier.weight(1f),
+      text = move.names.localized.capitalizeAndRemoveHyphen(),
+      style = MaterialTheme.typography.body1
+    )
+    MoveItem(move.power.toString(), 40.dp)
+    MoveItem(move.accuracy.toString(), 40.dp)
+    MoveItem(move.pp.toString(), 40.dp)
+    Box(
+      Modifier
+        .width(80.dp)
+        .shadow(4.dp, CircleShape)
+        .background(colorResource(id = type.typeColorResId), CircleShape),
+      contentAlignment = Alignment.Center
+    ) {
+      Text(text = type.name)
     }
   }
 }
@@ -133,7 +133,7 @@ fun MovePreview() {
       damageClass = com.doool.pokedex.domain.model.Info(
         name = "physical"
       ),
-      flavorTextEntries = listOf("A ramming attack that may cause flinching."),
+      flavorTextEntries = listOf(LocalizedString("A ramming attack that may cause flinching.")),
       effectEntries = Effect(
         effect = "Inflicts regular damage.  Has a 30% chance to make the target flinch.",
         shortEffect = "Has a 30% chance to make the target flinch.",

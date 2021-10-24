@@ -17,6 +17,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.doool.pokedex.presentation.ui.LocalNavController
+import com.doool.pokedex.presentation.ui.NavDestination
 import com.doool.pokedex.presentation.ui.main.home.HomeDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveListDestination

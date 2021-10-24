@@ -13,7 +13,7 @@ class SearchItem @Inject constructor(
 
   @WorkerThread
   suspend operator fun invoke(query: String?, limit: Int = -1) = flow {
-    emit(searchRepository.searchItem(query, limit).map { pokemonRepository.getItem(it) })
+    emit(searchRepository.searchItem(query, limit).map { pokemonRepository.getItem(it.name) })
   }
 }
 

@@ -2,10 +2,9 @@ package com.doool.pokedex.presentation.ui.main.move
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.doool.pokedex.presentation.ui.main.NavDestination
+import com.doool.pokedex.presentation.ui.NavDestination
 
 const val NAME_PARAM = "query"
 

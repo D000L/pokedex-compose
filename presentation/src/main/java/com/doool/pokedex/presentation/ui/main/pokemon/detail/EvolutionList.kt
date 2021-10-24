@@ -12,12 +12,14 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
+import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.presentation.ui.main.common.DarkPokeball
 import com.doool.pokedex.presentation.ui.main.common.EvolutionType
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun EvolutionList(
@@ -56,7 +58,7 @@ private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> 
 }
 
 @Composable
-private fun Pokemon(pokemonInfo: Info, onClick: (String) -> Unit) {
+private fun Pokemon(pokemonInfo: LocalizedInfo, onClick: (String) -> Unit) {
   Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
     DarkPokeball(modifier = Modifier.clickable {  onClick(pokemonInfo.name) }, size = 96.dp, translateOffset = DpOffset(x = 0.dp, y = -16.dp), rotate = 0f)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -67,7 +69,7 @@ private fun Pokemon(pokemonInfo: Info, onClick: (String) -> Unit) {
         contentDescription = null
       )
       Space(height = 4.dp)
-      Text(text = pokemonInfo.name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body1)
+      Text(text = pokemonInfo.names.localized.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body1)
     }
   }
 }

@@ -11,8 +11,18 @@ class GetPokemonEvolutionChain @Inject constructor(private val pokemonRepository
   operator fun invoke(url: String): Flow<List<PokemonEvolutionChain>> = flow {
     val result = pokemonRepository.getPokemonEvolutionChain(url)
     result.forEach {
-      it.from.url = pokemonRepository.getPokemonThumbnail(it.from.name)
-      it.to.url = pokemonRepository.getPokemonThumbnail(it.to.name)
+      val fromId = it.from.url.trimEnd('/').split("/").last().toInt()
+      val fromSprite =
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$fromId.png"
+      it.from.names = pokemonRepository.getPokemonSpecies(it.from.name).names
+      it.from.url = fromSprite
+
+      val toId = it.to.url.trimEnd('/').split("/").last().toInt()
+      val toSprite =
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$toId.png"
+
+      it.to.names = pokemonRepository.getPokemonSpecies(it.to.name).names
+      it.to.url = toSprite
     }
     emit(result)
   }

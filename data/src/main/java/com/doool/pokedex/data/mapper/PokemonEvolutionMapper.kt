@@ -5,6 +5,8 @@ import com.doool.pokedex.data.response.EvolvesTo
 import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.domain.model.Condition
+import com.doool.pokedex.domain.model.Info
+import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 
 fun PokemonEvolutionChainResponse.toModel(): List<PokemonEvolutionChain> = with(this) {
@@ -16,13 +18,13 @@ private fun parseChain(
   evolvesTo: List<EvolvesTo>
 ): List<PokemonEvolutionChain> {
   val list = mutableListOf<PokemonEvolutionChain>()
-  val from = from.toModel()
+  val from = LocalizedInfo(from.name, url = from.url)
 
   evolvesTo.forEach {
     list.add(
       PokemonEvolutionChain(
         from,
-        it.species.toModel(),
+        LocalizedInfo(it.species.name, url = it.species.url),
         it.evolutionDetails.first().toModel()
       )
     )

@@ -1,4 +1,4 @@
-package com.doool.pokedex.presentation.ui.main
+package com.doool.pokedex.presentation.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue

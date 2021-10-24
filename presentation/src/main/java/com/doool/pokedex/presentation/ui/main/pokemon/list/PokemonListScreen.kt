@@ -30,18 +30,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.IndexedItem
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.presentation.ui.main.LocalNavController
+import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.main.common.Pokeball
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.TypeList
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
-import com.doool.pokedex.presentation.utils.Process
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.clipBackground
-import com.doool.pokedex.presentation.utils.defaultPlaceholder
+import com.doool.pokedex.presentation.utils.*
 
 @Composable
 fun PokemonListScreen(
@@ -58,7 +56,7 @@ fun PokemonListScreen(
 @Composable
 fun PokemonList(
   viewModel: PokemonListViewModel,
-  list: List<String>
+  list: List<IndexedItem>
 ) {
   val navController = LocalNavController.current
 
@@ -66,10 +64,10 @@ fun PokemonList(
     contentPadding = PaddingValues(top = 20.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp)
   ) {
-    items(list, key = { it }) {
-      val pokemon by remember { viewModel.getPokemon(it) }.collectAsState()
+    items(list, key = { it.id }) {
+      val itemState by remember { viewModel.getItemState(it.name) }.collectAsState()
 
-      Pokemon(pokemonState = pokemon) {
+      Pokemon(item = itemState) {
         navController.navigate(PokemonInfoDestination.getRouteByName(it))
       }
     }
@@ -80,15 +78,12 @@ fun PokemonList(
 @Composable
 fun PokemonPreview() {
   Pokemon(
-    PokemonDetail(
+    PokemonListItem(
       101,
       "electrode",
-      14,
-      54,
+      emptyList(),
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
-      listOf(),
       listOf(Info("bug"), Info("fairy")),
-      listOf()
     )
   ) {}
 }
@@ -107,10 +102,10 @@ private fun PokemonPlaceholder() {
 }
 
 @Composable
-private fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit = {}) {
+private fun Pokemon(item: PokemonListItem, onClick: (String) -> Unit = {}) {
   Box(Modifier.height(130.dp)) {
     val density = LocalDensity.current
-    val color = colorResource(id = pokemon.getBackgroundColor())
+    val color = colorResource(id = item.types.getBackgroundColor())
 
     Box(
       Modifier
@@ -130,49 +125,49 @@ private fun Pokemon(pokemon: PokemonDetail, onClick: (String) -> Unit = {}) {
           drawContent()
         }
         .clipBackground(
-          color = colorResource(id = pokemon.getBackgroundColor()),
+          color = color,
           shape = RoundedCornerShape(10.dp)
         )
-        .clickable { onClick(pokemon.name) }
+        .clickable { onClick(item.name) }
     ) {
       Pokeball(180.dp, Alignment.CenterEnd, DpOffset(35.dp, 32.dp))
-      PokemonSummary(Modifier.padding(top = 6.dp, start = 16.dp), pokemon)
+      PokemonSummary(Modifier.padding(top = 6.dp, start = 16.dp), item)
     }
     Image(
       modifier = Modifier
         .align(Alignment.CenterEnd)
         .padding(end = 10.dp)
         .requiredSize(120.dp),
-      painter = rememberImagePainter(pokemon.image),
+      painter = rememberImagePainter(item.image),
       contentDescription = null
     )
   }
 }
 
 @Composable
-fun Pokemon(pokemonState: LoadState<PokemonDetail>, onClick: (String) -> Unit) {
-  pokemonState.Process(onLoading = {
+fun Pokemon(item: LoadState<PokemonListItem>, onClick: (String) -> Unit) {
+  item.Process(onLoading = {
     PokemonPlaceholder()
   }, onComplete = {
-    Pokemon(pokemon = it, onClick = onClick)
+    Pokemon(item = it, onClick = onClick)
   })
 }
 
 @Composable
-private fun PokemonSummary(modifier: Modifier = Modifier, pokemon: PokemonDetail) {
+private fun PokemonSummary(modifier: Modifier = Modifier, item: PokemonListItem) {
   Column(modifier) {
     Text(
-      text = "#%03d".format(pokemon.id),
+      text = "#%03d".format(item.id),
       fontSize = 12.sp,
       color = Color.White.copy(alpha = 0.4f),
       fontWeight = FontWeight.Bold
     )
     Text(
-      text = pokemon.name.capitalizeAndRemoveHyphen(),
+      text = item.names.localized.capitalizeAndRemoveHyphen(),
       color = Color.White,
       style = MaterialTheme.typography.h3
     )
     Space(height = 2.dp)
-    TypeList(types = pokemon.types)
+    TypeList(types = item.types)
   }
 }

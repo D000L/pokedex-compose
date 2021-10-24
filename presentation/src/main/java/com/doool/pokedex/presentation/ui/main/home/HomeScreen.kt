@@ -46,7 +46,7 @@ import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.ui.main.GamesDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
-import com.doool.pokedex.presentation.ui.main.LocalNavController
+import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.main.LocationDestination
 import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
@@ -54,10 +54,7 @@ import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
 import com.doool.pokedex.presentation.ui.main.news.NewsDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
-import com.doool.pokedex.presentation.utils.Process
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.clipBackground
-import com.doool.pokedex.presentation.utils.defaultPlaceholder
+import com.doool.pokedex.presentation.utils.*
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
   News(R.color.background_psychic, NewsDestination.route),
@@ -336,7 +333,7 @@ private fun PokemonSummary(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
     modifier = Modifier
       .size(220.dp)
       .clipBackground(
-        color = colorResource(id = pokemon.getBackgroundColor()),
+        color = colorResource(id = pokemon.types.getBackgroundColor()),
         shape = RoundedCornerShape(24.dp)
       )
       .clickable {
@@ -402,7 +399,7 @@ fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
     )
     Box(Modifier.weight(1f, fill = true), contentAlignment = Alignment.Center) {
       Text(
-        text = item.name.capitalizeAndRemoveHyphen(),
+        text = item.names.localized.capitalizeAndRemoveHyphen(),
         style = MaterialTheme.typography.body1,
         color = Color.White,
         textAlign = TextAlign.Center,
@@ -423,7 +420,7 @@ fun PreviewMove() {
       damageClass = Info(
         name = "physical"
       ),
-      flavorTextEntries = listOf("A ramming attack that may cause flinching."),
+      flavorTextEntries = listOf(LocalizedString("A ramming attack that may cause flinching.")),
       effectEntries = Effect(
         effect = "Inflicts regular damage.  Has a 30% chance to make the target flinch.",
         shortEffect = "Has a 30% chance to make the target flinch.",
@@ -451,7 +448,7 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
   ) {
     Box(Modifier.weight(1f, fill = true), contentAlignment = Alignment.Center) {
       Text(
-        text = move.name.capitalizeAndRemoveHyphen(),
+        text = move.names.localized.capitalizeAndRemoveHyphen(),
         style = MaterialTheme.typography.body1,
         color = Color.White,
         textAlign = TextAlign.Center,

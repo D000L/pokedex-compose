@@ -12,6 +12,7 @@ import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun Info(
@@ -23,7 +24,7 @@ fun Info(
     modifier = modifier.fillMaxWidth(),
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    Description(pokemonSpecies.flavorText.firstOrNull() ?: "")
+    Description(pokemonSpecies.flavorText.localized)
     Space(height = 12.dp)
     PokedexData(pokemon, pokemonSpecies)
     Space(height = 12.dp)
@@ -34,7 +35,7 @@ fun Info(
 @Composable
 private fun PokedexData(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
   CommonSubTitle("Pokedex Data")
-  InfoItem("Species", pokemonSpecies.genera.genus)
+  InfoItem("Species", pokemonSpecies.genera.localized)
   InfoItem("Height", "%.1f m".format(pokemon.height / 10f))
   InfoItem("Weight", "%.1f kg".format(pokemon.weight / 10f))
   InfoItem(

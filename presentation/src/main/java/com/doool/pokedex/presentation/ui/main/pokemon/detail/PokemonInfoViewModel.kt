@@ -33,10 +33,10 @@ class PokemonInfoViewModel @Inject constructor(
   var initIndex = 0
 
   val pokemonList = flow {
-    val names = getPokemonNames()
-    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = names.first()
-    initIndex = names.indexOf(_currentPokemon.value)
-    emit(names)
+    val indexed = getPokemonNames()
+    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = indexed.first().name
+    initIndex = indexed.indexOfFirst { it.name == _currentPokemon.value }
+    emit(indexed)
   }
 
   val pokemon = currentPokemon.flatMapLatest { getPokemonUsecase(it) }.stateInWhileSubscribed()
@@ -54,10 +54,6 @@ class PokemonInfoViewModel @Inject constructor(
     viewModelScope.launch {
       _currentPokemon.postValue(name)
     }
-  }
-
-  val pokemonImageMap: Map<String, Flow<String>> = lazyMap { name ->
-    return@lazyMap getPokemonUsecase(name).map { it.image }
   }
 
   fun loadPokemonMove(name: String) =

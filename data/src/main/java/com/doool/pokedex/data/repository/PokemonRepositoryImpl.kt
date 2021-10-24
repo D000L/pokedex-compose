@@ -31,7 +31,6 @@ class PokemonRepositoryImpl @Inject constructor(
         PokemonDetailEntity(
           remoteResult.name,
           remoteResult.id,
-          remoteResult.id,
           remoteResult.toJson()
         )
       )
@@ -123,7 +122,6 @@ class PokemonRepositoryImpl @Inject constructor(
         PokemonMoveEntity(
           remoteResult.name,
           remoteResult.id,
-          remoteResult.id,
           remoteResult.toJson()
         )
       )
@@ -145,7 +143,6 @@ class PokemonRepositoryImpl @Inject constructor(
         ItemEntity(
           remoteResult.name,
           remoteResult.id,
-          remoteResult.id,
           remoteResult.toJson()
         )
       )
@@ -154,8 +151,7 @@ class PokemonRepositoryImpl @Inject constructor(
     return localResult.json.toResponse()
   }
 
-  override suspend fun getPokemonThumbnail(name: String): String {
-    val pokemon = pokemonDetailDao.getPokemon(name).json?.toResponse<PokemonDetailResponse>()
-    return pokemon?.sprites?.other?.artwork?.frontDefault ?: ""
+  override suspend fun getPokemonThumbnail(id: Int): String {
+    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
   }
 }

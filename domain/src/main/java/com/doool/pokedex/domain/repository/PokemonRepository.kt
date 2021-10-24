@@ -11,5 +11,5 @@ interface PokemonRepository {
   suspend fun getPokemonMove(name: String): PokemonMove
   suspend fun getItem(name: String): Item
 
-  suspend fun getPokemonThumbnail(name: String): String
+  suspend fun getPokemonThumbnail(id: Int): String
 }

@@ -30,8 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
+import com.doool.pokedex.domain.model.IndexedItem
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.presentation.ui.main.LocalNavController
+import com.doool.pokedex.domain.model.PokemonSpecies
+import com.doool.pokedex.presentation.ui.LocalNavController
+import com.doool.pokedex.presentation.ui.LocalPokemonColor
 import com.doool.pokedex.presentation.ui.main.common.Space
 import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
@@ -39,8 +42,8 @@ import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.getItemTopOffset
+import com.doool.pokedex.presentation.utils.localized
 import com.google.accompanist.pager.*
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -73,7 +76,7 @@ fun PokemonInfoScreen(
     )
 
     LaunchedEffect(pagerState.currentPage) {
-      viewModel.setCurrentPokemon(pokemonList[pagerState.currentPage])
+      viewModel.setCurrentPokemon(pokemonList[pagerState.currentPage].name)
     }
   }
 }
@@ -83,7 +86,7 @@ fun PokemonInfoScreen(
 fun PokemonInfo(
   pagerState: PagerState = rememberPagerState(),
   viewModel: PokemonInfoViewModel,
-  items: List<String>
+  items: List<IndexedItem>
 ) {
   val coroutine = rememberCoroutineScope()
   val density = LocalDensity.current
@@ -108,10 +111,16 @@ fun PokemonInfo(
   BoxWithConstraints {
     val minHeight = maxHeight - HEADER_HEIGHT_EXCLUDE_PAGER
     val pokemon by viewModel.pokemon.collectAsState()
+    val species by viewModel.species.collectAsState()
 
-    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = pokemon.getBackgroundColor())) {
-      Body(Modifier.defaultMinSize(minHeight = minHeight), lazyListState, tabState, viewModel) {
-        coroutine.launch { pagerState.scrollToPage(items.indexOf(it)) }
+    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = pokemon.types.getBackgroundColor())) {
+      Body(
+        Modifier.defaultMinSize(minHeight = minHeight),
+        lazyListState,
+        tabState,
+        viewModel
+      ) { name ->
+        coroutine.launch { pagerState.scrollToPage(items.indexOfFirst { it.name == name }) }
       }
 
       val mainColor by animateColorAsState(targetValue = LocalPokemonColor.current)
@@ -122,9 +131,9 @@ fun PokemonInfo(
       ) {
         Header(
           pagerState,
-          viewModel.pokemonImageMap,
           items,
           pokemon,
+          species,
           offset
         )
         Tab(tabState) { tabState = it }
@@ -195,9 +204,9 @@ private fun Body(
 @Composable
 private fun Header(
   pagerState: PagerState = rememberPagerState(),
-  pokemonImageMap: Map<String, Flow<String>>,
-  items: List<String>,
+  items: List<IndexedItem>,
   pokemon: PokemonDetail,
+  species: PokemonSpecies,
   offset: Float
 ) {
   Box {
@@ -211,14 +220,12 @@ private fun Header(
             alpha = (offset * 3).coerceIn(0f, 1f)
           },
         count = items.size,
-        key = { items[it] },
+        key = { items[it].id },
         state = pagerState,
         contentPadding = PaddingValues(horizontal = 100.dp)
       ) { index ->
-        val pokemonName = items[index]
-        val imageUrl by remember(pokemonName) { pokemonImageMap.getValue(pokemonName) }.collectAsState(
-          initial = ""
-        )
+        val pokemon = items[index]
+        val imageUrl = remember(pokemon) { "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png" }
         PokemonImage(imageUrl, calculateCurrentOffsetForPage(index))
       }
     }
@@ -230,7 +237,8 @@ private fun Header(
           start = 20.dp,
           end = 20.dp
         ),
-      pokemon = pokemon
+      pokemon = pokemon,
+      species = species
     )
   }
 }
@@ -271,11 +279,11 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
 }
 
 @Composable
-private fun TitleLayout(modifier: Modifier, pokemon: PokemonDetail) {
+private fun TitleLayout(modifier: Modifier, pokemon: PokemonDetail, species: PokemonSpecies) {
   Column(modifier.height(TITLE_HEIGHT)) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
-        text = pokemon.name.capitalizeAndRemoveHyphen(),
+        text = species.names.localized.capitalizeAndRemoveHyphen(),
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         color = Color.White

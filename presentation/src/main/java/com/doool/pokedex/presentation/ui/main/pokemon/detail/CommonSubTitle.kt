@@ -4,11 +4,8 @@ import androidx.annotation.ColorRes
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-
-val LocalPokemonColor = compositionLocalOf { Color.Black }
+import com.doool.pokedex.presentation.ui.LocalPokemonColor
 
 @Composable
 fun CommonSubTitle(title: String, @ColorRes color: Int? = null) {
