@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +21,6 @@ import com.doool.pokedex.presentation.ui.main.home.HomeDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
 import com.doool.pokedex.presentation.ui.main.news.NewsDestination
-import com.doool.pokedex.presentation.ui.main.pokemon.detail.LocalPokemonColor
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
@@ -87,24 +85,24 @@ fun NotDevelop() {
   }
 }
 
-val mainNav = listOf(HomeDestination, NewsDestination, Games, Item, Berry, Location)
+val mainNav = listOf(HomeDestination, NewsDestination, GamesDestination, ItemDestination, BerryDestination, LocationDestination)
 
-object Games : NavDestination() {
+object GamesDestination : NavDestination() {
   override val route = "Games"
   override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object Item : NavDestination() {
+object ItemDestination  : NavDestination() {
   override val route = "Item"
   override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object Berry : NavDestination() {
+object BerryDestination : NavDestination() {
   override val route = "Berry"
   override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object Location : NavDestination() {
+object LocationDestination : NavDestination() {
   override val route = "Location"
   override val content: @Composable () -> Unit = { NotDevelop() }
 }
