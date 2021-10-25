@@ -30,7 +30,7 @@ fun MoveScreen(viewModel: MoveViewModel = hiltViewModel()) {
 
   LazyColumn(contentPadding = PaddingValues(top = 20.dp)) {
     item { MoveHeader() }
-    items(moveList, key = { it }) {
+    items(moveList, key = { it.id }) {
       val move by remember(it) { viewModel.getMove(it.name) }.collectAsState()
       Move(move) {
         navController.navigate(MoveInfoDestination.getRouteByName(it))

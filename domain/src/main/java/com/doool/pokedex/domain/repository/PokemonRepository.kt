@@ -9,6 +9,7 @@ interface PokemonRepository {
   suspend fun getPokemonEvolutionChain(url: String): List<PokemonEvolutionChain>
   suspend fun getPokemonTypeResistance(name: String): PokemonTypeResistance
   suspend fun getPokemonMove(name: String): PokemonMove
+  suspend fun getAbility(name: String): Ability
   suspend fun getItem(name: String): Item
 
   suspend fun getPokemonThumbnail(id: Int): String

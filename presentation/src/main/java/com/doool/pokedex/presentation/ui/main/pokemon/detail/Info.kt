@@ -7,40 +7,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.presentation.ui.main.common.Space
-import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun Info(
   modifier: Modifier = Modifier,
-  pokemon: PokemonDetail,
-  pokemonSpecies: PokemonSpecies
+  aboutItem: InfoAboutItem
 ) {
   Column(
     modifier = modifier.fillMaxWidth(),
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    Description(pokemonSpecies.flavorText.localized)
+    Description(aboutItem.descriptions.localized)
     Space(height = 12.dp)
-    PokedexData(pokemon, pokemonSpecies)
+    PokedexData(aboutItem)
     Space(height = 12.dp)
-    Breeding(pokemon, pokemonSpecies)
+    Breeding(aboutItem)
   }
 }
 
 @Composable
-private fun PokedexData(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+private fun PokedexData(aboutItem: InfoAboutItem) {
   CommonSubTitle("Pokedex Data")
-  InfoItem("Species", pokemonSpecies.genera.localized)
-  InfoItem("Height", "%.1f m".format(pokemon.height / 10f))
-  InfoItem("Weight", "%.1f kg".format(pokemon.weight / 10f))
+  InfoItem("Species", aboutItem.genera.localized)
+  InfoItem("Height", "%.1f m".format(aboutItem.height / 10f))
+  InfoItem("Weight", "%.1f kg".format(aboutItem.weight / 10f))
   InfoItem(
     "Abilities",
-    pokemon.abilities.sortedBy { it.slot }.map { it.ability.name.capitalizeAndRemoveHyphen() }
+    aboutItem.abilities.sortedBy { it.id }.map { it.names.localized.capitalizeAndRemoveHyphen() }
       .joinToString(
         separator = ", "
       )
@@ -48,18 +44,18 @@ private fun PokedexData(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) 
 }
 
 @Composable
-private fun Breeding(pokemon: PokemonDetail, pokemonSpecies: PokemonSpecies) {
+private fun Breeding(aboutItem: InfoAboutItem) {
   CommonSubTitle("Breeding")
   InfoItem(
     "Gender",
     "♀ %.1f%%, ♂ %.1f%%".format(
-      pokemonSpecies.maleRate.toFloat(),
-      pokemonSpecies.femaleRate.toFloat()
+      aboutItem.maleRate.toFloat(),
+      aboutItem.femaleRate.toFloat()
     )
   )
   InfoItem(
     "Egg Groups",
-    pokemonSpecies.eggGroups.map { it.name.capitalizeAndRemoveHyphen() }.joinToString(
+    aboutItem.eggGroups.map { it.name.capitalizeAndRemoveHyphen() }.joinToString(
       separator = ", "
     )
   )

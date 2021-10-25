@@ -9,7 +9,7 @@ data class PokemonDetail(
   val stats: List<Stat> = listOf(),
   val types: List<Info> = listOf(),
   val moves: List<Move> = listOf(),
-  val abilities: List<Ability> = listOf()
+  val abilities: List<AbilityInfo> = listOf()
 )
 
 data class Stat(
@@ -30,7 +30,7 @@ data class VersionGroupDetail(
   val version: Info = Info()
 )
 
-data class Ability(
+data class AbilityInfo(
   val ability: Info = Info(),
   val isHidden: Boolean = false,
   val slot: Int = 0

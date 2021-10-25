@@ -26,6 +26,9 @@ interface PokeApiService {
   @GET("item/{name}/")
   suspend fun getItem(@Path("name") name: String): ItemResponse
 
+  @GET("ability/{name}")
+  suspend fun getAbility(@Path("name") name: String): AbilityResponse
+
   @GET("move?offset=0&limit=999")
   suspend fun getAllPokemonMoveInfo(): ListItem<InfoResponse>
 

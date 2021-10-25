@@ -13,4 +13,10 @@ open class BaseViewModel : ViewModel() {
       viewModelScope,
       SharingStarted.WhileSubscribed(delay), factory() ?: T::class.java.newInstance()
     )
+
+  inline fun <reified T> Flow<T>.stateInWhileLazily(factory: () -> T? = { null }) =
+    this.stateIn(
+      viewModelScope,
+      SharingStarted.Lazily, factory() ?: T::class.java.newInstance()
+    )
 }

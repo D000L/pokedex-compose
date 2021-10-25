@@ -20,17 +20,16 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun Stats(
   modifier: Modifier = Modifier,
-  stats: List<Stat>,
-  damageRelations: List<Damage>
+  statsItem : InfoStatsItem
 ) {
   Column(
     modifier.fillMaxWidth(),
     verticalArrangement = Arrangement.spacedBy(10.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    BaseStats(stats)
+    BaseStats(statsItem.stats)
     Space(height = 12.dp)
-    TypeDefenses(damageRelations)
+    TypeDefenses(statsItem.damageRelations)
   }
 }
 

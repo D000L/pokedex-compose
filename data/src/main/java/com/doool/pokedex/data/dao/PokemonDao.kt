@@ -57,4 +57,10 @@ interface PokemonDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertItemEntity(item: List<ItemEntity>)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertAbilityEntity(ability: AbilityEntity)
+
+  @Query("SELECT * FROM ability WHERE name = :name")
+  suspend fun getAbility(name: String): AbilityEntity?
 }

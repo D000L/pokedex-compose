@@ -151,6 +151,28 @@ class PokemonRepositoryImpl @Inject constructor(
     return localResult.json.toResponse()
   }
 
+  override suspend fun getAbility(name: String): Ability {
+    return fetchAbility(name).toModel()
+  }
+
+  private suspend fun fetchAbility(names: String): AbilityResponse {
+    val localResult = pokemonDao.getAbility(names)
+
+    if (localResult?.json == null) {
+      val remoteResult = pokeApiService.getAbility(names)
+      pokemonDao.insertAbilityEntity(
+        AbilityEntity(
+          remoteResult.name,
+          remoteResult.id,
+          remoteResult.toJson()
+        )
+      )
+      return remoteResult
+    }
+    return localResult.json.toResponse()
+  }
+
+
   override suspend fun getPokemonThumbnail(id: Int): String {
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
   }

@@ -31,8 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.IndexedItem
-import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.LocalPokemonColor
 import com.doool.pokedex.presentation.ui.main.common.Space
@@ -40,6 +38,7 @@ import com.doool.pokedex.presentation.ui.main.common.SpaceFill
 import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
 import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
+import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.doool.pokedex.presentation.utils.localized
@@ -110,10 +109,9 @@ fun PokemonInfo(
 
   BoxWithConstraints {
     val minHeight = maxHeight - HEADER_HEIGHT_EXCLUDE_PAGER
-    val pokemon by viewModel.pokemon.collectAsState()
-    val species by viewModel.species.collectAsState()
+    val headerState by viewModel.headerState.collectAsState()
 
-    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = pokemon.types.getBackgroundColor())) {
+    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = headerState.types.getBackgroundColor())) {
       Body(
         Modifier.defaultMinSize(minHeight = minHeight),
         lazyListState,
@@ -132,8 +130,7 @@ fun PokemonInfo(
         Header(
           pagerState,
           items,
-          pokemon,
-          species,
+          headerState,
           offset
         )
         Tab(tabState) { tabState = it }
@@ -152,7 +149,7 @@ private fun Body(
   onClickPokemon: (String) -> Unit,
 ) {
   val navController = LocalNavController.current
-  val pokemon by viewModel.pokemon.collectAsState()
+  val moveItems by viewModel.moveState.collectAsState()
 
   LazyColumn(
     state = state,
@@ -161,26 +158,28 @@ private fun Body(
     item { Space(height = 20.dp) }
     when (tabState) {
       TabState.About -> item {
-        val species by viewModel.species.collectAsState()
+        val aboutState by viewModel.aboutState.collectAsState()
 
-        Info(
-          modifier = modifier.padding(horizontal = 20.dp),
-          pokemon = pokemon,
-          pokemonSpecies = species
-        )
+        aboutState.Process(onComplete = {
+          Info(
+            modifier = modifier.padding(horizontal = 20.dp),
+            aboutItem = it
+          )
+        })
       }
       TabState.Stats -> item {
-        val damageRelations by viewModel.damageRelations.collectAsState()
+        val statsState by viewModel.statsState.collectAsState()
 
-        Stats(
-          modifier = modifier.padding(horizontal = 20.dp),
-          stats = pokemon.stats,
-          damageRelations = damageRelations
-        )
+        statsState.Process(onComplete = {
+          Stats(
+            modifier = modifier.padding(horizontal = 20.dp),
+            statsItem = it,
+          )
+        })
       }
       TabState.Move -> {
         item { MoveHeader() }
-        items(pokemon.moves, key = { it.name }) {
+        items(moveItems, key = { it.name }) {
           val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
           Move(move) {
             navController.navigate(MoveInfoDestination.getRouteByName(it))
@@ -205,8 +204,7 @@ private fun Body(
 private fun Header(
   pagerState: PagerState = rememberPagerState(),
   items: List<IndexedItem>,
-  pokemon: PokemonDetail,
-  species: PokemonSpecies,
+  headerItem: InfoHeaderItem,
   offset: Float
 ) {
   Box {
@@ -237,8 +235,7 @@ private fun Header(
           start = 20.dp,
           end = 20.dp
         ),
-      pokemon = pokemon,
-      species = species
+      headerItem = headerItem
     )
   }
 }
@@ -279,24 +276,24 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
 }
 
 @Composable
-private fun TitleLayout(modifier: Modifier, pokemon: PokemonDetail, species: PokemonSpecies) {
+private fun TitleLayout(modifier: Modifier, headerItem: InfoHeaderItem) {
   Column(modifier.height(TITLE_HEIGHT)) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
-        text = species.names.localized.capitalizeAndRemoveHyphen(),
+        text = headerItem.names.localized.capitalizeAndRemoveHyphen(),
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         color = Color.White
       )
       SpaceFill()
       Text(
-        text = "#%03d".format(pokemon.id),
+        text = "#%03d".format(headerItem.id),
         style = MaterialTheme.typography.h3,
         color = Color.White.copy(alpha = 0.7f)
       )
     }
     Space(height = 6.dp)
-    TypeListWithTitle(types = pokemon.types)
+    TypeListWithTitle(types = headerItem.types)
   }
 }
 

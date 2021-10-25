@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class PokemonDetailResponse(
-  val abilities: List<Ability> = listOf(),
+  val abilities: List<AbilityInfoResponse> = listOf(),
   @SerializedName("base_experience") val baseExperience: Int = 0,
   val forms: List<InfoResponse> = listOf(),
   @SerializedName("game_indices") val gameIndices: List<GameIndice> = listOf(),
@@ -30,7 +30,7 @@ data class PokemonDetailResponse(
 )
 
 @Keep
-data class Ability(
+data class AbilityInfoResponse(
   val ability: InfoResponse = InfoResponse(),
   @SerializedName("is_hidden") val isHidden: Boolean = false,
   val slot: Int = 0

@@ -24,7 +24,7 @@ fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {
   )
 }
 
-fun EffectResponse.toModel(effectChance: Int): Effect = with(this) {
+fun EffectResponse.toModel(effectChance: Int = -1): Effect = with(this) {
   val effect = effect.replace("\$effect_chance", "$effectChance")
   val shortEffect = shortEffect.replace("\$effect_chance", "$effectChance")
   Effect(effect = effect, effectChance = effectChance, shortEffect = shortEffect)

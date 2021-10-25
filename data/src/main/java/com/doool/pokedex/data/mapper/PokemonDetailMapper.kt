@@ -1,7 +1,6 @@
 package com.doool.pokedex.data.mapper
 
 import com.doool.pokedex.data.response.*
-import com.doool.pokedex.data.response.Ability
 import com.doool.pokedex.domain.model.*
 
 fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
@@ -48,8 +47,8 @@ fun VersionGroupDetailResponse.toModel(): VersionGroupDetail = with(this) {
   )
 }
 
-fun Ability.toModel(): com.doool.pokedex.domain.model.Ability = with(this) {
-  com.doool.pokedex.domain.model.Ability(
+fun AbilityInfoResponse.toModel(): AbilityInfo = with(this) {
+  AbilityInfo(
     ability = ability.toModel(),
     isHidden = isHidden,
     slot = slot
