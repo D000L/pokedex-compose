@@ -1,20 +1,14 @@
 package com.doool.pokedex.presentation.ui.main.news
 
 import android.widget.TextView
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -26,7 +20,7 @@ import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.PokemonNews
 import com.doool.pokedex.presentation.ui.main.common.Space
-import com.doool.pokedex.presentation.utils.getItemTopOffset
+import com.doool.pokedex.presentation.ui.main.common.listAppBar
 
 @Composable
 fun NewsScreen(viewModel: NewsViewModel = hiltViewModel()) {
@@ -36,33 +30,12 @@ fun NewsScreen(viewModel: NewsViewModel = hiltViewModel()) {
   NewsList(news)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NewsList(news: LazyPagingItems<PokemonNews>) {
   val state = rememberLazyListState()
 
   LazyColumn(state = state) {
-    stickyHeader {
-      val showHeaderDivider by derivedStateOf {
-        state.getItemTopOffset(1) < 0
-      }
-
-      Box(
-        Modifier
-          .fillMaxWidth()
-          .height(52.dp)
-          .background(Color.White), contentAlignment = Alignment.Center
-      ) {
-        Text(text = "Pokemon News",style = MaterialTheme.typography.h4)
-        if (showHeaderDivider) Box(
-          Modifier
-            .align(Alignment.BottomCenter)
-            .fillMaxWidth()
-            .height(0.5.dp)
-            .background(Color.Black)
-        )
-      }
-    }
+    listAppBar(state = state, title = "Pokemon News")
     items(news, key = { it.title }) {
       it?.let { News(it) }
     }

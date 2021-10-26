@@ -33,10 +33,7 @@ import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.IndexedItem
 import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.LocalPokemonColor
-import com.doool.pokedex.presentation.ui.main.common.Space
-import com.doool.pokedex.presentation.ui.main.common.SpaceFill
-import com.doool.pokedex.presentation.ui.main.common.TypeListWithTitle
-import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
+import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
 import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
@@ -46,7 +43,6 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-private val TOOLBAR_HEIGHT = 56.dp
 private val THUMBNAIL_VIEWPAGER_HEIGHT = 130.dp
 private val TITLE_HEIGHT = 92.dp
 private val TAB_HEIGHT = 42.dp
@@ -135,7 +131,7 @@ fun PokemonInfo(
         )
         Tab(tabState) { tabState = it }
       }
-      AppBar(modifier = Modifier.height(TOOLBAR_HEIGHT))
+      DefaultAppBar(tintColor = Color.White)
     }
   }
 }
@@ -223,7 +219,8 @@ private fun Header(
         contentPadding = PaddingValues(horizontal = 100.dp)
       ) { index ->
         val pokemon = items[index]
-        val imageUrl = remember(pokemon) { "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png" }
+        val imageUrl =
+          remember(pokemon) { "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png" }
         PokemonImage(imageUrl, calculateCurrentOffsetForPage(index))
       }
     }
@@ -237,21 +234,6 @@ private fun Header(
         ),
       headerItem = headerItem
     )
-  }
-}
-
-@Composable
-private fun AppBar(modifier: Modifier = Modifier) {
-  val navController = LocalNavController.current
-
-  Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-    IconButton(onClick = navController::navigateUp) {
-      Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.White)
-    }
-    SpaceFill()
-    IconButton(onClick = { }) {
-      Icon(Icons.Default.Share, contentDescription = null, tint = Color.White)
-    }
   }
 }
 

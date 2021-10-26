@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -32,12 +33,8 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.IndexedItem
 import com.doool.pokedex.domain.model.Info
-import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.presentation.ui.LocalNavController
-import com.doool.pokedex.presentation.ui.main.common.Pokeball
-import com.doool.pokedex.presentation.ui.main.common.Space
-import com.doool.pokedex.presentation.ui.main.common.TypeList
-import com.doool.pokedex.presentation.ui.main.common.getBackgroundColor
+import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.utils.*
 
@@ -48,9 +45,7 @@ fun PokemonListScreen(
 
   val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
 
-  Column(Modifier.padding(horizontal = 20.dp)) {
-    PokemonList(pokemonListViewModel, pokemonList)
-  }
+  PokemonList(pokemonListViewModel, pokemonList)
 }
 
 @Composable
@@ -59,15 +54,17 @@ fun PokemonList(
   list: List<IndexedItem>
 ) {
   val navController = LocalNavController.current
+  val state = rememberLazyListState()
 
   LazyColumn(
-    contentPadding = PaddingValues(top = 20.dp),
+    state = state,
     verticalArrangement = Arrangement.spacedBy(12.dp)
   ) {
+    listAppBar(state = state, title = "Pokemon")
     items(list, key = { it.id }) {
       val itemState by remember { viewModel.getItemState(it.name) }.collectAsState()
 
-      Pokemon(item = itemState) {
+      Pokemon(modifier = Modifier.padding(horizontal = 20.dp), item = itemState) {
         navController.navigate(PokemonInfoDestination.getRouteByName(it))
       }
     }
@@ -78,7 +75,7 @@ fun PokemonList(
 @Composable
 fun PokemonPreview() {
   Pokemon(
-    PokemonListItem(
+    item = PokemonListItem(
       101,
       "electrode",
       emptyList(),
@@ -89,8 +86,8 @@ fun PokemonPreview() {
 }
 
 @Composable
-private fun PokemonPlaceholder() {
-  Box(Modifier.height(130.dp)) {
+private fun PokemonPlaceholder(modifier: Modifier = Modifier) {
+  Box(modifier.height(130.dp)) {
     Box(
       Modifier
         .align(Alignment.BottomStart)
@@ -102,8 +99,12 @@ private fun PokemonPlaceholder() {
 }
 
 @Composable
-private fun Pokemon(item: PokemonListItem, onClick: (String) -> Unit = {}) {
-  Box(Modifier.height(130.dp)) {
+private fun Pokemon(
+  modifier: Modifier = Modifier,
+  item: PokemonListItem,
+  onClick: (String) -> Unit = {}
+) {
+  Box(modifier.height(130.dp)) {
     val density = LocalDensity.current
     val color = colorResource(id = item.types.getBackgroundColor())
 
@@ -145,11 +146,15 @@ private fun Pokemon(item: PokemonListItem, onClick: (String) -> Unit = {}) {
 }
 
 @Composable
-fun Pokemon(item: LoadState<PokemonListItem>, onClick: (String) -> Unit) {
+fun Pokemon(
+  modifier: Modifier = Modifier,
+  item: LoadState<PokemonListItem>,
+  onClick: (String) -> Unit
+) {
   item.Process(onLoading = {
-    PokemonPlaceholder()
+    PokemonPlaceholder(modifier)
   }, onComplete = {
-    Pokemon(item = it, onClick = onClick)
+    Pokemon(modifier = modifier, item = it, onClick = onClick)
   })
 }
 

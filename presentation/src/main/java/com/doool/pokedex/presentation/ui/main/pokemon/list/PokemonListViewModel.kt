@@ -8,8 +8,10 @@ import com.doool.pokedex.domain.usecase.GetPokemonSpecies
 import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,5 +30,5 @@ class PokemonListViewModel @Inject constructor(
 
   fun getItemState(name: String) = combine(getPokemonUsecase(name), getPokemonSpecies(name)) { pokemon, species ->
     PokemonListItem(pokemon.id, pokemon.name, species.names, pokemon.image, pokemon.types)
-  }.withLoadState().stateInWhileSubscribed(1000) { LoadState.Loading }
+  }.onStart { delay(500) }.withLoadState().stateInWhileSubscribed(1000) { LoadState.Loading }
 }
