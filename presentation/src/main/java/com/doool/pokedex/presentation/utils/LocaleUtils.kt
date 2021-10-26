@@ -1,9 +1,9 @@
 package com.doool.pokedex.presentation.utils
 
 import androidx.compose.runtime.Composable
+import com.doool.pokedex.domain.model.Language
 import com.doool.pokedex.domain.model.LocalizedString
-import com.doool.pokedex.presentation.setting.Language
-import com.doool.pokedex.presentation.setting.LocalSettings
+import com.doool.pokedex.presentation.LocalSettings
 
 val List<LocalizedString>.localized: String
   @Composable get() {

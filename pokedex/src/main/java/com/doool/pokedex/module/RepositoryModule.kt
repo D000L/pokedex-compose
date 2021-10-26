@@ -1,16 +1,14 @@
 package com.doool.pokedex.module
 
-import com.doool.pokedex.data.repository.DownloadRepositoryImpl
-import com.doool.pokedex.data.repository.NewsRepositoryImpl
-import com.doool.pokedex.data.repository.PokemonRepositoryImpl
-import com.doool.pokedex.data.repository.SearchRepositoryImpl
-import com.doool.pokedex.domain.repository.DownloadRepository
-import com.doool.pokedex.domain.repository.NewsRepository
-import com.doool.pokedex.domain.repository.PokemonRepository
-import com.doool.pokedex.domain.repository.SearchRepository
+import android.content.Context
+import com.doool.pokedex.data.preference.SettingPreferences
+import com.doool.pokedex.data.repository.*
+import com.doool.pokedex.domain.repository.*
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -28,4 +26,14 @@ abstract class RepositoryModule {
 
   @Binds
   abstract fun bindSearchRepository(impl: SearchRepositoryImpl): SearchRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class RepositoryProvideModule {
+
+  @Provides
+  fun bindSettingRepository(@ApplicationContext context: Context): SettingRepository {
+    return SettingRepositoryImpl(SettingPreferences(context))
+  }
 }

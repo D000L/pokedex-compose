@@ -10,6 +10,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -17,6 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.doool.pokedex.domain.model.PokedexSetting
+import com.doool.pokedex.presentation.LocalSettings
 import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.NavDestination
 import com.doool.pokedex.presentation.ui.main.home.HomeDestination
@@ -46,8 +50,11 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       PokedexTheme {
-        Surface(Modifier.fillMaxSize()) {
-          MainNavHost()
+        val setting by viewModel.setting.collectAsState(initial = PokedexSetting())
+        CompositionLocalProvider(LocalSettings provides setting) {
+          Surface(Modifier.fillMaxSize()) {
+            MainNavHost()
+          }
         }
       }
     }

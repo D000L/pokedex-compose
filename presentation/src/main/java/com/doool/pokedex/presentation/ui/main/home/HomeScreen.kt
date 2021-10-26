@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -25,6 +26,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -73,19 +75,27 @@ fun HomeScreen(
 ) {
   var isSearching by remember { mutableStateOf(false) }
   val animationOffset by animateFloatAsState(targetValue = if (isSearching) 0f else 1f)
+  val context = LocalContext.current
 
   Box(
     Modifier
       .verticalScroll(rememberScrollState())
       .fillMaxWidth()
   ) {
-    Text(
-      modifier = Modifier
+    Row(
+      Modifier
         .padding(start = 20.dp, end = 20.dp, top = 48.dp)
-        .alpha(animationOffset),
-      text = stringResource(id = R.string.home_title),
-      style = MaterialTheme.typography.h1
-    )
+        .alpha(animationOffset)) {
+      Text(
+        text = stringResource(id = R.string.home_title),
+        style = MaterialTheme.typography.h1
+      )
+      IconButton(onClick = {
+        context.goSetting()
+      }) {
+        Icon(Icons.Default.Settings, null)
+      }
+    }
 
     MenuScreen(
       Modifier
