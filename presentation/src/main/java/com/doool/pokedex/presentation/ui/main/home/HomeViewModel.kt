@@ -47,4 +47,8 @@ class HomeViewModel @Inject constructor(
       this@HomeViewModel.query.emit(query)
     }
   }
+
+  fun clearQuery(){
+    query.tryEmit("")
+  }
 }

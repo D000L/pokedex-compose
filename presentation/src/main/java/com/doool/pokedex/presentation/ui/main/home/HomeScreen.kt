@@ -26,7 +26,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -46,9 +45,9 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
+import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.main.GamesDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
-import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.main.LocationDestination
 import com.doool.pokedex.presentation.ui.main.common.*
 import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
@@ -56,6 +55,7 @@ import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
 import com.doool.pokedex.presentation.ui.main.news.NewsDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
+import com.doool.pokedex.presentation.ui.main.setting.SettingDropDown
 import com.doool.pokedex.presentation.utils.*
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
@@ -75,7 +75,6 @@ fun HomeScreen(
 ) {
   var isSearching by remember { mutableStateOf(false) }
   val animationOffset by animateFloatAsState(targetValue = if (isSearching) 0f else 1f)
-  val context = LocalContext.current
 
   Box(
     Modifier
@@ -85,15 +84,22 @@ fun HomeScreen(
     Row(
       Modifier
         .padding(start = 20.dp, end = 20.dp, top = 48.dp)
-        .alpha(animationOffset)) {
+        .alpha(animationOffset)
+    ) {
       Text(
         text = stringResource(id = R.string.home_title),
         style = MaterialTheme.typography.h1
       )
-      IconButton(onClick = {
-        context.goSetting()
-      }) {
+
+      SpaceFill()
+
+      var showMenu by remember { mutableStateOf(false) }
+      IconButton(onClick = { showMenu = true }) {
         Icon(Icons.Default.Settings, null)
+
+        SettingDropDown(expended = showMenu) {
+          showMenu = false
+        }
       }
     }
 
@@ -121,6 +127,8 @@ private fun SearchScreen(
   val animate by animateFloatAsState(targetValue = if (isExpended) 0f else 1f)
   val query by viewModel.query.collectAsState()
 
+  LaunchedEffect(isExpended) { if (!isExpended) viewModel.clearQuery() }
+
   Column {
     SearchBox(
       modifier = Modifier
@@ -130,9 +138,10 @@ private fun SearchScreen(
           shape = RoundedCornerShape(8.dp * animate)
         )
         .clickable(!isExpended) { setExpended(true) },
+      isExpended = isExpended,
       query = query,
       updateQuery = viewModel::search,
-      isExpended = isExpended,
+      clearQuery = viewModel::clearQuery,
       navigateBack = { setExpended(false) }
     )
 
@@ -153,9 +162,10 @@ private fun SearchScreen(
 @Composable
 private fun SearchBox(
   modifier: Modifier = Modifier,
+  isExpended: Boolean = false,
   query: String,
   updateQuery: (String) -> Unit,
-  isExpended: Boolean = false,
+  clearQuery: () -> Unit,
   navigateBack: () -> Unit
 ) {
   val keyboardController = LocalSoftwareKeyboardController.current
@@ -189,9 +199,10 @@ private fun SearchBox(
     decorationBox = {
       SearchBoxLayout(isExpended, query.isEmpty(), {
         hideKeyboard()
-        updateQuery("")
+        clearQuery()
       }, {
         hideKeyboard()
+        clearQuery()
         navigateBack()
       }, it)
     })

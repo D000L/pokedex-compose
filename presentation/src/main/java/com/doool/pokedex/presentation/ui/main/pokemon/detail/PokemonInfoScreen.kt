@@ -131,7 +131,7 @@ fun PokemonInfo(
         )
         Tab(tabState) { tabState = it }
       }
-      DefaultAppBar(tintColor = Color.White)
+      DefaultAppBar(tintColor = Color.White, showDivider = false)
     }
   }
 }

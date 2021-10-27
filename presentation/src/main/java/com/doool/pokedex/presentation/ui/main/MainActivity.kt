@@ -19,8 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.doool.pokedex.domain.model.PokedexSetting
-import com.doool.pokedex.presentation.LocalSettings
+import com.doool.pokedex.presentation.LocalLanguage
 import com.doool.pokedex.presentation.ui.LocalNavController
 import com.doool.pokedex.presentation.ui.NavDestination
 import com.doool.pokedex.presentation.ui.main.home.HomeDestination
@@ -50,8 +49,8 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       PokedexTheme {
-        val setting by viewModel.setting.collectAsState(initial = PokedexSetting())
-        CompositionLocalProvider(LocalSettings provides setting) {
+        val language by viewModel.language.collectAsState()
+        CompositionLocalProvider(LocalLanguage provides language) {
           Surface(Modifier.fillMaxSize()) {
             MainNavHost()
           }
