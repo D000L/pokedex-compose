@@ -20,14 +20,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.doool.pokedex.presentation.LocalLanguage
-import com.doool.pokedex.presentation.ui.LocalNavController
-import com.doool.pokedex.presentation.ui.NavDestination
-import com.doool.pokedex.presentation.ui.main.home.HomeDestination
-import com.doool.pokedex.presentation.ui.main.move.MoveInfoDestination
-import com.doool.pokedex.presentation.ui.main.move.MoveListDestination
-import com.doool.pokedex.presentation.ui.main.news.NewsDestination
-import com.doool.pokedex.presentation.ui.main.pokemon.detail.PokemonInfoDestination
-import com.doool.pokedex.presentation.ui.main.pokemon.list.PokemonListDestination
+import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.NavDestination
+import com.doool.pokedex.presentation.ui.home.destination.HomeDestination
+import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
+import com.doool.pokedex.presentation.ui.move_list.destination.MoveListDestination
+import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
+import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
+import com.doool.pokedex.presentation.ui.pokemon_list.destination.PokemonListDestination
 import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import com.doool.pokedex.presentation.utils.goDownload
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,14 +93,21 @@ fun NotDevelop() {
   }
 }
 
-val mainNav = listOf(HomeDestination, NewsDestination, GamesDestination, ItemDestination, BerryDestination, LocationDestination)
+val mainNav = listOf(
+  HomeDestination,
+  NewsDestination,
+  GamesDestination,
+  ItemDestination,
+  BerryDestination,
+  LocationDestination
+)
 
 object GamesDestination : NavDestination() {
   override val route = "Games"
   override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object ItemDestination  : NavDestination() {
+object ItemDestination : NavDestination() {
   override val route = "Item"
   override val content: @Composable () -> Unit = { NotDevelop() }
 }

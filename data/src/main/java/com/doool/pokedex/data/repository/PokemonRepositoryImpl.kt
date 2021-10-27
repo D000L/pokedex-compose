@@ -171,9 +171,4 @@ class PokemonRepositoryImpl @Inject constructor(
     }
     return localResult.json.toResponse()
   }
-
-
-  override suspend fun getPokemonThumbnail(id: Int): String {
-    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
-  }
 }

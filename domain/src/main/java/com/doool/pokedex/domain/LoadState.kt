@@ -8,7 +8,7 @@ sealed class LoadState<out T> {
   data class Success<T>(val data: T) : LoadState<T>()
 
   val isLoading: Boolean
-    get() = this is LoadState.Loading
+    get() = this is Loading
 }
 
 fun <T> Flow<T>.withLoadState() = flow {

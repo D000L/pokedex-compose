@@ -16,7 +16,7 @@ fun PokemonSpeciesResponse.toModel(): PokemonSpecies = with(this) {
     femaleRate = if (genderRate == 0) 0 else (1 / genderRate) * 100,
     evolutionUrl = evolutionChain?.url ?: "",
     flavorText = flavorTextEntries.map {
-      LocalizedString(it.flavorText.replace("\n", " "),it.language.name)
+      LocalizedString(it.flavorText.replace("\n", " "), it.language.name)
     },
     generation = generation.toModel(),
     genera = genera.map { LocalizedString(it.genus, it.language.name) },

@@ -1,5 +1,6 @@
 package com.doool.pokedex.domain.usecase
 
+import com.doool.pokedex.domain.Urls
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.domain.repository.PokemonRepository
 import kotlinx.coroutines.flow.Flow
@@ -11,18 +12,13 @@ class GetPokemonEvolutionChain @Inject constructor(private val pokemonRepository
   operator fun invoke(url: String): Flow<List<PokemonEvolutionChain>> = flow {
     val result = pokemonRepository.getPokemonEvolutionChain(url)
     result.forEach {
-      val fromId = it.from.url.trimEnd('/').split("/").last().toInt()
-      val fromSprite =
-        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$fromId.png"
+      val fromSprite = Urls.getImageUrl(it.from.id)
       it.from.names = pokemonRepository.getPokemonSpecies(it.from.name).names
-      it.from.url = fromSprite
+      it.from.imageUrl = fromSprite
 
-      val toId = it.to.url.trimEnd('/').split("/").last().toInt()
-      val toSprite =
-        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$toId.png"
-
+      val toSprite = Urls.getImageUrl(it.to.id)
       it.to.names = pokemonRepository.getPokemonSpecies(it.to.name).names
-      it.to.url = toSprite
+      it.to.imageUrl = toSprite
     }
     emit(result)
   }

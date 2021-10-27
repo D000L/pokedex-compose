@@ -14,6 +14,7 @@ class SearchMove @Inject constructor(
   @WorkerThread
   suspend operator fun invoke(query: String?, limit: Int = -1) = flow {
     emit(
-      searchRepository.searchMoveNames(query, limit).map { pokemonRepository.getPokemonMove(it.name) })
+      searchRepository.searchMoveNames(query, limit)
+        .map { pokemonRepository.getPokemonMove(it.name) })
   }
 }

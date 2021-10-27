@@ -16,7 +16,7 @@ class DownloadActivity : ComponentActivity() {
 
     setContent {
       PokedexTheme {
-        DownloadScreen(){
+        DownloadScreen {
           startActivity(Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
       }

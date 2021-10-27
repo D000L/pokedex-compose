@@ -7,5 +7,8 @@ import retrofit2.http.Query
 interface NewsService {
 
   @GET("news")
-  suspend fun getNewsList(@Query("index") index: Int, @Query("count") count: Int): List<PokemonNewsResponse>
+  suspend fun getNewsList(
+    @Query("index") index: Int,
+    @Query("count") count: Int
+  ): List<PokemonNewsResponse>
 }

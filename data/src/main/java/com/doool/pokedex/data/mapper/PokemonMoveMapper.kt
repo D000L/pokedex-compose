@@ -11,7 +11,7 @@ fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {
   PokemonMove(
     id = id,
     name = name,
-    names = names.map { LocalizedString(it.name,it.language.name) },
+    names = names.map { LocalizedString(it.name, it.language.name) },
     accuracy = accuracy,
     effectEntries = effectEntries.firstOrNull()?.toModel(effectChance) ?: Effect(),
     damageClass = damageClass?.toModel() ?: Info(),

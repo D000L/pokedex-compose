@@ -1,6 +1,5 @@
 package com.doool.pokedex.domain.usecase
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import com.doool.pokedex.domain.repository.PokemonRepository
 import kotlinx.coroutines.flow.flow

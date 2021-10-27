@@ -1,11 +1,11 @@
 package com.doool.pokedex.data.mapper
 
+import com.doool.pokedex.data.parseId
 import com.doool.pokedex.data.response.EvolutionDetail
 import com.doool.pokedex.data.response.EvolvesTo
 import com.doool.pokedex.data.response.PokemonEvolutionChainResponse
 import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.domain.model.Condition
-import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 
@@ -18,13 +18,13 @@ private fun parseChain(
   evolvesTo: List<EvolvesTo>
 ): List<PokemonEvolutionChain> {
   val list = mutableListOf<PokemonEvolutionChain>()
-  val from = LocalizedInfo(from.name, url = from.url)
+  val from = LocalizedInfo(id = from.url.parseId(), name = from.name)
 
   evolvesTo.forEach {
     list.add(
       PokemonEvolutionChain(
         from,
-        LocalizedInfo(it.species.name, url = it.species.url),
+        LocalizedInfo(id = it.species.url.parseId(), name = it.species.name),
         it.evolutionDetails.first().toModel()
       )
     )

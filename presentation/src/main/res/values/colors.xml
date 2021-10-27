@@ -47,22 +47,4 @@
     <color name="type_rock">#BAAB82</color>
     <color name="type_steel">#417D9A</color>
     <color name="type_water">#4A90DA</color>
-
-    <color name="hp">#FF0000</color>
-    <color name="attack">#F08030</color>
-    <color name="defense">#F8D030</color>
-    <color name="special_attack">#6890F0</color>
-    <color name="special_defense">#78C850</color>
-    <color name="special_speed">#F85888</color>
-
-    <color name="pokemon_red">#EC8484</color>
-    <color name="pokemon_blue">#94DBEE</color>
-    <color name="pokemon_yellow">#EED535</color>
-    <color name="pokemon_green">#64D364</color>
-    <color name="pokemon_black">#BBB</color>
-    <color name="pokemon_brown">#C96</color>
-    <color name="pokemon_purple">#C183C1</color>
-    <color name="pokemon_white">#FFF</color>
-    <color name="pokemon_pink">#F4BDC9</color>
-    <color name="pokemon_gray">#D1D1E0</color>
 </resources>

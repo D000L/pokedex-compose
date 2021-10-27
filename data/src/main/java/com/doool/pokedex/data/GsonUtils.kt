@@ -10,3 +10,5 @@ inline fun <reified T> T.toJson(): String {
 inline fun <reified T> String.toResponse(): T {
   return Gson().fromJson(this, object : TypeToken<T>() {}.type)
 }
+
+fun String.parseId() = this.trimEnd('/').split("/").last().toInt()
