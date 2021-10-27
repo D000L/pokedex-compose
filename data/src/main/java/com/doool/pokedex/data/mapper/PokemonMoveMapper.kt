@@ -2,10 +2,8 @@ package com.doool.pokedex.data.mapper
 
 import com.doool.pokedex.data.response.PokemonMoveResponse
 import com.doool.pokedex.data.response.common.EffectResponse
-import com.doool.pokedex.domain.model.Effect
-import com.doool.pokedex.domain.model.Info
-import com.doool.pokedex.domain.model.LocalizedString
-import com.doool.pokedex.domain.model.PokemonMove
+import com.doool.pokedex.domain.Urls
+import com.doool.pokedex.domain.model.*
 
 fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {
   PokemonMove(
@@ -15,8 +13,16 @@ fun PokemonMoveResponse.toModel(): PokemonMove = with(this) {
     accuracy = accuracy,
     effectEntries = effectEntries.firstOrNull()?.toModel(effectChance) ?: Effect(),
     damageClass = damageClass?.toModel() ?: Info(),
-    flavorTextEntries = flavorTextEntries.map { LocalizedString(it.flavorText, it.language.name) },
-    learnedPokemon = learnedPokemon.map { it.toModel() },
+    flavorTextEntries = flavorTextEntries.map {
+      LocalizedString(
+        it.flavorText.replace("\n", " "),
+        it.language.name
+      )
+    },
+    learnedPokemon = learnedPokemon.map {
+      val info = it.toModel()
+      Pokemon(info.id, info.name, Urls.getImageUrl(info.id))
+    },
     machines = machines.firstOrNull()?.machine?.toModel() ?: Info(),
     power = power,
     pp = pp,

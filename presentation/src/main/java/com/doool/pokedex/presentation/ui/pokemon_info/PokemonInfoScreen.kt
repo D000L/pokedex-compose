@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
-import com.doool.pokedex.domain.Urls
-import com.doool.pokedex.domain.model.IndexedItem
+import com.doool.pokedex.domain.model.Info
+import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
@@ -84,7 +84,7 @@ fun PokemonInfoScreen(
 fun PokemonInfo(
   pagerState: PagerState = rememberPagerState(),
   viewModel: PokemonInfoViewModel,
-  items: List<IndexedItem>
+  items: List<Pokemon>
 ) {
   val coroutine = rememberCoroutineScope()
   val density = LocalDensity.current
@@ -202,7 +202,7 @@ private fun Body(
 @Composable
 private fun Header(
   pagerState: PagerState = rememberPagerState(),
-  items: List<IndexedItem>,
+  items: List<Pokemon>,
   headerUIModel: HeaderUIModel,
   offset: Float
 ) {
@@ -222,9 +222,7 @@ private fun Header(
         contentPadding = PaddingValues(horizontal = 100.dp)
       ) { index ->
         val pokemon = items[index]
-        val imageUrl =
-          remember(pokemon) { Urls.getImageUrl(pokemon.id) }
-        PokemonImage(imageUrl, calculateCurrentOffsetForPage(index))
+        PokemonImage( pokemon.imageUrl, calculateCurrentOffsetForPage(index))
       }
     }
 

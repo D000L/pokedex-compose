@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgumentBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
+import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.bottomSheet
 
 object LocalNavController {
 
@@ -29,6 +29,18 @@ abstract class NavDestination {
   abstract val route: String
   open val arguments: List<NamedNavArgument> = emptyList()
   abstract val content: @Composable () -> Unit
+}
+
+fun NavGraphBuilder.composable(navDestination: NavDestination) =
+  composable(navDestination.route, arguments = navDestination.arguments) {
+    navDestination.content()
+  }
+
+@OptIn(ExperimentalMaterialNavigationApi::class)
+fun NavGraphBuilder.bottomSheet(
+  navDestination: NavDestination
+) = bottomSheet(navDestination.route, arguments = navDestination.arguments) {
+  navDestination.content()
 }
 
 fun NavArgumentBuilder.nullableType(navType: NavType<*>) {

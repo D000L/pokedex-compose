@@ -8,7 +8,7 @@ data class PokemonMove(
   val damageClass: Info = Info(),
   val flavorTextEntries: List<LocalizedString> = emptyList(),
   val effectEntries: Effect = Effect(),
-  val learnedPokemon: List<Info> = emptyList(),
+  val learnedPokemon: List<Pokemon> = emptyList(),
   val machines: Info = Info(),
   val power: Int = 0,
   val pp: Int = 0,

@@ -1,5 +1,6 @@
 package com.doool.pokedex.data.mapper
 
+import com.doool.pokedex.data.parseId
 import com.doool.pokedex.data.response.*
 import com.doool.pokedex.domain.model.*
 
@@ -30,7 +31,7 @@ fun StatResponse.toModel(): Stat = with(this) {
 }
 
 fun TypeResponse.toModel(): Info = with(this) {
-  Info(name = type.name, url = type.url)
+  Info(name = type.name, id = type.url.parseId())
 }
 
 fun MoveResponse.toModel(): Move = with(this) {

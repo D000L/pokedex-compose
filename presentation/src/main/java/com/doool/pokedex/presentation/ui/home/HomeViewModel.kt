@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
+import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.usecase.search.SearchItem
 import com.doool.pokedex.domain.usecase.search.SearchMove
 import com.doool.pokedex.domain.usecase.search.SearchPokemon
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SearchResult(
-  var pokemon: List<PokemonDetail> = emptyList(),
+  var pokemon: List<Pair<PokemonDetail,PokemonSpecies>> = emptyList(),
   var items: List<Item> = emptyList(),
   var moves: List<PokemonMove> = emptyList()
 )
@@ -24,7 +25,7 @@ data class SearchResult(
 class HomeViewModel @Inject constructor(
   private val searchMove: SearchMove,
   private val searchItem: SearchItem,
-  private val searchPokemon: SearchPokemon
+  private val searchPokemon: SearchPokemon,
 ) : BaseViewModel() {
 
   companion object {

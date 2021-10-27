@@ -88,4 +88,5 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:0.20.0"
     implementation "com.google.accompanist:accompanist-pager:0.20.0"
     implementation "com.google.accompanist:accompanist-placeholder:0.20.0"
+    implementation "com.google.accompanist:accompanist-navigation-material:0.20.0"
 }

@@ -43,6 +43,7 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
+import com.doool.pokedex.presentation.Language
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.common.MoveCategoryColor
@@ -198,8 +199,8 @@ private fun SearchResult(
       val navController = LocalNavController.current
 
       SummaryList("Pokemon", result.pokemon, { onClickMore(Menu.Pokemon) }, {
-        PokemonSummary(pokemon = it) {
-          navController.navigate(PokemonInfoDestination.getRouteByName(it.name))
+        PokemonSummary(pokemon = it.first, it.second) {
+          navController.navigate(PokemonInfoDestination.getRouteByName(it.first.name))
         }
       })
 
@@ -274,7 +275,7 @@ private fun SummaryItemPlaceholder(size: Dp, cornerRadius: Dp = 16.dp) {
 
 @Composable
 @Preview
-fun PokemonSummaryPreview() {
+private fun PokemonSummaryPreview() {
   PokemonSummary(PokemonDetail(
     101,
     "electrode",
@@ -284,12 +285,11 @@ fun PokemonSummaryPreview() {
     listOf(),
     listOf(Info("bug"), Info("fairy")),
     listOf()
-  )
-  ) {}
+  ),PokemonSpecies(names = listOf(LocalizedString("electrode")))) {}
 }
 
 @Composable
-private fun PokemonSummary(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
+private fun PokemonSummary(pokemon: PokemonDetail, species: PokemonSpecies, onClick: () -> Unit = {}) {
   Column(
     modifier = Modifier
       .size(220.dp)
@@ -310,7 +310,7 @@ private fun PokemonSummary(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
       fontWeight = FontWeight.Bold
     )
     Text(
-      text = pokemon.name.capitalizeAndRemoveHyphen(),
+      text = species.names.localized.capitalizeAndRemoveHyphen(),
       style = MaterialTheme.typography.h4,
       color = Color.White
     )
@@ -332,7 +332,7 @@ private fun PokemonSummary(pokemon: PokemonDetail, onClick: () -> Unit = {}) {
 
 @Composable
 @Preview
-fun ItemSummaryPreview() {
+private fun ItemSummaryPreview() {
   ItemSummary(Item(
     name = "Ability Urge"
   )
@@ -340,7 +340,7 @@ fun ItemSummaryPreview() {
 }
 
 @Composable
-fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
+private fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
   Column(
     Modifier
       .size(92.dp)
@@ -373,7 +373,7 @@ fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
 
 @Composable
 @Preview
-fun PreviewMove() {
+private fun PreviewMove() {
   MoveThumbnail(
     PokemonMove(
       name = "Mega Punch",
@@ -394,7 +394,7 @@ fun PreviewMove() {
 }
 
 @Composable
-fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
+private fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
   Column(
     Modifier
       .size(120.dp)
@@ -425,19 +425,19 @@ fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
         style = MaterialTheme.typography.body2,
         color = Color.White.copy(0.7f)
       )
-      Space(width = 4.dp)
+      Space(width = 2.dp)
       Text(
         text = move.power.toString(),
         style = MaterialTheme.typography.body1,
         color = Color.White
       )
-      Space(width = 4.dp)
+      Space(width = 3.dp)
       Text(
         text = "PP",
         style = MaterialTheme.typography.body2,
         color = Color.White.copy(0.7f)
       )
-      Space(width = 4.dp)
+      Space(width = 2.dp)
       Text(
         text = move.pp.toString(),
         style = MaterialTheme.typography.body1,

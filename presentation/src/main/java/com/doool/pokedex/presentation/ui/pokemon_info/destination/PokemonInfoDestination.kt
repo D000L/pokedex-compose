@@ -2,7 +2,9 @@ package com.doool.pokedex.presentation.ui.pokemon_info.destination
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.doool.pokedex.presentation.NavDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.PokemonInfoScreen

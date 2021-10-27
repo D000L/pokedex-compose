@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.LoadState
-import com.doool.pokedex.domain.model.IndexedItem
 import com.doool.pokedex.domain.model.Info
+import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
@@ -55,7 +55,7 @@ fun PokemonListScreen(
 @Composable
 fun PokemonList(
   viewModel: PokemonListViewModel,
-  list: List<IndexedItem>
+  list: List<Pokemon>
 ) {
   val navController = LocalNavController.current
   val state = rememberLazyListState()

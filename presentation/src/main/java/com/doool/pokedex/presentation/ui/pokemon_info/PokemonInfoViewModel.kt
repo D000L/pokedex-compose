@@ -36,10 +36,10 @@ class PokemonInfoViewModel @Inject constructor(
   var initIndex = 0
 
   val pokemonList = flow {
-    val indexed = getPokemonNames()
-    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = indexed.first().name
-    initIndex = indexed.indexOfFirst { it.name == _currentPokemon.value }
-    emit(indexed)
+    val info = getPokemonNames()
+    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = info.first().name
+    initIndex = info.indexOfFirst { it.name == _currentPokemon.value }
+    emit(info)
   }
 
   private val pokemon =

@@ -19,8 +19,8 @@ class MoveInfoViewModel @Inject constructor(
   private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-  val move: Flow<LoadState<PokemonMove>> =
+  val move =
     savedStateHandle.getLiveData<String>(NAME_PARAM).asFlow().flatMapLatest {
       getMove(it).withLoadState()
-    }
+    }.stateInWhileSubscribed { LoadState.Loading }
 }
