@@ -53,7 +53,7 @@ fun PokemonListScreen(
 }
 
 @Composable
-fun PokemonList(
+private fun PokemonList(
   viewModel: PokemonListViewModel,
   list: List<Pokemon>
 ) {
@@ -77,7 +77,7 @@ fun PokemonList(
 
 @Preview
 @Composable
-fun PokemonPreview() {
+private fun PokemonPreview() {
   Pokemon(
     item = PokemonListItem(
       101,
@@ -150,7 +150,7 @@ private fun Pokemon(
 }
 
 @Composable
-fun Pokemon(
+private fun Pokemon(
   modifier: Modifier = Modifier,
   item: LoadState<PokemonListItem>,
   onClick: (String) -> Unit
