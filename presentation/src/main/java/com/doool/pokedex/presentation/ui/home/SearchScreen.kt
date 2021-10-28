@@ -38,12 +38,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.palette.graphics.Palette
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
-import com.doool.pokedex.presentation.Language
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.common.MoveCategoryColor
@@ -276,20 +279,26 @@ private fun SummaryItemPlaceholder(size: Dp, cornerRadius: Dp = 16.dp) {
 @Composable
 @Preview
 private fun PokemonSummaryPreview() {
-  PokemonSummary(PokemonDetail(
-    101,
-    "electrode",
-    14,
-    54,
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
-    listOf(),
-    listOf(Info("bug"), Info("fairy")),
-    listOf()
-  ),PokemonSpecies(names = listOf(LocalizedString("electrode")))) {}
+  PokemonSummary(
+    PokemonDetail(
+      101,
+      "electrode",
+      14,
+      54,
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
+      listOf(),
+      listOf(Info("bug"), Info("fairy")),
+      listOf()
+    ), PokemonSpecies(names = listOf(LocalizedString("electrode")))
+  ) {}
 }
 
 @Composable
-private fun PokemonSummary(pokemon: PokemonDetail, species: PokemonSpecies, onClick: () -> Unit = {}) {
+private fun PokemonSummary(
+  pokemon: PokemonDetail,
+  species: PokemonSpecies,
+  onClick: () -> Unit = {}
+) {
   Column(
     modifier = Modifier
       .size(220.dp)
@@ -333,19 +342,40 @@ private fun PokemonSummary(pokemon: PokemonDetail, species: PokemonSpecies, onCl
 @Composable
 @Preview
 private fun ItemSummaryPreview() {
-  ItemSummary(Item(
-    name = "Ability Urge"
-  )
+  ItemSummary(
+    Item(
+      name = "Ability Urge"
+    )
   ) {}
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
+  var color by remember { mutableStateOf(Color.Gray) }
+  var textColor by remember { mutableStateOf(Color.White) }
+
+  val painter = rememberImagePainter(item.sprites) { allowHardware(false) }
+  val state = painter.state
+
+  if (state is ImagePainter.State.Success) {
+    LaunchedEffect(key1 = painter) {
+      val image = painter.imageLoader.execute(painter.request).drawable
+      val bitmap = image?.toBitmap()
+      bitmap?.let {
+        Palette.Builder(bitmap).generate {
+          color = it?.lightVibrantSwatch?.rgb?.let { Color(it) } ?: Color.Gray
+          textColor = it?.lightVibrantSwatch?.titleTextColor?.let { Color(it) } ?: Color.White
+        }
+      }
+    }
+  }
+
   Column(
     Modifier
       .size(92.dp)
       .clipBackground(
-        color = Color.Gray,
+        color = color,
         shape = RoundedCornerShape(16.dp)
       )
       .clickable {
@@ -356,14 +386,14 @@ private fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
   ) {
     Image(
       modifier = Modifier.size(32.dp),
-      painter = rememberImagePainter(item.sprites),
+      painter = painter,
       contentDescription = null
     )
     Box(Modifier.weight(1f, fill = true), contentAlignment = Alignment.Center) {
       Text(
         text = item.names.localized.capitalizeAndRemoveHyphen(),
         style = MaterialTheme.typography.body1,
-        color = Color.White,
+        color = textColor,
         textAlign = TextAlign.Center,
         overflow = TextOverflow.Ellipsis
       )
