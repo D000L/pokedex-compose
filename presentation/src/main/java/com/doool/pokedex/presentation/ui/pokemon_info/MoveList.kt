@@ -103,7 +103,7 @@ private fun Move(move: PokemonMove, onItemClicked: (String) -> Unit = {}) {
     MoveItem(move.pp.toString(), 40.dp)
     Box(
       Modifier
-        .width(80.dp)
+        .size(80.dp, 24.dp)
         .shadow(4.dp, CircleShape)
         .background(colorResource(id = type.typeColorResId), CircleShape),
       contentAlignment = Alignment.Center
