@@ -17,6 +17,6 @@ data class SpritesOthers(
 ) {
   @Keep
   data class Artwork(
-    @SerializedName("front_default") val frontDefault: String = "",
+    @SerializedName("front_default") val frontDefault: String? = null,
   )
 }

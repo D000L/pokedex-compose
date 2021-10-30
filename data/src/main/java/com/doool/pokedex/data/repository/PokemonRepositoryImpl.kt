@@ -40,6 +40,7 @@ class PokemonRepositoryImpl @Inject constructor(
   }
 
   override suspend fun getPokemonSpecies(name: String): PokemonSpecies {
+    val name = name.split("-").first()
     return fetchPokemonSpecies(name).toModel()
   }
 

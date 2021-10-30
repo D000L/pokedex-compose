@@ -5,7 +5,7 @@ import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.domain.repository.SearchRepository
 import javax.inject.Inject
 
-class GetPokemonNames @Inject constructor(private val searchRepository: SearchRepository) {
+class GetPokemonList @Inject constructor(private val searchRepository: SearchRepository) {
 
   suspend operator fun invoke(query: String? = null): List<Pokemon> =
     searchRepository.searchPokemonNames(query).map {

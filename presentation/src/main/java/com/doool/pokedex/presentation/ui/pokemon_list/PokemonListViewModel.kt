@@ -3,7 +3,7 @@ package com.doool.pokedex.presentation.ui.pokemon_list
 import androidx.lifecycle.SavedStateHandle
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.usecase.GetPokemon
-import com.doool.pokedex.domain.usecase.GetPokemonNames
+import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
 import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-  private val getPokemonList: GetPokemonNames,
+  private val getPokemonList: GetPokemonList,
   private val getPokemonUsecase: GetPokemon,
   private val getPokemonSpecies: GetPokemonSpecies,
   savedStateHandle: SavedStateHandle

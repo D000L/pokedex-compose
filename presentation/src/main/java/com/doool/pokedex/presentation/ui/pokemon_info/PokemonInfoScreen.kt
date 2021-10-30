@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
-import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
@@ -253,6 +252,7 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
     ),
     painter = rememberImagePainter(imageUrl) {
       placeholder(R.drawable.ic_pokeball)
+      error(R.drawable.ic_pokeball)
     },
     contentDescription = null
   )

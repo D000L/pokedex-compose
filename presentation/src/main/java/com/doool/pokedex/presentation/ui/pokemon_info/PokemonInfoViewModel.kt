@@ -24,7 +24,7 @@ class PokemonInfoViewModel @Inject constructor(
   private val getPokemonSpecies: GetPokemonSpecies,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
   private val getDamageRelations: GetDamageRelations,
-  private val getPokemonNames: GetPokemonNames,
+  private val getPokemonList: GetPokemonList,
   private val getAbility: GetAbility,
   private val getMove: GetMove,
   savedStateHandle: SavedStateHandle
@@ -36,7 +36,7 @@ class PokemonInfoViewModel @Inject constructor(
   var initIndex = 0
 
   val pokemonList = flow {
-    val info = getPokemonNames()
+    val info = getPokemonList()
     if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = info.first().name
     initIndex = info.indexOfFirst { it.name == _currentPokemon.value }
     emit(info)
