@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,7 +50,7 @@ enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
 fun HomeScreen(
   onClickMenu: (Menu, String?) -> Unit
 ) {
-  var isSearching by remember { mutableStateOf(false) }
+  var isSearching by rememberSaveable { mutableStateOf(false) }
   val animationOffset by animateFloatAsState(targetValue = if (isSearching) 0f else 1f)
 
   Box(

@@ -1,7 +1,9 @@
 package com.doool.pokedex.presentation.ui.pokemon_list
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
@@ -13,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +28,12 @@ class PokemonListViewModel @Inject constructor(
 
   private var searchQuery: String? = savedStateHandle.get<String?>(QUERY_PARAM)
 
-  val pokemonList = flow {
-    emit(getPokemonList(searchQuery))
+  val pokemonList = savedStateHandle.getLiveData<List<Pokemon>?>("POKEMON_LIST")
+
+  fun loadPokemonList() {
+    viewModelScope.launch {
+      pokemonList.postValue(getPokemonList(searchQuery))
+    }
   }
 
   fun getItemState(name: String) =

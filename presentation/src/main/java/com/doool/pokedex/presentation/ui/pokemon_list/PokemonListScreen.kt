@@ -9,10 +9,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -47,9 +45,13 @@ fun PokemonListScreen(
   pokemonListViewModel: PokemonListViewModel = hiltViewModel()
 ) {
 
-  val pokemonList by pokemonListViewModel.pokemonList.collectAsState(initial = emptyList())
+  val pokemonList by pokemonListViewModel.pokemonList.observeAsState(initial = emptyList())
 
-  PokemonList(pokemonListViewModel, pokemonList)
+  if(pokemonList.isNotEmpty()) PokemonList(pokemonListViewModel, pokemonList)
+
+  LaunchedEffect(pokemonList){
+    if(pokemonList.isEmpty()) pokemonListViewModel.loadPokemonList()
+  }
 }
 
 @Composable
@@ -59,7 +61,7 @@ private fun PokemonList(
 ) {
   val navController = LocalNavController.current
   val state = rememberLazyListState()
-
+  
   LazyColumn(
     state = state,
     verticalArrangement = Arrangement.spacedBy(12.dp)
