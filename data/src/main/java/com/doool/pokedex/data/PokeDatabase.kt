@@ -16,8 +16,9 @@ import com.doool.pokedex.data.entity.*
     PokemonTypeResistanceEntity::class,
     PokemonMoveEntity::class,
     ItemEntity::class,
-    AbilityEntity::class],
-  version = 16,
+    AbilityEntity::class,
+    FormEntity::class],
+  version = 17,
   exportSchema = true
 )
 abstract class PokeDatabase : RoomDatabase() {

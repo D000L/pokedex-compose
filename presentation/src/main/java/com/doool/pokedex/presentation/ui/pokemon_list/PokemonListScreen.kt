@@ -85,6 +85,7 @@ private fun PokemonPreview() {
       101,
       "electrode",
       emptyList(),
+      emptyList(),
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
       listOf(Info("bug"), Info("fairy")),
     )
@@ -173,11 +174,19 @@ private fun PokemonSummary(modifier: Modifier = Modifier, item: PokemonListItem)
       color = Color.White.copy(alpha = 0.4f),
       fontWeight = FontWeight.Bold
     )
-    Text(
-      text = item.names.localized.capitalizeAndRemoveHyphen(),
-      color = Color.White,
-      style = MaterialTheme.typography.h3
-    )
+    Row(verticalAlignment = Alignment.Bottom) {
+      Text(
+        text = item.names.localized.capitalizeAndRemoveHyphen(),
+        color = Color.White,
+        style = MaterialTheme.typography.h3
+      )
+      Text(
+        modifier = Modifier.padding(start = 4.dp),
+        text = item.formNames.localized.capitalizeAndRemoveHyphen(),
+        color = Color.White.copy(0.7f),
+        style = MaterialTheme.typography.body2
+      )
+    }
     Space(height = 2.dp)
     TypeList(types = item.types)
   }

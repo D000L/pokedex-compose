@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.usecase.*
 import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class PokemonInfoViewModel @Inject constructor(
   private val getPokemonUsecase: GetPokemon,
   private val getPokemonSpecies: GetPokemonSpecies,
+  private val getForm: GetForm,
   private val getPokemonEvolutionChain: GetPokemonEvolutionChain,
   private val getDamageRelations: GetDamageRelations,
   private val getPokemonList: GetPokemonList,
@@ -48,7 +50,10 @@ class PokemonInfoViewModel @Inject constructor(
     currentPokemon.flatMapLatest { getPokemonSpecies(it) }.stateInWhileSubscribed()
 
   val headerState = combine(pokemon, species) { pokemon, species ->
-    HeaderUIModel(pokemon.id, pokemon.name, species.names, pokemon.image, pokemon.types)
+    val form = pokemon.name.contains("-")
+    var formNames = emptyList<LocalizedString>()
+    if (form) formNames = getForm(pokemon.name).first().formNames
+    HeaderUIModel(pokemon.id, pokemon.name, species.names, pokemon.types, formNames)
   }.stateInWhileSubscribed()
 
   val aboutState = combine(pokemon, species) { pokemon, species ->

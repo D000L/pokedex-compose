@@ -7,7 +7,7 @@ data class HeaderUIModel(
   val id: Int = 0,
   val name: String = "",
   val names: List<LocalizedString> = emptyList(),
-  val image: String = "",
-  val types: List<Info> = emptyList()
+  val types: List<Info> = emptyList(),
+  val formNames: List<LocalizedString> = emptyList()
 )
 

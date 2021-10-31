@@ -172,4 +172,25 @@ class PokemonRepositoryImpl @Inject constructor(
     }
     return localResult.json.toResponse()
   }
+
+  override suspend fun getForm(name: String): Form {
+    return fetchForm(name).toModel()
+  }
+
+  private suspend fun fetchForm(name: String): FormResponse {
+    val localResult = pokemonDao.getForm(name)
+
+    if (localResult?.json == null) {
+      val remoteResult = pokeApiService.getForm(name)
+      pokemonDao.insertFormEntity(
+        FormEntity(
+          remoteResult.name,
+          remoteResult.id,
+          remoteResult.toJson()
+        )
+      )
+      return remoteResult
+    }
+    return localResult.json.toResponse()
+  }
 }

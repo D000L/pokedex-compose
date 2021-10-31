@@ -31,8 +31,16 @@ fun EvolutionList(
     verticalArrangement = Arrangement.spacedBy(12.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    chainList.forEach {
-      Evolution(it, onClickPokemon)
+    if (chainList.isEmpty()) {
+      Text(
+        modifier = Modifier.padding(top = 140.dp),
+        text = "No Evolution",
+        style = MaterialTheme.typography.body1
+      )
+    } else {
+      chainList.forEach {
+        Evolution(it, onClickPokemon)
+      }
     }
   }
 }
@@ -59,7 +67,12 @@ private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> 
 @Composable
 private fun Pokemon(pokemonInfo: LocalizedInfo, onClick: (String) -> Unit) {
   Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
-    DarkPokeball(modifier = Modifier.clickable {  onClick(pokemonInfo.name) }, size = 96.dp, translateOffset = DpOffset(x = 0.dp, y = -16.dp), rotate = 0f)
+    DarkPokeball(
+      modifier = Modifier.clickable { onClick(pokemonInfo.name) },
+      size = 96.dp,
+      translateOffset = DpOffset(x = 0.dp, y = -16.dp),
+      rotate = 0f
+    )
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Image(
         modifier = Modifier
@@ -68,7 +81,10 @@ private fun Pokemon(pokemonInfo: LocalizedInfo, onClick: (String) -> Unit) {
         contentDescription = null
       )
       Space(height = 4.dp)
-      Text(text = pokemonInfo.names.localized.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body1)
+      Text(
+        text = pokemonInfo.names.localized.capitalizeAndRemoveHyphen(),
+        style = MaterialTheme.typography.body1
+      )
     }
   }
 }

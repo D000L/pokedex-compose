@@ -11,4 +11,5 @@ interface PokemonRepository {
   suspend fun getPokemonMove(name: String): PokemonMove
   suspend fun getAbility(name: String): Ability
   suspend fun getItem(name: String): Item
+  suspend fun getForm(name: String): Form
 }

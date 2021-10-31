@@ -60,4 +60,10 @@ interface PokemonDao {
 
   @Query("SELECT * FROM ability WHERE name = :name")
   suspend fun getAbility(name: String): AbilityEntity?
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertFormEntity(form: FormEntity)
+
+  @Query("SELECT * FROM form WHERE name = :name")
+  suspend fun getForm(name: String): FormEntity?
 }

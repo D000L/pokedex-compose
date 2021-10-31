@@ -10,10 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +43,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 private val THUMBNAIL_VIEWPAGER_HEIGHT = 130.dp
-private val TITLE_HEIGHT = 92.dp
+private val TITLE_HEIGHT = 112.dp
 private val TAB_HEIGHT = 42.dp
 
 private val HEADER_HEIGHT = TOOLBAR_HEIGHT + THUMBNAIL_VIEWPAGER_HEIGHT + TITLE_HEIGHT + TAB_HEIGHT
@@ -163,6 +160,8 @@ private fun Body(
             modifier = modifier.padding(horizontal = 20.dp),
             aboutUIModel = it
           )
+        },onLoading = {
+          CircularProgressIndicator()
         })
       }
       TabState.Stats -> item {
@@ -221,7 +220,7 @@ private fun Header(
         contentPadding = PaddingValues(horizontal = 100.dp)
       ) { index ->
         val pokemon = items[index]
-        PokemonImage( pokemon.imageUrl, calculateCurrentOffsetForPage(index))
+        PokemonImage(pokemon.imageUrl, calculateCurrentOffsetForPage(index))
       }
     }
 
@@ -261,6 +260,11 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
 @Composable
 private fun TitleLayout(modifier: Modifier, headerUIModel: HeaderUIModel) {
   Column(modifier.height(TITLE_HEIGHT)) {
+    Text(
+      text = headerUIModel.formNames.localized.capitalizeAndRemoveHyphen(),
+      style = MaterialTheme.typography.subtitle1,
+      color = Color.White.copy(alpha = 0.5f)
+    )
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
         text = headerUIModel.names.localized.capitalizeAndRemoveHyphen(),
