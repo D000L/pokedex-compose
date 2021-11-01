@@ -5,11 +5,12 @@ import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.LocalizedString
 
 data class AboutUIModel(
-  val descriptions: List<LocalizedString>,
-  val height: Int, val weight: Int,
-  val abilities: List<Ability>,
-  val genera: List<LocalizedString>,
-  val maleRate: Int,
-  val femaleRate: Int,
-  val eggGroups: List<Info>,
+  val isLoading: Boolean = true,
+  val descriptions: List<LocalizedString> = emptyList(),
+  val height: Int = 0, val weight: Int = 0,
+  val abilities: List<Ability> = emptyList(),
+  val genera: List<LocalizedString> = emptyList(),
+  val maleRate: Int = 0,
+  val femaleRate: Int = 0,
+  val eggGroups: List<Info> = emptyList()
 )

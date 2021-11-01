@@ -17,14 +17,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonMove
+import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.LocalPokemonColor
+import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.ui.common.PokemonType
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.defaultPlaceholder
 import com.doool.pokedex.presentation.utils.localized

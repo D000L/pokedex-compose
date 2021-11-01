@@ -2,16 +2,16 @@ package com.doool.pokedex.presentation.ui.pokemon_list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.domain.usecase.GetForm
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import com.doool.pokedex.domain.withLoadState
+import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
 import com.doool.pokedex.presentation.ui.pokemon_list.destination.QUERY_PARAM
+import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine

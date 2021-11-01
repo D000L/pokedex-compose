@@ -3,6 +3,7 @@ package com.doool.pokedex.presentation.ui.pokemon_info
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +14,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
+import com.doool.pokedex.presentation.LoadState
+import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.ui.common.EvolutionType
+import com.doool.pokedex.presentation.ui.pokemon_info.model.EvolutionListUIModel
 import com.doool.pokedex.presentation.ui.widget.DarkPokeball
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
@@ -23,25 +27,28 @@ import com.doool.pokedex.presentation.utils.localized
 @Composable
 fun EvolutionList(
   modifier: Modifier = Modifier,
-  chainList: List<PokemonEvolutionChain>,
+  chainList: EvolutionListUIModel,
   onClickPokemon: (String) -> Unit
 ) {
-  Column(
-    modifier = modifier.fillMaxWidth(),
-    verticalArrangement = Arrangement.spacedBy(12.dp),
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    if (chainList.isEmpty()) {
-      Text(
-        modifier = Modifier.padding(top = 140.dp),
-        text = "No Evolution",
-        style = MaterialTheme.typography.body1
-      )
-    } else {
-      chainList.forEach {
-        Evolution(it, onClickPokemon)
+  Box {
+    Column(
+      modifier = modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(12.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      if (chainList.evolutions.isEmpty()) {
+        Text(
+          modifier = Modifier.padding(top = 140.dp),
+          text = "No Evolution",
+          style = MaterialTheme.typography.body1
+        )
+      } else {
+        chainList.evolutions.forEach {
+          Evolution(it, onClickPokemon)
+        }
       }
     }
+    if(chainList.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
   }
 }
 

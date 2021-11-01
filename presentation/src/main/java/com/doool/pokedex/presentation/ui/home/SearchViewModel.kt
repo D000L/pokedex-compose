@@ -8,21 +8,21 @@ import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.usecase.search.SearchItem
 import com.doool.pokedex.domain.usecase.search.SearchMove
 import com.doool.pokedex.domain.usecase.search.SearchPokemon
-import com.doool.pokedex.domain.withLoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
+import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SearchResult(
-  var pokemon: List<Pair<PokemonDetail,PokemonSpecies>> = emptyList(),
+  var pokemon: List<Pair<PokemonDetail, PokemonSpecies>> = emptyList(),
   var items: List<Item> = emptyList(),
   var moves: List<PokemonMove> = emptyList()
 )
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
   private val searchMove: SearchMove,
   private val searchItem: SearchItem,
   private val searchPokemon: SearchPokemon,
@@ -45,11 +45,11 @@ class HomeViewModel @Inject constructor(
 
   fun search(query: String) {
     viewModelScope.launch {
-      this@HomeViewModel.query.emit(query)
+      this@SearchViewModel.query.emit(query)
     }
   }
 
-  fun clearQuery(){
+  fun clearQuery() {
     query.tryEmit("")
   }
 }

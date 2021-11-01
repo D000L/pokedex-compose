@@ -1,6 +1,7 @@
 package com.doool.pokedex.presentation.ui.pokemon_info
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,15 +18,18 @@ fun About(
   modifier: Modifier = Modifier,
   aboutUIModel: AboutUIModel
 ) {
-  Column(
-    modifier = modifier.fillMaxWidth(),
-    verticalArrangement = Arrangement.spacedBy(10.dp)
-  ) {
-    Description(aboutUIModel.descriptions.localized)
-    Space(height = 12.dp)
-    PokedexData(aboutUIModel)
-    Space(height = 12.dp)
-    Breeding(aboutUIModel)
+  Box {
+    Column(
+      modifier = modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+      Description(aboutUIModel.descriptions.localized)
+      Space(height = 12.dp)
+      PokedexData(aboutUIModel)
+      Space(height = 12.dp)
+      Breeding(aboutUIModel)
+    }
+    if(aboutUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
   }
 }
 

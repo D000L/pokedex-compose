@@ -3,6 +3,7 @@ package com.doool.pokedex.presentation.ui.pokemon_info
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,14 +27,17 @@ fun Stats(
   modifier: Modifier = Modifier,
   statsUIModel: StatsUIModel
 ) {
-  Column(
-    modifier.fillMaxWidth(),
-    verticalArrangement = Arrangement.spacedBy(10.dp),
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    BaseStats(statsUIModel.stats)
-    Space(height = 12.dp)
-    TypeDefenses(statsUIModel.damageRelations)
+  Box {
+    Column(
+      modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(10.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      BaseStats(statsUIModel.stats)
+      Space(height = 12.dp)
+      TypeDefenses(statsUIModel.damageRelations)
+    }
+    if (statsUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
   }
 }
 

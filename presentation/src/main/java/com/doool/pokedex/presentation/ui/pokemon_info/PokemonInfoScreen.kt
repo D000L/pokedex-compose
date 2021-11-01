@@ -28,14 +28,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.Pokemon
+import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
+import com.doool.pokedex.presentation.process
 import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.model.HeaderUIModel
 import com.doool.pokedex.presentation.ui.widget.*
-import com.doool.pokedex.presentation.utils.Process
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.defaultPlaceholder
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.doool.pokedex.presentation.utils.localized
 import com.google.accompanist.pager.*
@@ -143,6 +145,10 @@ private fun Body(
   viewModel: PokemonInfoViewModel,
   onClickPokemon: (String) -> Unit,
 ) {
+  val pokemon by viewModel.currentPokemon.collectAsState("")
+
+  if (pokemon.isBlank()) return
+
   val navController = LocalNavController.current
   val moveItems by viewModel.moveState.collectAsState()
 
@@ -155,36 +161,36 @@ private fun Body(
       TabState.About -> item {
         val aboutState by viewModel.aboutState.collectAsState()
 
-        aboutState.Process(onComplete = {
-          About(
-            modifier = modifier.padding(horizontal = 20.dp),
-            aboutUIModel = it
-          )
-        },onLoading = {
-          CircularProgressIndicator()
-        })
+        About(
+          modifier = modifier.padding(horizontal = 20.dp),
+          aboutUIModel = aboutState
+        )
       }
       TabState.Stats -> item {
         val statsState by viewModel.statsState.collectAsState()
 
-        statsState.Process(onComplete = {
-          Stats(
-            modifier = modifier.padding(horizontal = 20.dp),
-            statsUIModel = it,
-          )
-        })
+        Stats(
+          modifier = modifier.padding(horizontal = 20.dp),
+          statsUIModel = statsState,
+        )
       }
       TabState.Move -> {
         item { MoveHeader() }
-        items(moveItems, key = { it.name }) {
-          val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
-          Move(move) {
-            navController.navigate(MoveInfoDestination.getRouteByName(it))
+        if(moveItems.isLoading){
+          item {
+            CircularProgressIndicator()
+          }
+        }else{
+          items(moveItems.moves, key = { it.name }) {
+            val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
+            Move(move) {
+              navController.navigate(MoveInfoDestination.getRouteByName(it))
+            }
           }
         }
       }
       TabState.Evolution -> item {
-        val evolutionChain by viewModel.evolutionChain.collectAsState()
+        val evolutionChain by viewModel.evolutionChainState.collectAsState()
 
         EvolutionList(
           modifier = modifier.padding(horizontal = 20.dp),
@@ -259,14 +265,18 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
 
 @Composable
 private fun TitleLayout(modifier: Modifier, headerUIModel: HeaderUIModel) {
+  val isLoading = headerUIModel.isLoading
+
   Column(modifier.height(TITLE_HEIGHT)) {
     Text(
+      modifier = Modifier.defaultPlaceholder(isLoading),
       text = headerUIModel.formNames.localized.capitalizeAndRemoveHyphen(),
       style = MaterialTheme.typography.subtitle1,
       color = Color.White.copy(alpha = 0.5f)
     )
     Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
+        modifier = Modifier.defaultPlaceholder(isLoading),
         text = headerUIModel.names.localized.capitalizeAndRemoveHyphen(),
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
@@ -274,13 +284,14 @@ private fun TitleLayout(modifier: Modifier, headerUIModel: HeaderUIModel) {
       )
       SpaceFill()
       Text(
+        modifier = Modifier.defaultPlaceholder(isLoading),
         text = "#%03d".format(headerUIModel.id),
         style = MaterialTheme.typography.h3,
         color = Color.White.copy(alpha = 0.7f)
       )
     }
     Space(height = 6.dp)
-    TypeListWithTitle(types = headerUIModel.types)
+    TypeListWithTitle(modifier = Modifier.defaultPlaceholder(isLoading), types = headerUIModel.types)
   }
 }
 

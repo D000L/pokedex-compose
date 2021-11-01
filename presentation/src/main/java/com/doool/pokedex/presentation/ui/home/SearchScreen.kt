@@ -45,9 +45,10 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
-import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.*
+import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.common.MoveCategoryColor
 import com.doool.pokedex.presentation.ui.common.PokemonType
@@ -58,13 +59,16 @@ import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
 import com.doool.pokedex.presentation.ui.widget.Type
 import com.doool.pokedex.presentation.ui.widget.TypeList
-import com.doool.pokedex.presentation.utils.*
+import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.presentation.utils.clipBackground
+import com.doool.pokedex.presentation.utils.defaultPlaceholder
+import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun SearchScreen(
   isExpended: Boolean,
   setExpended: (Boolean) -> Unit,
-  viewModel: HomeViewModel = hiltViewModel(),
+  viewModel: SearchViewModel = hiltViewModel(),
   onClickMenu: (Menu, String?) -> Unit
 ) {
   val animate by animateFloatAsState(targetValue = if (isExpended) 0f else 1f)
