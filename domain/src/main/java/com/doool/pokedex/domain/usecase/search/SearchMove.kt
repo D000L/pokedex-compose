@@ -3,7 +3,9 @@ package com.doool.pokedex.domain.usecase.search
 import androidx.annotation.WorkerThread
 import com.doool.pokedex.domain.repository.PokemonRepository
 import com.doool.pokedex.domain.repository.SearchRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class SearchMove @Inject constructor(
@@ -16,5 +18,5 @@ class SearchMove @Inject constructor(
     emit(
       searchRepository.searchMoveNames(query, limit)
         .map { pokemonRepository.getPokemonMove(it.name) })
-  }
+  }.flowOn(Dispatchers.IO)
 }
