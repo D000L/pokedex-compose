@@ -33,9 +33,11 @@ fun Stats(
       verticalArrangement = Arrangement.spacedBy(10.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      BaseStats(statsUIModel.stats)
-      Space(height = 12.dp)
-      TypeDefenses(statsUIModel.damageRelations)
+      if(statsUIModel.isInit) {
+        BaseStats(statsUIModel.stats)
+        Space(height = 12.dp)
+        TypeDefenses(statsUIModel.damageRelations)
+      }
     }
     if (statsUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
   }

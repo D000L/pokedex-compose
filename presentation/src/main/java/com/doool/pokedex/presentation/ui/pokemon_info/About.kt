@@ -23,13 +23,15 @@ fun About(
       modifier = modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-      Description(aboutUIModel.descriptions.localized)
-      Space(height = 12.dp)
-      PokedexData(aboutUIModel)
-      Space(height = 12.dp)
-      Breeding(aboutUIModel)
+      if(aboutUIModel.isInit) {
+        Description(aboutUIModel.descriptions.localized)
+        Space(height = 12.dp)
+        PokedexData(aboutUIModel)
+        Space(height = 12.dp)
+        Breeding(aboutUIModel)
+      }
     }
-    if(aboutUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    if (aboutUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
   }
 }
 

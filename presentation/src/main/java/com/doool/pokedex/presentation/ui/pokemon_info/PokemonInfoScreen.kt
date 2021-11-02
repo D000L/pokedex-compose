@@ -176,7 +176,9 @@ private fun Body(
         item { MoveHeader() }
         if(moveItems.isLoading){
           item {
-            CircularProgressIndicator()
+            Box(Modifier.fillParentMaxSize()){
+              CircularProgressIndicator(Modifier.align(Alignment.Center))
+            }
           }
         }else{
           items(moveItems.moves, key = { it.name }) {
@@ -192,7 +194,7 @@ private fun Body(
 
         EvolutionList(
           modifier = modifier.padding(horizontal = 20.dp),
-          chainList = evolutionChain,
+          evolutionListUIModel = evolutionChain,
           onClickPokemon = onClickPokemon
         )
       }

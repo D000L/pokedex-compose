@@ -66,7 +66,7 @@ class PokemonInfoViewModel @Inject constructor(
         formNames = formNames
       )
     } else state.copy(isLoading = true)
-  }.stateInWhileSubscribed()
+  }.stateInWhileLazily()
 
   val aboutState = combine(
     pokemon,
@@ -76,6 +76,7 @@ class PokemonInfoViewModel @Inject constructor(
     if (pokemon is LoadState.Success && species is LoadState.Success) {
       val abilities = pokemon.data.abilities.map { getAbility(it.ability.name).first() }
       state.copy(
+        isInit = true,
         isLoading = false,
         descriptions = species.data.flavorText,
         height = pokemon.data.height,
@@ -87,28 +88,33 @@ class PokemonInfoViewModel @Inject constructor(
         eggGroups = species.data.eggGroups
       )
     } else state.copy(isLoading = true)
-  }.stateInWhileSubscribed()
+  }.stateInWhileLazily()
 
   val statsState =
     combine(pokemon, species, ::Pair).scan(StatsUIModel()) { state, (pokemon, species) ->
       if (pokemon is LoadState.Success && species is LoadState.Success) {
         val damageRelations = getDamageRelations(pokemon.data.types.map { it.name }).first()
-        state.copy(isLoading = false, stats = pokemon.data.stats, damageRelations = damageRelations)
+        state.copy(
+          isInit = true,
+          isLoading = false,
+          stats = pokemon.data.stats,
+          damageRelations = damageRelations
+        )
       } else state.copy(isLoading = true)
-    }.stateInWhileSubscribed()
+    }.stateInWhileLazily()
 
   val moveState = pokemon.scan(MoveListUIModel()) { state, pokemon ->
     if (pokemon is LoadState.Success) {
       state.copy(isLoading = false, moves = pokemon.data.moves)
     } else state.copy(isLoading = true)
-  }.stateInWhileSubscribed()
+  }.stateInWhileLazily()
 
   val evolutionChainState = species.scan(EvolutionListUIModel()) { state, species ->
     if (species is LoadState.Success) {
       val evolutionChain = getPokemonEvolutionChain(species.data.evolutionUrl).first()
-      state.copy(isLoading = false, evolutions = evolutionChain)
+      state.copy(isInit = true, isLoading = false, evolutions = evolutionChain)
     } else state.copy(isLoading = true)
-  }.stateInWhileSubscribed()
+  }.stateInWhileLazily()
 
   fun setCurrentPokemon(name: String) {
     viewModelScope.launch {
