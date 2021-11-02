@@ -5,7 +5,7 @@ import com.doool.pokedex.domain.model.*
 interface PokemonRepository {
 
   suspend fun getPokemon(name: String): PokemonDetail
-  suspend fun getPokemonSpecies(name: String): PokemonSpecies
+  suspend fun getPokemonSpecies(name: Int): PokemonSpecies
   suspend fun getPokemonEvolutionChain(url: String): List<PokemonEvolutionChain>
   suspend fun getPokemonTypeResistance(name: String): PokemonTypeResistance
   suspend fun getPokemonMove(name: String): PokemonMove

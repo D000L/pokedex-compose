@@ -28,11 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.Pokemon
-import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
-import com.doool.pokedex.presentation.process
 import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.model.HeaderUIModel
 import com.doool.pokedex.presentation.ui.widget.*

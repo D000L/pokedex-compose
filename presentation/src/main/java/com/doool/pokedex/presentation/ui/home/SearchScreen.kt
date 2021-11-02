@@ -290,6 +290,7 @@ private fun PokemonSummaryPreview() {
       14,
       54,
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
+      Info("nidoran-f",29),
       listOf(),
       listOf(Info("bug"), Info("fairy")),
       listOf()

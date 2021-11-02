@@ -6,6 +6,7 @@ data class PokemonDetail(
   val height: Int = 0,
   val weight: Int = 0,
   val image: String = "",
+  val species: Info,
   val stats: List<Stat> = listOf(),
   val types: List<Info> = listOf(),
   val moves: List<Move> = listOf(),

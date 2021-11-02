@@ -39,21 +39,20 @@ class PokemonRepositoryImpl @Inject constructor(
     return localResult.json.toResponse()
   }
 
-  override suspend fun getPokemonSpecies(name: String): PokemonSpecies {
-    val name = name.split("-").first()
-    return fetchPokemonSpecies(name).toModel()
+  override suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
+    return fetchPokemonSpecies(id).toModel()
   }
 
-  private suspend fun fetchPokemonSpecies(name: String): PokemonSpeciesResponse {
-    val localResult = pokemonDao.getPokemonSpecies(name)
+  private suspend fun fetchPokemonSpecies(id: Int): PokemonSpeciesResponse {
+    val localResult = pokemonDao.getPokemonSpecies(id)
 
     if (localResult == null) {
-      val remoteResult = pokeApiService.getPokemonSpecies(name)
+      val remoteResult = pokeApiService.getPokemonSpecies(id)
       val model = remoteResult.toJson()
       pokemonDao.insertPokemonSpecies(
         PokemonSpeciesEntity(
-          remoteResult.name,
           remoteResult.id,
+          remoteResult.name,
           model
         )
       )

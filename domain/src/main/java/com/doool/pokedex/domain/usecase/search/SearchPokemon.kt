@@ -16,7 +16,9 @@ class SearchPokemon @Inject constructor(
     emit(
       searchRepository.searchPokemonNames(query, limit)
         .map {
-          Pair(pokemonRepository.getPokemon(it.name), pokemonRepository.getPokemonSpecies(it.name))
+          val pokemon = pokemonRepository.getPokemon(it.name)
+          val species = pokemonRepository.getPokemonSpecies(pokemon.species.id)
+          Pair(pokemon, species)
         })
   }
 }

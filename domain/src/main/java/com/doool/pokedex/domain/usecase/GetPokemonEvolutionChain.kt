@@ -13,11 +13,11 @@ class GetPokemonEvolutionChain @Inject constructor(private val pokemonRepository
     val result = pokemonRepository.getPokemonEvolutionChain(url)
     result.forEach {
       val fromSprite = Urls.getImageUrl(it.from.id)
-      it.from.names = pokemonRepository.getPokemonSpecies(it.from.name).names
+      it.from.names = pokemonRepository.getPokemonSpecies(it.from.id).names
       it.from.imageUrl = fromSprite
 
       val toSprite = Urls.getImageUrl(it.to.id)
-      it.to.names = pokemonRepository.getPokemonSpecies(it.to.name).names
+      it.to.names = pokemonRepository.getPokemonSpecies(it.from.id).names
       it.to.imageUrl = toSprite
     }
     emit(result)

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetPokemonSpecies @Inject constructor(private val pokemonRepository: PokemonRepository) {
 
-  operator fun invoke(name: String): Flow<PokemonSpecies> = flow {
-    emit(pokemonRepository.getPokemonSpecies(name))
+  operator fun invoke(id : Int): Flow<PokemonSpecies> = flow {
+    emit(pokemonRepository.getPokemonSpecies(id))
   }
 }

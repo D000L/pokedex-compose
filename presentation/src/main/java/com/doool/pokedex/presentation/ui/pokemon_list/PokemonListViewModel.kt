@@ -14,8 +14,8 @@ import com.doool.pokedex.presentation.ui.pokemon_list.destination.QUERY_PARAM
 import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,18 +39,19 @@ class PokemonListViewModel @Inject constructor(
     }
   }
 
-  fun getItemState(name: String) =
-    combine(getPokemonUsecase(name), getPokemonSpecies(name)) { pokemon, species ->
-      val form = pokemon.name.contains("-")
-      var formNames = emptyList<LocalizedString>()
-      if (form) formNames = getForm(pokemon.name).first().formNames
-      PokemonListItem(
-        pokemon.id,
-        pokemon.name,
-        species.names,
-        formNames,
-        pokemon.image,
-        pokemon.types
-      )
-    }.onStart { delay(500) }.withLoadState().stateInWhileSubscribed(1000) { LoadState.Loading }
+  fun getItemState(name: String) = getPokemonUsecase(name).map { pokemon ->
+    val species = getPokemonSpecies(pokemon.species.id).first()
+
+    val form = pokemon.name.contains("-")
+    var formNames = emptyList<LocalizedString>()
+    if (form) formNames = getForm(pokemon.name).first().formNames
+    PokemonListItem(
+      pokemon.id,
+      pokemon.name,
+      species.names,
+      formNames,
+      pokemon.image,
+      pokemon.types
+    )
+  }.onStart { delay(500) }.withLoadState().stateInWhileSubscribed(1000) { LoadState.Loading }
 }

@@ -11,6 +11,7 @@ fun PokemonDetailResponse.toModel(): PokemonDetail = with(this) {
     height = height,
     weight = weight,
     image = sprites.other.artwork.frontDefault ?: sprites.frontDefault,
+    species = species.toModel(),
     stats = stats.map {
       it.toModel()
     },

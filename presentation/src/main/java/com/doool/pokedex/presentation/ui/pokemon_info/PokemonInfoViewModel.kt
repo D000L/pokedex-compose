@@ -5,13 +5,11 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonDetail
-import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.usecase.*
 import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.NAME_PARAM
 import com.doool.pokedex.presentation.ui.pokemon_info.model.*
-import com.doool.pokedex.presentation.utils.lazyMap
 import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,16 +44,9 @@ class PokemonInfoViewModel @Inject constructor(
     emit(info)
   }
 
-  private val pokemonMap: Map<String, Flow<LoadState<PokemonDetail>>> = lazyMap { name ->
-    return@lazyMap getPokemonUsecase(name).withLoadState()
-  }
-
-  private val speciesMap: Map<String, Flow<LoadState<PokemonSpecies>>> = lazyMap { name ->
-    return@lazyMap getPokemonSpecies(name).withLoadState()
-  }
-
-  private val pokemon = currentPokemon.flatMapLatest { pokemonMap.getValue(it) }
-  private val species = currentPokemon.flatMapLatest { speciesMap.getValue(it) }
+  private val pokemon = currentPokemon.flatMapLatest { getPokemonUsecase(it).withLoadState() }
+  private val species = pokemon.filterIsInstance<LoadState.Success<PokemonDetail>>()
+    .flatMapLatest { getPokemonSpecies(it.data.species.id).withLoadState() }
 
   val headerState = combine(
     pokemon,
