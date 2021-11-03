@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
+import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.getData
+import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
@@ -106,7 +109,7 @@ fun PokemonInfo(
     val minHeight = maxHeight - HEADER_HEIGHT_EXCLUDE_PAGER
     val headerState by viewModel.headerState.collectAsState()
 
-    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = headerState.types.getBackgroundColor())) {
+    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = headerState.getData()?.types?.getBackgroundColor() ?: R.color.background_bug)) {
       Body(
         Modifier.defaultMinSize(minHeight = minHeight),
         lazyListState,
@@ -143,12 +146,8 @@ private fun Body(
   viewModel: PokemonInfoViewModel,
   onClickPokemon: (String) -> Unit,
 ) {
-  val pokemon by viewModel.currentPokemon.collectAsState("")
-
-  if (pokemon.isBlank()) return
-
   val navController = LocalNavController.current
-  val moveItems by viewModel.moveState.collectAsState()
+  val moveUIState by viewModel.moveUIState.collectAsState()
 
   LazyColumn(
     state = state,
@@ -157,44 +156,46 @@ private fun Body(
     item { Space(height = 20.dp) }
     when (tabState) {
       TabState.About -> item {
-        val aboutState by viewModel.aboutState.collectAsState()
+        val aboutUIState by viewModel.aboutUIState.collectAsState()
 
         About(
           modifier = modifier.padding(horizontal = 20.dp),
-          aboutUIModel = aboutState
+          aboutUIState = aboutUIState
         )
       }
       TabState.Stats -> item {
-        val statsState by viewModel.statsState.collectAsState()
+        val statsUIState by viewModel.statsUIState.collectAsState()
 
         Stats(
           modifier = modifier.padding(horizontal = 20.dp),
-          statsUIModel = statsState,
+          statsUIState = statsUIState,
         )
       }
       TabState.Move -> {
         item { MoveHeader() }
-        if(moveItems.isLoading){
+        if(moveUIState.isLoading()){
           item {
             Box(Modifier.fillParentMaxSize()){
               CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
           }
         }else{
-          items(moveItems.moves, key = { it.name }) {
-            val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
-            Move(move) {
-              navController.navigate(MoveInfoDestination.getRouteByName(it))
+          moveUIState.getData()?.let{ moveItems->
+            items(moveItems.moves, key = { it.name }) {
+              val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
+              Move(move) {
+                navController.navigate(MoveInfoDestination.getRouteByName(it))
+              }
             }
           }
         }
       }
       TabState.Evolution -> item {
-        val evolutionChain by viewModel.evolutionChainState.collectAsState()
+        val evolutionListUIState by viewModel.evolutionListUIState.collectAsState()
 
         EvolutionList(
           modifier = modifier.padding(horizontal = 20.dp),
-          evolutionListUIModel = evolutionChain,
+          evolutionListUIState = evolutionListUIState,
           onClickPokemon = onClickPokemon
         )
       }
@@ -207,7 +208,7 @@ private fun Body(
 private fun Header(
   pagerState: PagerState = rememberPagerState(),
   items: List<Pokemon>,
-  headerUIModel: HeaderUIModel,
+  headerUIModel: LoadState<HeaderUIModel>,
   offset: Float
 ) {
   Box {
@@ -237,7 +238,7 @@ private fun Header(
           start = 20.dp,
           end = 20.dp
         ),
-      headerUIModel = headerUIModel
+      headerUIState = headerUIModel
     )
   }
 }
@@ -264,8 +265,9 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
 }
 
 @Composable
-private fun TitleLayout(modifier: Modifier, headerUIModel: HeaderUIModel) {
-  val isLoading = headerUIModel.isLoading
+private fun TitleLayout(modifier: Modifier, headerUIState: LoadState<HeaderUIModel>) {
+  val isLoading = headerUIState.isLoading()
+  val headerUIModel = headerUIState.getData() ?: HeaderUIModel()
 
   Column(modifier.height(TITLE_HEIGHT)) {
     Text(

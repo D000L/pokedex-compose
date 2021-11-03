@@ -2,21 +2,17 @@ package com.doool.pokedex.presentation.ui.pokemon_list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.doool.pokedex.domain.model.LocalizedString
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.domain.usecase.GetForm
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
 import com.doool.pokedex.presentation.ui.pokemon_list.destination.QUERY_PARAM
-import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,19 +35,30 @@ class PokemonListViewModel @Inject constructor(
     }
   }
 
-  fun getItemState(name: String) = getPokemonUsecase(name).map { pokemon ->
-    val species = getPokemonSpecies(pokemon.species.id).first()
-
-    val form = pokemon.name.contains("-")
-    var formNames = emptyList<LocalizedString>()
-    if (form) formNames = getForm(pokemon.name).first().formNames
-    PokemonListItem(
-      pokemon.id,
-      pokemon.name,
-      species.names,
-      formNames,
-      pokemon.image,
-      pokemon.types
-    )
-  }.onStart { delay(500) }.withLoadState().stateInWhileSubscribed(1000) { LoadState.Loading }
+  fun getItemState(name: String) = getPokemonUsecase(name).flatMapMerge { pokemon ->
+    when (pokemon) {
+      is LoadState.Error -> emptyFlow()
+      is LoadState.Loading -> emptyFlow()
+      is LoadState.Success -> {
+        val form = pokemon.data.name.contains("-")
+        val formFlow = if (form) getForm(pokemon.data.name) else flowOf(LoadState.Success(null))
+        combine(getPokemonSpecies(pokemon.data.species.id), formFlow) { species, form ->
+          Triple(pokemon, species, form)
+        }
+      }
+    }
+  }.map { (pokemon, species, form) ->
+    if (species is LoadState.Success && form is LoadState.Success) {
+      LoadState.Success(
+        PokemonListItem(
+          pokemon.data.id,
+          pokemon.data.name,
+          species.data.names,
+          form.data?.formNames ?: emptyList(),
+          pokemon.data.image,
+          pokemon.data.types
+        )
+      )
+    } else LoadState.Loading()
+  }.onStart { delay(500) }.stateInWhileSubscribed(1000) { LoadState.Loading() }
 }

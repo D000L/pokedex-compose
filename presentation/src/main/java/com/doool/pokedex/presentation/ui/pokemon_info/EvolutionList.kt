@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.getData
+import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.presentation.ui.common.EvolutionType
@@ -25,7 +28,7 @@ import com.doool.pokedex.presentation.utils.localized
 @Composable
 fun EvolutionList(
   modifier: Modifier = Modifier,
-  evolutionListUIModel: EvolutionListUIModel,
+  evolutionListUIState: LoadState<EvolutionListUIModel>,
   onClickPokemon: (String) -> Unit
 ) {
   Box {
@@ -34,19 +37,25 @@ fun EvolutionList(
       verticalArrangement = Arrangement.spacedBy(12.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      if (evolutionListUIModel.isInit) {
-        Text(
-          modifier = Modifier.padding(top = 140.dp),
-          text = "No Evolution",
-          style = MaterialTheme.typography.body1
-        )
-      } else {
-        evolutionListUIModel.evolutions.forEach {
-          Evolution(it, onClickPokemon)
+      evolutionListUIState.getData()?.let { evolutionListUIModel ->
+        if (evolutionListUIModel.evolutions.isEmpty()) {
+          Text(
+            modifier = Modifier.padding(top = 140.dp),
+            text = "No Evolution",
+            style = MaterialTheme.typography.body1
+          )
+        } else {
+          evolutionListUIModel.evolutions.forEach {
+            Evolution(it, onClickPokemon)
+          }
         }
       }
     }
-    if(evolutionListUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    if (evolutionListUIState.isLoading()) CircularProgressIndicator(
+      modifier = Modifier.align(
+        Alignment.Center
+      )
+    )
   }
 }
 

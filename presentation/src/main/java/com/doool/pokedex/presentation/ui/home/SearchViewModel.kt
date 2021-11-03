@@ -1,21 +1,19 @@
 package com.doool.pokedex.presentation.ui.home
 
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.domain.usecase.search.SearchItem
-import com.doool.pokedex.domain.usecase.search.SearchMove
-import com.doool.pokedex.domain.usecase.search.SearchPokemon
+import com.doool.pokedex.domain.usecase.search.Search
 import com.doool.pokedex.presentation.base.BaseViewModel
-import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class SearchResult(
+data class SearchUIModel(
   var pokemon: List<Pair<PokemonDetail, PokemonSpecies>> = emptyList(),
   var items: List<Item> = emptyList(),
   var moves: List<PokemonMove> = emptyList()
@@ -23,9 +21,7 @@ data class SearchResult(
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-  private val searchMove: SearchMove,
-  private val searchItem: SearchItem,
-  private val searchPokemon: SearchPokemon,
+  private val searchUsacese: Search
 ) : BaseViewModel() {
 
   companion object {
@@ -35,12 +31,19 @@ class SearchViewModel @Inject constructor(
   val query = MutableStateFlow("")
 
   val searchResultState = query.distinctUntilChangedBy { it }.flatMapLatest {
-    combine(
-      searchPokemon(it, SEARCH_ITEM_LIMIT),
-      searchItem(it, SEARCH_ITEM_LIMIT),
-      searchMove(it, SEARCH_ITEM_LIMIT),
-      ::SearchResult
-    ).withLoadState()
+    searchUsacese(Pair(it, SEARCH_ITEM_LIMIT))
+  }.map {
+    when (it) {
+      is LoadState.Error -> LoadState.Error()
+      is LoadState.Loading -> LoadState.Loading()
+      is LoadState.Success -> LoadState.Success(
+        SearchUIModel(
+          it.data.pokemon,
+          it.data.item,
+          it.data.move
+        )
+      )
+    }
   }
 
   fun search(query: String) {

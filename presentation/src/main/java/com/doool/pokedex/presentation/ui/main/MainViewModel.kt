@@ -1,6 +1,7 @@
 package com.doool.pokedex.presentation.ui.main
 
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.repository.SettingRepository
 import com.doool.pokedex.domain.usecase.CheckIsDownloaded
 import com.doool.pokedex.presentation.Language
@@ -18,7 +19,7 @@ class MainViewModel @Inject constructor(
   var isReady: Boolean = false
   var needDownload = checkIsDownloaded().onCompletion {
     isReady = true
-  }.filter { !it }
+  }.filter { it is LoadState.Success && !it.data }
 
   val language = settingRepository.getLanguageCode().map { Language.fromCode(it) }
     .stateIn(viewModelScope, SharingStarted.Eagerly, Language.English)

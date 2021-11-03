@@ -5,8 +5,6 @@ import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.LocalizedString
 
 data class AboutUIModel(
-  val isInit: Boolean = false,
-  val isLoading: Boolean = true,
   val descriptions: List<LocalizedString> = emptyList(),
   val height: Int = 0,
   val weight: Int = 0,

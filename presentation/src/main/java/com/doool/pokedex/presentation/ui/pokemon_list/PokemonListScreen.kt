@@ -30,7 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.Pokemon
-import com.doool.pokedex.presentation.LoadState
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor

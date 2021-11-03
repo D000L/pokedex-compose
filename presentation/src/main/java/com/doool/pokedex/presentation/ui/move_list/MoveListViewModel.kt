@@ -1,12 +1,11 @@
 package com.doool.pokedex.presentation.ui.move_list
 
 import androidx.lifecycle.SavedStateHandle
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.usecase.GetMove
 import com.doool.pokedex.domain.usecase.GetMoveNames
-import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
 import com.doool.pokedex.presentation.ui.move_list.destination.QUERY_PARAM
-import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -26,6 +25,6 @@ class MoveListViewModel @Inject constructor(
     emit(getMoveNames(searchQuery))
   }
 
-  fun getMove(name: String) = getMoveUsecase(name).onStart { delay(500) }.withLoadState()
-    .stateInWhileSubscribed(1000) { LoadState.Loading }
+  fun getMove(name: String) = getMoveUsecase(name).onStart { delay(500) }
+    .stateInWhileSubscribed(1000) { LoadState.Loading() }
 }

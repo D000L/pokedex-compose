@@ -3,20 +3,25 @@ package com.doool.pokedex.presentation.ui.pokemon_info
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.Form
 import com.doool.pokedex.domain.model.LocalizedString
-import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.usecase.*
-import com.doool.pokedex.presentation.LoadState
 import com.doool.pokedex.presentation.base.BaseViewModel
+import com.doool.pokedex.presentation.combineLoadState
+import com.doool.pokedex.presentation.flatMapLatestState
+import com.doool.pokedex.presentation.mapData
+import com.doool.pokedex.presentation.scanLoadState
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.NAME_PARAM
 import com.doool.pokedex.presentation.ui.pokemon_info.model.*
-import com.doool.pokedex.presentation.withLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -39,82 +44,65 @@ class PokemonInfoViewModel @Inject constructor(
 
   val pokemonList = flow {
     val info = getPokemonList()
-    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = info.first().name
-    initIndex = info.indexOfFirst { it.name == _currentPokemon.value }
+    if (_currentPokemon.value.isNullOrEmpty()) _currentPokemon.value = info.firstOrNull()?.name
+    initIndex = Math.max(0, info.indexOfFirst { it.name == _currentPokemon.value })
     emit(info)
   }
 
-  private val pokemon = currentPokemon.flatMapLatest { getPokemonUsecase(it).withLoadState() }
-  private val species = pokemon.filterIsInstance<LoadState.Success<PokemonDetail>>()
-    .flatMapLatest { getPokemonSpecies(it.data.species.id).withLoadState() }
+  private val pokemon = currentPokemon.flatMapLatest { getPokemonUsecase(it) }
+  private val species = pokemon.flatMapLatestState { getPokemonSpecies(it.species.id) }
 
-  val headerState = combine(
-    pokemon,
-    species,
-    ::Pair
-  ).scan(HeaderUIModel()) { state, (pokemon, species) ->
-    if (pokemon is LoadState.Success && species is LoadState.Success) {
-      val form = pokemon.data.name.contains("-")
+  val headerState = combineLoadState(pokemon, species)
+    .scanLoadState { (pokemon, species) ->
+      val form = pokemon.name.contains("-")
       var formNames = emptyList<LocalizedString>()
-      if (form) formNames = getForm(pokemon.data.name).first().formNames
-      state.copy(
-        isLoading = false,
-        id = pokemon.data.id,
-        name = pokemon.data.name,
-        names = species.data.names,
-        types = pokemon.data.types,
+
+      if (form) formNames = getForm(pokemon.name).filterIsInstance<LoadState.Success<Form>>()
+        .firstOrNull()?.data?.formNames ?: emptyList()
+
+      HeaderUIModel(
+        id = pokemon.id,
+        name = pokemon.name,
+        names = species.names,
+        types = pokemon.types,
         formNames = formNames
       )
-    } else state.copy(isLoading = true)
-  }.stateInWhileLazily()
+    }.stateInWhileLazily { LoadState.loading() }
 
-  val aboutState = combine(
-    pokemon,
-    species,
-    ::Pair
-  ).scan(AboutUIModel()) { state, (pokemon, species) ->
-    if (pokemon is LoadState.Success && species is LoadState.Success) {
-      val abilities = pokemon.data.abilities.map { getAbility(it.ability.name).first() }
-      state.copy(
-        isInit = true,
-        isLoading = false,
-        descriptions = species.data.flavorText,
-        height = pokemon.data.height,
-        weight = pokemon.data.weight,
-        abilities = abilities,
-        genera = species.data.genera,
-        maleRate = species.data.maleRate,
-        femaleRate = species.data.femaleRate,
-        eggGroups = species.data.eggGroups
-      )
-    } else state.copy(isLoading = true)
-  }.stateInWhileLazily()
+  val aboutUIState = combineLoadState(pokemon, species).flatMapLatestState { (pokemon, species) ->
+    combineLoadState(pokemon.abilities.map { getAbility(it.ability.name) }).mapData {
+      Triple(pokemon, species, it)
+    }
+  }.scanLoadState { (pokemon, species, abilities) ->
+    AboutUIModel(
+      descriptions = species.flavorText,
+      height = pokemon.height,
+      weight = pokemon.weight,
+      abilities = abilities,
+      genera = species.genera,
+      maleRate = species.maleRate,
+      femaleRate = species.femaleRate,
+      eggGroups = species.eggGroups
+    )
+  }.stateInWhileLazily { LoadState.loading() }
 
-  val statsState =
-    combine(pokemon, species, ::Pair).scan(StatsUIModel()) { state, (pokemon, species) ->
-      if (pokemon is LoadState.Success && species is LoadState.Success) {
-        val damageRelations = getDamageRelations(pokemon.data.types.map { it.name }).first()
-        state.copy(
-          isInit = true,
-          isLoading = false,
-          stats = pokemon.data.stats,
-          damageRelations = damageRelations
-        )
-      } else state.copy(isLoading = true)
-    }.stateInWhileLazily()
+  val statsUIState = pokemon.flatMapLatestState { pokemon ->
+    getDamageRelations(pokemon.types.map { it.name }).mapData {
+      Pair(pokemon, it)
+    }
+  }.scanLoadState { (pokemon, damageRelations) ->
+    StatsUIModel(stats = pokemon.stats, damageRelations = damageRelations)
+  }.stateInWhileLazily { LoadState.loading() }
 
-  val moveState = pokemon.scan(MoveListUIModel()) { state, pokemon ->
-    if (pokemon is LoadState.Success) {
-      state.copy(isLoading = false, moves = pokemon.data.moves)
-    } else state.copy(isLoading = true)
-  }.stateInWhileLazily()
+  val moveUIState = pokemon.scanLoadState { pokemon ->
+    MoveListUIModel(moves = pokemon.moves)
+  }.stateInWhileLazily { LoadState.loading() }
 
-  val evolutionChainState = species.scan(EvolutionListUIModel()) { state, species ->
-    if (species is LoadState.Success) {
-      val evolutionChain = getPokemonEvolutionChain(species.data.evolutionUrl).first()
-      state.copy(isInit = true, isLoading = false, evolutions = evolutionChain)
-    } else state.copy(isLoading = true)
-  }.stateInWhileLazily()
+  val evolutionListUIState = species.flatMapLatestState {
+    getPokemonEvolutionChain(it.evolutionUrl)
+  }.scanLoadState { evolutionChain ->
+    EvolutionListUIModel(evolutions = evolutionChain)
+  }.stateInWhileLazily { LoadState.loading() }
 
   fun setCurrentPokemon(name: String) {
     viewModelScope.launch {
@@ -123,6 +111,5 @@ class PokemonInfoViewModel @Inject constructor(
   }
 
   fun loadPokemonMove(name: String) =
-    getMove(name).onStart { delay(500) }.withLoadState()
-      .stateInWhileSubscribed(1000) { LoadState.Loading }
+    getMove(name).onStart { delay(500) }.stateInWhileSubscribed(1000) { LoadState.Loading() }
 }

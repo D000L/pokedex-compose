@@ -46,7 +46,7 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.*
-import com.doool.pokedex.presentation.LoadState
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
@@ -96,7 +96,7 @@ fun SearchScreen(
       Space(height = 20.dp)
       SearchResult(
         modifier = Modifier.fillMaxSize(),
-        uiState = viewModel.searchResultState.collectAsState(LoadState.Loading).value,
+        uiState = viewModel.searchResultState.collectAsState(LoadState.Loading()).value,
         onClickMore = {
           onClickMenu(it, query)
         })
@@ -194,7 +194,7 @@ private fun SearchBoxLayout(
 @Composable
 private fun SearchResult(
   modifier: Modifier,
-  uiState: LoadState<SearchResult>,
+  uiState: LoadState<SearchUIModel>,
   onClickMore: (Menu) -> Unit
 ) {
   Column(modifier) {

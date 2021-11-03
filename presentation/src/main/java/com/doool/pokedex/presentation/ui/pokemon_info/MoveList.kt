@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonMove
-import com.doool.pokedex.presentation.LoadState
+import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.ui.common.PokemonType

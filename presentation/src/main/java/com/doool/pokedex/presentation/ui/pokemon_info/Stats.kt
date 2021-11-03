@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.getData
+import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.Damage
 import com.doool.pokedex.domain.model.Stat
 import com.doool.pokedex.presentation.LocalPokemonColor
@@ -25,7 +28,7 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun Stats(
   modifier: Modifier = Modifier,
-  statsUIModel: StatsUIModel
+  statsUIState: LoadState<StatsUIModel>
 ) {
   Box {
     Column(
@@ -33,13 +36,13 @@ fun Stats(
       verticalArrangement = Arrangement.spacedBy(10.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      if(statsUIModel.isInit) {
+      statsUIState.getData()?.let { statsUIModel ->
         BaseStats(statsUIModel.stats)
         Space(height = 12.dp)
         TypeDefenses(statsUIModel.damageRelations)
       }
     }
-    if (statsUIModel.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    if (statsUIState.isLoading()) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
   }
 }
 
