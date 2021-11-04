@@ -1,6 +1,5 @@
 package com.doool.pokedex.presentation.ui.move_list
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +26,7 @@ fun MoveListScreen(viewModel: MoveListViewModel = hiltViewModel()) {
 
   LazyColumn(state = state) {
     listAppBar(state = state, title = "Move")
-    item { MoveHeader(Modifier.padding(bottom = 10.dp)) }
+    item { MoveHeader(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp)) }
     items(moveList, key = { it.id }) { it ->
       val move by remember(it) { viewModel.getMove(it.name) }.collectAsState()
       Move(moveState = move) {

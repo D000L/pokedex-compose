@@ -11,9 +11,9 @@ import com.doool.pokedex.R
 // Set of Material typography styles to start with
 val Typography = Typography(
   defaultFontFamily = FontFamily(
-    Font(R.font.mono_light, FontWeight.Light),
-    Font(R.font.mono_medium, FontWeight.Normal),
-    Font(R.font.mono_bold, FontWeight.Bold)
+    Font(R.font.sfpro_regular, FontWeight.Light),
+    Font(R.font.sfpro_medium, FontWeight.Normal),
+    Font(R.font.sfpro_bold, FontWeight.Bold)
   ),
   h1 = TextStyle(
     fontSize = 32.sp,
