@@ -57,12 +57,17 @@ private fun PokedexData(aboutUIModel: AboutUIModel) {
 @Composable
 private fun Breeding(aboutUIModel: AboutUIModel) {
   CommonSubTitle("Breeding")
+
   InfoItem(
     "Gender",
-    "♀ %.1f%%, ♂ %.1f%%".format(
-      aboutUIModel.maleRate.toFloat(),
-      aboutUIModel.femaleRate.toFloat()
-    )
+    if(aboutUIModel.isGenderless){
+      "Genderless"
+    }else {
+      "♀ %.1f%%, ♂ %.1f%%".format(
+        aboutUIModel.maleRate.toFloat(),
+        aboutUIModel.femaleRate.toFloat()
+      )
+    }
   )
   InfoItem(
     "Egg Groups",

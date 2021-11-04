@@ -12,5 +12,6 @@ data class AboutUIModel(
   val genera: List<LocalizedString> = emptyList(),
   val maleRate: Int = 0,
   val femaleRate: Int = 0,
+  val isGenderless: Boolean = false,
   val eggGroups: List<Info> = emptyList()
 )

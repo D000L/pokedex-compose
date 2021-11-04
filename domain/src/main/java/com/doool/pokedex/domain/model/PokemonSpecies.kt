@@ -7,6 +7,7 @@ data class PokemonSpecies(
   val color: Info = Info(),
   val maleRate: Int = 0,
   val femaleRate: Int = 0,
+  val isGenderless: Boolean = false,
   val evolutionUrl: String = "",
   val flavorText: List<LocalizedString> = listOf(),
   val generation: Info = Info(),

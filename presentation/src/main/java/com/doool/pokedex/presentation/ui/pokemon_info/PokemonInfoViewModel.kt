@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PokemonInfoViewModel @Inject constructor(
@@ -82,6 +81,7 @@ class PokemonInfoViewModel @Inject constructor(
       genera = species.genera,
       maleRate = species.maleRate,
       femaleRate = species.femaleRate,
+      isGenderless = species.isGenderless,
       eggGroups = species.eggGroups
     )
   }.stateInWhileLazily { LoadState.loading() }
