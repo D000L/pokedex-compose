@@ -30,9 +30,9 @@ import com.doool.pokedex.presentation.utils.defaultPlaceholder
 import com.doool.pokedex.presentation.utils.localized
 
 @Composable
-fun MoveHeader() {
+fun MoveHeader(modifier: Modifier = Modifier) {
   Row(
-    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
+    modifier = modifier,
     verticalAlignment = Alignment.CenterVertically
   ) {
     Text(

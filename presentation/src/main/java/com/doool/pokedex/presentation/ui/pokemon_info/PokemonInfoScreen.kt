@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -109,7 +108,11 @@ fun PokemonInfo(
     val minHeight = maxHeight - HEADER_HEIGHT_EXCLUDE_PAGER
     val headerState by viewModel.headerState.collectAsState()
 
-    CompositionLocalProvider(LocalPokemonColor provides colorResource(id = headerState.getData()?.types?.getBackgroundColor() ?: R.color.background_bug)) {
+    CompositionLocalProvider(
+      LocalPokemonColor provides colorResource(
+        id = headerState.getData()?.types?.getBackgroundColor() ?: R.color.background_bug
+      )
+    ) {
       Body(
         Modifier.defaultMinSize(minHeight = minHeight),
         lazyListState,
@@ -153,13 +156,11 @@ private fun Body(
     state = state,
     contentPadding = PaddingValues(top = HEADER_HEIGHT)
   ) {
-    item { Space(height = 20.dp) }
     when (tabState) {
       TabState.About -> item {
         val aboutUIState by viewModel.aboutUIState.collectAsState()
-
         About(
-          modifier = modifier.padding(horizontal = 20.dp),
+          modifier = modifier.padding(20.dp),
           aboutUIState = aboutUIState
         )
       }
@@ -167,20 +168,29 @@ private fun Body(
         val statsUIState by viewModel.statsUIState.collectAsState()
 
         Stats(
-          modifier = modifier.padding(horizontal = 20.dp),
+          modifier = modifier.padding(20.dp),
           statsUIState = statsUIState,
         )
       }
       TabState.Move -> {
-        item { MoveHeader() }
-        if(moveUIState.isLoading()){
+        item {
+          MoveHeader(
+            Modifier.padding(
+              start = 20.dp,
+              end = 20.dp,
+              top = 20.dp,
+              bottom = 10.dp
+            )
+          )
+        }
+        if (moveUIState.isLoading()) {
           item {
-            Box(Modifier.fillParentMaxSize()){
+            Box(Modifier.fillParentMaxSize()) {
               CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
           }
-        }else{
-          moveUIState.getData()?.let{ moveItems->
+        } else {
+          moveUIState.getData()?.let { moveItems ->
             items(moveItems.moves, key = { it.name }) {
               val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
               Move(move) {
@@ -194,7 +204,7 @@ private fun Body(
         val evolutionListUIState by viewModel.evolutionListUIState.collectAsState()
 
         EvolutionList(
-          modifier = modifier.padding(horizontal = 20.dp),
+          modifier = modifier.padding(20.dp),
           evolutionListUIState = evolutionListUIState,
           onClickPokemon = onClickPokemon
         )
@@ -214,13 +224,11 @@ private fun Header(
   Box {
     val viewPagerHeight = THUMBNAIL_VIEWPAGER_HEIGHT * offset
 
-    if (offset * 3 >= 1f) {
+    if (viewPagerHeight > THUMBNAIL_VIEWPAGER_HEIGHT - TITLE_HEIGHT) {
       HorizontalPager(
         modifier = Modifier
-          .height(viewPagerHeight)
-          .graphicsLayer {
-            alpha = (offset * 3).coerceIn(0f, 1f)
-          },
+          .requiredHeight(THUMBNAIL_VIEWPAGER_HEIGHT)
+          .alpha(offset.coerceIn(0f, 1f)),
         count = items.size,
         key = { items[it].id },
         state = pagerState,
@@ -293,7 +301,10 @@ private fun TitleLayout(modifier: Modifier, headerUIState: LoadState<HeaderUIMod
       )
     }
     Space(height = 6.dp)
-    TypeListWithTitle(modifier = Modifier.defaultPlaceholder(isLoading), types = headerUIModel.types)
+    TypeListWithTitle(
+      modifier = Modifier.defaultPlaceholder(isLoading),
+      types = headerUIModel.types
+    )
   }
 }
 
