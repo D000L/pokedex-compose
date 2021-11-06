@@ -91,13 +91,14 @@ fun PokemonInfo(
   var tabState by remember { mutableStateOf(TabState.About) }
 
   val offset by derivedStateOf {
-    val topOffset = lazyListState.getItemTopOffset()
+    val topOffset = lazyListState.getItemTopOffset(1)
     val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
     (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
   }
 
   val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
-  LaunchedEffect(dragged) {
+
+  LaunchedEffect(lazyListState.isScrollInProgress) {
     if (!dragged && offset != 0f && offset != 1f) {
       val direction = if (offset > 0.5f) -offset else offset
       lazyListState.animateScrollBy(direction * density.run { THUMBNAIL_VIEWPAGER_HEIGHT.toPx() })
@@ -153,18 +154,18 @@ private fun Body(
   val moveUIState by viewModel.moveUIState.collectAsState()
 
   LazyColumn(
-    state = state,
-    contentPadding = PaddingValues(top = HEADER_HEIGHT)
+    state = state
   ) {
+    item { Box(Modifier.padding(top = HEADER_HEIGHT)) }
     when (tabState) {
-      TabState.About -> item {
+      TabState.About -> item("About") {
         val aboutUIState by viewModel.aboutUIState.collectAsState()
         About(
           modifier = modifier.padding(20.dp),
           aboutUIState = aboutUIState
         )
       }
-      TabState.Stats -> item {
+      TabState.Stats -> item("Stats") {
         val statsUIState by viewModel.statsUIState.collectAsState()
 
         Stats(
@@ -200,7 +201,7 @@ private fun Body(
           }
         }
       }
-      TabState.Evolution -> item {
+      TabState.Evolution -> item("Evolution") {
         val evolutionListUIState by viewModel.evolutionListUIState.collectAsState()
 
         EvolutionList(
