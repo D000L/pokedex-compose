@@ -4,9 +4,11 @@ package com.doool.pokedex.presentation.ui.home
 import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -45,8 +47,8 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.R
-import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.*
 import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
@@ -64,50 +66,10 @@ import com.doool.pokedex.presentation.utils.clipBackground
 import com.doool.pokedex.presentation.utils.defaultPlaceholder
 import com.doool.pokedex.presentation.utils.localized
 
-@Composable
-fun SearchScreen(
-  isExpended: Boolean,
-  setExpended: (Boolean) -> Unit,
-  viewModel: SearchViewModel = hiltViewModel(),
-  onClickMenu: (Menu, String?) -> Unit
-) {
-  val animate by animateFloatAsState(targetValue = if (isExpended) 0f else 1f)
-  val query by viewModel.query.collectAsState()
-
-  LaunchedEffect(isExpended) { if (!isExpended) viewModel.clearQuery() }
-
-  Column {
-    SearchBox(
-      modifier = Modifier
-        .padding(horizontal = 20.dp * animate)
-        .background(
-          color = Color.LightGray.copy(alpha = 0.4f),
-          shape = RoundedCornerShape(8.dp * animate)
-        )
-        .clickable(!isExpended) { setExpended(true) },
-      isExpended = isExpended,
-      query = query,
-      updateQuery = viewModel::search,
-      clearQuery = viewModel::clearQuery,
-      navigateBack = { setExpended(false) }
-    )
-
-    if (isExpended && animate == 0f) {
-      Space(height = 20.dp)
-      SearchResult(
-        modifier = Modifier.fillMaxSize(),
-        uiState = viewModel.searchResultState.collectAsState(LoadState.Loading()).value,
-        onClickMore = {
-          onClickMenu(it, query)
-        })
-      Space(height = 20.dp)
-    }
-  }
-}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun SearchBox(
+fun SearchBox(
   modifier: Modifier = Modifier,
   isExpended: Boolean = false,
   query: String,
@@ -155,6 +117,7 @@ private fun SearchBox(
     })
 }
 
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SearchBoxLayout(
@@ -188,6 +151,27 @@ private fun SearchBoxLayout(
         Icon(imageVector = Icons.Default.Clear, contentDescription = null)
       }
     }
+  }
+}
+
+@Composable
+fun SearchResult(
+  modifier: Modifier = Modifier,
+  viewModel: SearchViewModel = hiltViewModel(),
+  onClickMenu: (Menu) -> Unit
+) {
+  val uiState by viewModel.searchResultState.collectAsState(LoadState.Loading())
+
+  Column(modifier) {
+    Space(height = 20.dp)
+    SearchResult(
+      modifier = Modifier
+        .fillMaxSize(),
+      uiState = uiState,
+      onClickMore = {
+        onClickMenu(it)
+      })
+    Space(height = 20.dp)
   }
 }
 
@@ -290,7 +274,7 @@ private fun PokemonSummaryPreview() {
       14,
       54,
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png",
-      Info("nidoran-f",29),
+      Info("nidoran-f", 29),
       listOf(),
       listOf(Info("bug"), Info("fairy")),
       listOf()

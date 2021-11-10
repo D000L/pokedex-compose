@@ -13,6 +13,11 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 
+fun Modifier.ifThen(condition: Boolean, modifier: Modifier): Modifier {
+  return if (condition) then(modifier)
+  else this
+}
+
 fun Modifier.clipBackground(
   color: Color,
   shape: Shape = RectangleShape
