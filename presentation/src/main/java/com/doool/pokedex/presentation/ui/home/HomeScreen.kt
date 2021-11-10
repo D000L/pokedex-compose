@@ -75,12 +75,16 @@ fun HomeScreen(
 
     SearchBox(
       modifier = Modifier
-        .padding(top = 40.dp * animationOffset)
-        .padding(horizontal = 20.dp * animationOffset)
+        .padding(
+          top = 40.dp * animationOffset,
+          start = 20.dp * animationOffset,
+          end = 20.dp * animationOffset
+        )
         .background(
           color = Color.LightGray.copy(alpha = 0.4f),
           shape = RoundedCornerShape(8.dp * animationOffset)
-        ),
+        )
+        .clickable(!isSearching) { isSearching = true },
       isExpended = isSearching,
       query = query,
       updateQuery = viewModel::search,
