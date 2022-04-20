@@ -1,11 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        compose_version = '1.1.0-alpha06'
-        kotlin_version = '1.5.31'
-        hilt_version = "2.37"
-        room_version = "2.3.0"
-        paging_version = "3.0.1"
+        compose_version = '1.2.0-alpha06'
+        kotlin_version = '1.6.10'
+        hilt_version = '2.41'
+        room_version = '2.4.2'
+        paging_version = '3.1.1'
     }
     repositories {
         google()

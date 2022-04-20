@@ -63,11 +63,11 @@ dependencies {
 
     implementation 'javax.inject:javax.inject:1'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt'
 
-    implementation 'androidx.paging:paging-common-ktx:3.0.1'
+    implementation 'androidx.paging:paging-common-ktx:3.1.1'
 
-    implementation 'androidx.room:room-ktx:2.3.0'
+    implementation 'androidx.room:room-ktx:2.4.2'
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 

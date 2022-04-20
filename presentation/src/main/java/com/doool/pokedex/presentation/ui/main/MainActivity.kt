@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     installSplashScreen().run {
-      setKeepVisibleCondition {
+      setKeepOnScreenCondition {
         !viewModel.isReady
       }
     }

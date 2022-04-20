@@ -27,7 +27,7 @@ class PokemonListViewModel @Inject constructor(
 
   private var searchQuery: String? = savedStateHandle.get<String?>(QUERY_PARAM)
 
-  val pokemonList = savedStateHandle.getLiveData<List<Pokemon>?>("POKEMON_LIST")
+  val pokemonList = savedStateHandle.getLiveData<List<Pokemon>>("POKEMON_LIST", emptyList())
 
   fun loadPokemonList() {
     viewModelScope.launch {

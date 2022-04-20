@@ -4,9 +4,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -81,7 +81,7 @@ fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
     Space(20.dp)
 
     LazyVerticalGrid(
-      cells = GridCells.Adaptive(100.dp),
+      columns = GridCells.Adaptive(100.dp),
       content = {
         items(move.learnedPokemon) {
           Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(14.dp)) {
