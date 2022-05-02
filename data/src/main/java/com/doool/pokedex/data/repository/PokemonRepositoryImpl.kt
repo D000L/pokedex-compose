@@ -18,6 +18,27 @@ class PokemonRepositoryImpl @Inject constructor(
   private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
+  override suspend fun getPokemon(id: Int): PokemonDetail {
+    return fetchPokemon(id).toModel()
+  }
+
+  private suspend fun fetchPokemon(id: Int): PokemonDetailResponse {
+    val localResult = pokemonDetailDao.getPokemon(id)
+
+    if (localResult.json == null) {
+      val remoteResult = pokeApiService.getPokemon(id)
+      pokemonDetailDao.insertPokemonDetail(
+        PokemonDetailEntity(
+          remoteResult.name,
+          remoteResult.id,
+          remoteResult.toJson()
+        )
+      )
+      return remoteResult
+    }
+    return localResult.json.toResponse()
+  }
+
   override suspend fun getPokemon(name: String): PokemonDetail {
     return fetchPokemon(name).toModel()
   }

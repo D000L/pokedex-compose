@@ -35,7 +35,7 @@ class PokemonListViewModel @Inject constructor(
     }
   }
 
-  fun getItemState(name: String) = getPokemonUsecase(name).flatMapMerge { pokemon ->
+  fun getItemState(name: String) = getPokemonUsecase(GetPokemon.Params.ByName(name)).flatMapMerge { pokemon ->
     when (pokemon) {
       is LoadState.Error -> emptyFlow()
       is LoadState.Loading -> emptyFlow()

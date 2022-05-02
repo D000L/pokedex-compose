@@ -5,7 +5,17 @@ import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
 class GetPokemon @Inject constructor(private val pokemonRepository: PokemonRepository) :
-  BaseParamsUseCase<String, PokemonDetail>() {
+    BaseParamsUseCase<GetPokemon.Params, PokemonDetail>() {
 
-  override suspend fun execute(params: String): PokemonDetail = pokemonRepository.getPokemon(params)
+    sealed class Params {
+        class ByName(val name: String) : Params()
+        class ById(val Id: Int) : Params()
+    }
+
+    override suspend fun execute(params: Params): PokemonDetail {
+        return when (params) {
+            is Params.ById -> pokemonRepository.getPokemon(params.Id)
+            is Params.ByName -> pokemonRepository.getPokemon(params.name)
+        }
+    }
 }
