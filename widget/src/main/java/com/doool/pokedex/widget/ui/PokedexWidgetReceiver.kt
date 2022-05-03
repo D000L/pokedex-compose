@@ -67,8 +67,7 @@ class WidgetLoaderImpl(
     ) {
         collectLatest {
             when (it) {
-                is LoadState.Error -> {
-                }
+                is LoadState.Error -> {}
                 is LoadState.Loading -> recomposable(context, WidgetState.Loading)
                 is LoadState.Success -> onSuccess(it.data)
             }
@@ -83,7 +82,8 @@ class WidgetLoaderImpl(
                     pokemon.name,
                     pokemon.weight,
                     pokemon.height,
-                    species.genera[0].text
+                    species.genera[0].text,
+                    species.flavorText[0].text
                 ))
             }
         }
