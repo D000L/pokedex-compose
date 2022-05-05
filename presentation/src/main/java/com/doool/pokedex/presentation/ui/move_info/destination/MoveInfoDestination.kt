@@ -11,15 +11,15 @@ const val NAME_PARAM = "query"
 
 object MoveInfoDestination : NavDestination() {
 
-  override val route: String = "move/{$NAME_PARAM}"
-  override val arguments: List<NamedNavArgument> = listOf(
-    navArgument(NAME_PARAM) { type = NavType.StringType }
-  )
-  override val content: @Composable () -> Unit = {
-    MoveInfoScreen()
-  }
+    override val route: String = "move/{$NAME_PARAM}"
+    override val arguments: List<NamedNavArgument> = listOf(
+        navArgument(NAME_PARAM) { type = NavType.StringType }
+    )
+    override val content: @Composable () -> Unit = {
+        MoveInfoScreen()
+    }
 
-  fun getRouteByName(query: String): String {
-    return route.replace("{$NAME_PARAM}", query)
-  }
+    fun getRouteByName(query: String): String {
+        return route.replace("{$NAME_PARAM}", query)
+    }
 }

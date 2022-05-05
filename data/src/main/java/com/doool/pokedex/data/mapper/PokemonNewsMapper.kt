@@ -4,5 +4,5 @@ import com.doool.pokedex.data.response.PokemonNewsResponse
 import com.doool.pokedex.domain.model.PokemonNews
 
 fun PokemonNewsResponse.toModel(): PokemonNews = with(this) {
-  PokemonNews(title, shortDescription, url, image, date, tags)
+    PokemonNews(title, shortDescription, url, image, date, tags)
 }

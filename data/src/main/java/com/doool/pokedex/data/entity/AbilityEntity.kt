@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ability")
 data class AbilityEntity(
-  @PrimaryKey val name: String,
-  val id: Int = -1,
-  val json: String? = null
+    @PrimaryKey val name: String,
+    val id: Int = -1,
+    val json: String? = null
 )

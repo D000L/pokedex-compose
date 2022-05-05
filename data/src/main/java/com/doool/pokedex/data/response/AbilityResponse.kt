@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class AbilityResponse(
-  val id: Int = 0,
-  val name: String = "",
-  val names: List<Names> = emptyList(),
-  @SerializedName("effect_entries") val effectEntries: List<EffectResponse> = emptyList(),
-  @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorText> = emptyList()
+    val id: Int = 0,
+    val name: String = "",
+    val names: List<Names> = emptyList(),
+    @SerializedName("effect_entries") val effectEntries: List<EffectResponse> = emptyList(),
+    @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorText> = emptyList()
 )

@@ -4,5 +4,5 @@ import com.doool.pokedex.domain.model.PokemonNews
 
 interface NewsRepository {
 
-  suspend fun getNewsList(index: Int, count: Int): List<PokemonNews>
+    suspend fun getNewsList(index: Int, count: Int): List<PokemonNews>
 }

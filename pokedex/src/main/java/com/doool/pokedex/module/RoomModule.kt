@@ -13,16 +13,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RoomModule {
 
-  @Provides
-  @Singleton
-  fun provideRoomDataBase(@ApplicationContext context: Context) = PokeDatabase.getDataBase(context)
+    @Provides
+    @Singleton
+    fun provideRoomDataBase(@ApplicationContext context: Context) = PokeDatabase.getDataBase(context)
 
-  @Provides
-  fun providePokemonDetailDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonDetailDao()
+    @Provides
+    fun providePokemonDetailDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonDetailDao()
 
-  @Provides
-  fun providePokemonSpeciesDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonSpeciesDao()
+    @Provides
+    fun providePokemonSpeciesDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonSpeciesDao()
 
-  @Provides
-  fun providePokemonSearchDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonSearchDao()
+    @Provides
+    fun providePokemonSearchDao(pokeDatabase: PokeDatabase) = pokeDatabase.pokemonSearchDao()
 }

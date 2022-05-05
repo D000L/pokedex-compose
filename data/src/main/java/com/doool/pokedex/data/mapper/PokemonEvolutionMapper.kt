@@ -10,35 +10,35 @@ import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 
 fun PokemonEvolutionChainResponse.toModel(): List<PokemonEvolutionChain> = with(this) {
-  return parseChain(this.chain.species, this.chain.evolvesTo)
+    return parseChain(this.chain.species, this.chain.evolvesTo)
 }
 
 private fun parseChain(
-  from: InfoResponse,
-  evolvesTo: List<EvolvesTo>
+    from: InfoResponse,
+    evolvesTo: List<EvolvesTo>
 ): List<PokemonEvolutionChain> {
-  val list = mutableListOf<PokemonEvolutionChain>()
-  val from = LocalizedInfo(id = from.url.parseId(), name = from.name)
+    val list = mutableListOf<PokemonEvolutionChain>()
+    val from = LocalizedInfo(id = from.url.parseId(), name = from.name)
 
-  evolvesTo.forEach {
-    list.add(
-      PokemonEvolutionChain(
-        from,
-        LocalizedInfo(id = it.species.url.parseId(), name = it.species.name),
-        it.evolutionDetails.first().toModel()
-      )
-    )
-    if (it.evolvesTo.isNotEmpty()) list.addAll(parseChain(it.species, it.evolvesTo))
-  }
+    evolvesTo.forEach {
+        list.add(
+            PokemonEvolutionChain(
+                from,
+                LocalizedInfo(id = it.species.url.parseId(), name = it.species.name),
+                it.evolutionDetails.first().toModel()
+            )
+        )
+        if (it.evolvesTo.isNotEmpty()) list.addAll(parseChain(it.species, it.evolvesTo))
+    }
 
-  return list
+    return list
 }
 
 fun EvolutionDetail.toModel(): Condition = with(this) {
-  Condition(
-    item = this.item?.toModel(),
-    minLevel = this.minLevel,
-    timeOfDay = this.timeOfDay,
-    trigger = this.trigger.toModel()
-  )
+    Condition(
+        item = this.item?.toModel(),
+        minLevel = this.minLevel,
+        timeOfDay = this.timeOfDay,
+        trigger = this.trigger.toModel()
+    )
 }

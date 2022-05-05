@@ -4,6 +4,6 @@ import androidx.annotation.Keep
 
 @Keep
 data class InfoResponse(
-  val name: String = "",
-  val url: String = ""
+    val name: String = "",
+    val url: String = ""
 )

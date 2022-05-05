@@ -9,6 +9,6 @@ import com.doool.pokedex.presentation.LocalPokemonColor
 
 @Composable
 fun CommonSubTitle(title: String, @ColorRes color: Int? = null) {
-  val color = color?.run { colorResource(id = color) } ?: LocalPokemonColor.current
-  Text(text = title, style = MaterialTheme.typography.subtitle2, color = color)
+    val color = color?.run { colorResource(id = color) } ?: LocalPokemonColor.current
+    Text(text = title, style = MaterialTheme.typography.subtitle2, color = color)
 }

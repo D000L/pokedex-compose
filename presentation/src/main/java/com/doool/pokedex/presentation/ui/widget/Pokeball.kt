@@ -25,47 +25,48 @@ import com.doool.pokedex.R
 @Preview
 @Composable
 fun PreviewPokeball() {
-  Box {
-    Pokeball(60.dp, translateOffset = DpOffset(x = 0.dp, y = -12.dp))
-  }
+    Box {
+        Pokeball(60.dp, translateOffset = DpOffset(x = 0.dp, y = -12.dp))
+    }
 }
 
 @Composable
 fun BoxScope.Pokeball(
-  size: Dp,
-  alignment: Alignment = Alignment.Center,
-  translateOffset: DpOffset = DpOffset.Zero,
-  rotate: Float = 160f,
+    size: Dp,
+    alignment: Alignment = Alignment.Center,
+    translateOffset: DpOffset = DpOffset.Zero,
+    rotate: Float = 160f,
 ) {
-  Image(
-    modifier = Modifier
-      .requiredSize(size)
-      .alpha(0.15f)
-      .align(alignment)
-      .offset(translateOffset.x, translateOffset.y)
-      .rotate(rotate),
-    painter = painterResource(id = R.drawable.ic_pokeball),
-    contentDescription = null
-  )
+    Image(
+        modifier = Modifier
+            .requiredSize(size)
+            .alpha(0.15f)
+            .align(alignment)
+            .offset(translateOffset.x, translateOffset.y)
+            .rotate(rotate),
+        painter = painterResource(id = R.drawable.ic_pokeball),
+        contentDescription = null
+    )
 }
 
 @Composable
 fun BoxScope.DarkPokeball(
-  modifier: Modifier = Modifier,
-  size: Dp,
-  alignment: Alignment = Alignment.Center,
-  translateOffset: DpOffset = DpOffset.Zero,
-  rotate: Float = 160f,
+    modifier: Modifier = Modifier,
+    size: Dp,
+    alignment: Alignment = Alignment.Center,
+    translateOffset: DpOffset = DpOffset.Zero,
+    rotate: Float = 160f,
 ) {
-  Image(
-    modifier = Modifier
-      .requiredSize(size)
-      .align(alignment)
-      .offset(translateOffset.x, translateOffset.y)
-      .rotate(rotate)
-      .clip(CircleShape).then(modifier), colorFilter = ColorFilter.tint(
-      color = colorResource(id = R.color.gray),
-      blendMode = BlendMode.DstIn
-    ), painter = painterResource(id = R.drawable.ic_pokeball), contentDescription = null
-  )
+    Image(
+        modifier = Modifier
+            .requiredSize(size)
+            .align(alignment)
+            .offset(translateOffset.x, translateOffset.y)
+            .rotate(rotate)
+            .clip(CircleShape)
+            .then(modifier), colorFilter = ColorFilter.tint(
+            color = colorResource(id = R.color.gray),
+            blendMode = BlendMode.DstIn
+        ), painter = painterResource(id = R.drawable.ic_pokeball), contentDescription = null
+    )
 }

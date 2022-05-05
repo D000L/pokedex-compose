@@ -2,7 +2,14 @@ package com.doool.pokedex.presentation.ui.pokemon_info
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,93 +34,93 @@ import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun EvolutionList(
-  modifier: Modifier = Modifier,
-  evolutionListUIState: LoadState<EvolutionListUIModel>,
-  onClickPokemon: (String) -> Unit
+    modifier: Modifier = Modifier,
+    evolutionListUIState: LoadState<EvolutionListUIModel>,
+    onClickPokemon: (String) -> Unit
 ) {
-  Box {
-    Column(
-      modifier = modifier.fillMaxWidth(),
-      verticalArrangement = Arrangement.spacedBy(12.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      evolutionListUIState.getData()?.let { evolutionListUIModel ->
-        if (evolutionListUIModel.evolutions.isEmpty()) {
-          Text(
-            modifier = Modifier.padding(top = 140.dp),
-            text = "No Evolution",
-            style = MaterialTheme.typography.body1
-          )
-        } else {
-          evolutionListUIModel.evolutions.forEach {
-            Evolution(it, onClickPokemon)
-          }
+    Box {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            evolutionListUIState.getData()?.let { evolutionListUIModel ->
+                if (evolutionListUIModel.evolutions.isEmpty()) {
+                    Text(
+                        modifier = Modifier.padding(top = 140.dp),
+                        text = "No Evolution",
+                        style = MaterialTheme.typography.body1
+                    )
+                } else {
+                    evolutionListUIModel.evolutions.forEach {
+                        Evolution(it, onClickPokemon)
+                    }
+                }
+            }
         }
-      }
+        if (evolutionListUIState.isLoading()) CircularProgressIndicator(
+            modifier = Modifier.align(
+                Alignment.Center
+            )
+        )
     }
-    if (evolutionListUIState.isLoading()) CircularProgressIndicator(
-      modifier = Modifier.align(
-        Alignment.Center
-      )
-    )
-  }
 }
 
 @Composable
 private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> Unit) {
-  val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
+    val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
 
-  Row {
-    Pokemon(chain.from, onClickPokemon)
-    SpaceFill()
-    Column(Modifier.align(Alignment.CenterVertically)) {
-      when (evolutionType) {
-        EvolutionType.LevelUp -> LevelEvolution(chain.condition.minLevel)
-        EvolutionType.Item -> ItemEvolution(chain.condition.item?.name ?: "")
-        EvolutionType.Trade -> TradeEvolution()
-      }
+    Row {
+        Pokemon(chain.from, onClickPokemon)
+        SpaceFill()
+        Column(Modifier.align(Alignment.CenterVertically)) {
+            when (evolutionType) {
+                EvolutionType.LevelUp -> LevelEvolution(chain.condition.minLevel)
+                EvolutionType.Item -> ItemEvolution(chain.condition.item?.name ?: "")
+                EvolutionType.Trade -> TradeEvolution()
+            }
+        }
+        SpaceFill()
+        Pokemon(chain.to, onClickPokemon)
     }
-    SpaceFill()
-    Pokemon(chain.to, onClickPokemon)
-  }
 }
 
 @Composable
 private fun Pokemon(pokemonInfo: LocalizedInfo, onClick: (String) -> Unit) {
-  Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
-    DarkPokeball(
-      modifier = Modifier.clickable { onClick(pokemonInfo.name) },
-      size = 96.dp,
-      translateOffset = DpOffset(x = 0.dp, y = -16.dp),
-      rotate = 0f
-    )
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      Image(
-        modifier = Modifier
-          .size(76.dp),
-        painter = rememberImagePainter(pokemonInfo.imageUrl),
-        contentDescription = null
-      )
-      Space(height = 4.dp)
-      Text(
-        text = pokemonInfo.names.localized.capitalizeAndRemoveHyphen(),
-        style = MaterialTheme.typography.body1
-      )
+    Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
+        DarkPokeball(
+            modifier = Modifier.clickable { onClick(pokemonInfo.name) },
+            size = 96.dp,
+            translateOffset = DpOffset(x = 0.dp, y = -16.dp),
+            rotate = 0f
+        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                modifier = Modifier
+                    .size(76.dp),
+                painter = rememberImagePainter(pokemonInfo.imageUrl),
+                contentDescription = null
+            )
+            Space(height = 4.dp)
+            Text(
+                text = pokemonInfo.names.localized.capitalizeAndRemoveHyphen(),
+                style = MaterialTheme.typography.body1
+            )
+        }
     }
-  }
 }
 
 @Composable
 private fun LevelEvolution(level: Int) {
-  Text(text = "$level Level", style = MaterialTheme.typography.body2)
+    Text(text = "$level Level", style = MaterialTheme.typography.body2)
 }
 
 @Composable
 private fun TradeEvolution() {
-  Text(text = "Trade", style = MaterialTheme.typography.body2)
+    Text(text = "Trade", style = MaterialTheme.typography.body2)
 }
 
 @Composable
 private fun ItemEvolution(name: String) {
-  Text(text = name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body2)
+    Text(text = name.capitalizeAndRemoveHyphen(), style = MaterialTheme.typography.body2)
 }

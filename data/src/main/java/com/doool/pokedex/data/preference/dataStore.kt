@@ -12,20 +12,20 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class SettingPreferences constructor(context: Context) {
-  companion object {
-    private val LanguageCodeKey = stringPreferencesKey("language_code")
-  }
-
-  private val appContext = context.applicationContext
-
-  val languageCode: Flow<String?>
-    get() = appContext.dataStore.data.map { preferences ->
-      preferences[LanguageCodeKey]
+    companion object {
+        private val LanguageCodeKey = stringPreferencesKey("language_code")
     }
 
-  suspend fun saveLanguageCode(language: String) {
-    appContext.dataStore.edit { preferences ->
-      preferences[LanguageCodeKey] = language
+    private val appContext = context.applicationContext
+
+    val languageCode: Flow<String?>
+        get() = appContext.dataStore.data.map { preferences ->
+            preferences[LanguageCodeKey]
+        }
+
+    suspend fun saveLanguageCode(language: String) {
+        appContext.dataStore.edit { preferences ->
+            preferences[LanguageCodeKey] = language
+        }
     }
-  }
 }

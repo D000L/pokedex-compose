@@ -4,8 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingRepository {
 
-  fun getLanguageCode(): Flow<String?>
+    fun getLanguageCode(): Flow<String?>
 
-  suspend fun saveLanguageCode(code: String)
-
+    suspend fun saveLanguageCode(code: String)
 }

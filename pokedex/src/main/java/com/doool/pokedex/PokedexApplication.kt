@@ -5,11 +5,11 @@ import com.doool.pokedex.presentation.initCoil
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class PokedexApplication : Application(){
+class PokedexApplication : Application() {
 
-  override fun onCreate() {
-    super.onCreate()
+    override fun onCreate() {
+        super.onCreate()
 
-    initCoil()
-  }
+        initCoil()
+    }
 }

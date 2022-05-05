@@ -21,27 +21,27 @@ import com.doool.pokedex.presentation.ui.widget.Space
 
 @Composable
 fun SettingDropDown(expended: Boolean, dismiss: () -> Unit) {
-  val viewModel: SettingViewModel = hiltViewModel()
+    val viewModel: SettingViewModel = hiltViewModel()
 
-  DropdownMenu(expanded = expended, onDismissRequest = { dismiss() }) {
-    val currentLanguage by viewModel.language.collectAsState()
+    DropdownMenu(expanded = expended, onDismissRequest = { dismiss() }) {
+        val currentLanguage by viewModel.language.collectAsState()
 
-    Language.values().forEach {
-      val color = if (currentLanguage == it) Color.Gray else Color.White
-      DropdownMenuItem(modifier = Modifier.background(color), onClick = {
-        viewModel.updateLanguage(it)
-        dismiss()
-      }) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-          Image(
-            modifier = Modifier.size(32.dp),
-            painter = painterResource(id = it.flagResId),
-            contentDescription = null
-          )
-          Space(12.dp)
-          Text(text = it.title)
+        Language.values().forEach {
+            val color = if (currentLanguage == it) Color.Gray else Color.White
+            DropdownMenuItem(modifier = Modifier.background(color), onClick = {
+                viewModel.updateLanguage(it)
+                dismiss()
+            }) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier.size(32.dp),
+                        painter = painterResource(id = it.flagResId),
+                        contentDescription = null
+                    )
+                    Space(width = 12.dp)
+                    Text(text = it.title)
+                }
+            }
         }
-      }
     }
-  }
 }

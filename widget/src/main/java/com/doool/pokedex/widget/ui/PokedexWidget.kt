@@ -6,7 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.glance.*
+import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
@@ -14,7 +18,19 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.layout.*
+import androidx.glance.background
+import androidx.glance.currentState
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
+import androidx.glance.layout.padding
+import androidx.glance.layout.size
+import androidx.glance.layout.width
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -68,8 +84,10 @@ private fun PokeDexBig(state: WidgetUIModel) {
 
         Spacer(GlanceModifier.width(20.dp))
 
-        Row(GlanceModifier.height(90.dp).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            GlanceModifier.height(90.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
             PokemonDescription(GlanceModifier.defaultWeight(), state.description)
             Spacer(GlanceModifier.width(20.dp))
@@ -80,8 +98,10 @@ private fun PokeDexBig(state: WidgetUIModel) {
 
 @Composable
 private fun PokemonInfo(modifier: GlanceModifier = GlanceModifier, state: WidgetUIModel) {
-    Row(modifier.background(ImageProvider(R.drawable.background)).padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier.background(ImageProvider(R.drawable.background)).padding(horizontal = 20.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
         with(state) {
             PokemonImage(GlanceModifier.defaultWeight().size(120.dp).padding(4.dp), getImageUrl(id))
@@ -136,8 +156,10 @@ private fun PokemonStatus(
 
 @Composable
 private fun CrossController(index: Int) {
-    Row(GlanceModifier.size(90.dp).background(ImageProvider(R.drawable.keypad)),
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        GlanceModifier.size(90.dp).background(ImageProvider(R.drawable.keypad)),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         ControllerButton((index - 1).coerceAtLeast(0))
         Box(GlanceModifier.size(30.dp, 90.dp)) {}
         ControllerButton(index + 1)

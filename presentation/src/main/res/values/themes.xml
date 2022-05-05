@@ -14,7 +14,7 @@
         <item name="android:statusBarColor">?attr/statusBarBackground</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <!-- Status bar color. -->
-<!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
+        <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
 
         <item name="windowActionBar">false</item>

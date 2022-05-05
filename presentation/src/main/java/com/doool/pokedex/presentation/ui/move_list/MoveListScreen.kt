@@ -19,19 +19,19 @@ import com.doool.pokedex.presentation.ui.widget.listAppBar
 
 @Composable
 fun MoveListScreen(viewModel: MoveListViewModel = hiltViewModel()) {
-  val navController = LocalNavController.current
-  val state = rememberLazyListState()
+    val navController = LocalNavController.current
+    val state = rememberLazyListState()
 
-  val moveList by viewModel.moveList.collectAsState(initial = emptyList())
+    val moveList by viewModel.moveList.collectAsState(initial = emptyList())
 
-  LazyColumn(state = state) {
-    listAppBar(state = state, title = "Move")
-    item { MoveHeader(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp)) }
-    items(moveList, key = { it.id }) { it ->
-      val move by remember(it) { viewModel.getMove(it.name) }.collectAsState()
-      Move(moveState = move) {
-        navController.navigate(MoveInfoDestination.getRouteByName(it))
-      }
+    LazyColumn(state = state) {
+        listAppBar(state = state, title = "Move")
+        item { MoveHeader(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp)) }
+        items(moveList, key = { it.id }) { it ->
+            val move by remember(it) { viewModel.getMove(it.name) }.collectAsState()
+            Move(moveState = move) {
+                navController.navigate(MoveInfoDestination.getRouteByName(it))
+            }
+        }
     }
-  }
 }

@@ -5,7 +5,7 @@ import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
 class GetAbility @Inject constructor(private val pokemonRepository: PokemonRepository) :
-  BaseParamsUseCase<String, Ability>() {
+    BaseParamsUseCase<String, Ability>() {
 
-  override suspend fun execute(params: String): Ability = pokemonRepository.getAbility(params)
+    override suspend fun execute(params: String): Ability = pokemonRepository.getAbility(params)
 }

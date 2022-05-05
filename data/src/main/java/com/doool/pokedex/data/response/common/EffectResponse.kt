@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class EffectResponse(
-  val effect: String = "",
-  val language: InfoResponse = InfoResponse(),
-  @SerializedName("short_effect") val shortEffect: String = ""
+    val effect: String = "",
+    val language: InfoResponse = InfoResponse(),
+    @SerializedName("short_effect") val shortEffect: String = ""
 )

@@ -11,20 +11,20 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DownloadActivity : ComponentActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    setContent {
-      PokedexTheme {
-        DownloadScreen {
-          startActivity(
-            Intent(
-              this,
-              MainActivity::class.java
-            ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-          )
+        setContent {
+            PokedexTheme {
+                DownloadScreen {
+                    startActivity(
+                        Intent(
+                            this,
+                            MainActivity::class.java
+                        ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    )
+                }
+            }
         }
-      }
     }
-  }
 }

@@ -4,7 +4,7 @@ import com.doool.pokedex.domain.repository.DownloadRepository
 import javax.inject.Inject
 
 class CheckIsDownloaded @Inject constructor(private val downloadRepository: DownloadRepository) :
-  BaseUseCase<Boolean>() {
+    BaseUseCase<Boolean>() {
 
-  override suspend fun execute() = !downloadRepository.shouldDownload()
+    override suspend fun execute() = !downloadRepository.shouldDownload()
 }

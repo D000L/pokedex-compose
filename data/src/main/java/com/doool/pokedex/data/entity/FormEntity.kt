@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "form")
 data class FormEntity(
-  @PrimaryKey val name: String,
-  val id: Int,
-  val json: String,
+    @PrimaryKey val name: String,
+    val id: Int,
+    val json: String,
 )

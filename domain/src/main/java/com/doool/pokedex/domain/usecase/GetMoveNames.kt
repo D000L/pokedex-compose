@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class GetMoveNames @Inject constructor(private val searchRepository: SearchRepository) {
 
-  suspend operator fun invoke(query: String? = null): List<Info> =
-    searchRepository.searchMoveNames(query)
+    suspend operator fun invoke(query: String? = null): List<Info> =
+        searchRepository.searchMoveNames(query)
 }

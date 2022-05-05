@@ -3,7 +3,16 @@ package com.doool.pokedex.presentation.ui.move_info
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -32,75 +41,75 @@ import com.doool.pokedex.presentation.utils.localized
 @Composable
 fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
 
-  val move by viewModel.move.collectAsState()
+    val move by viewModel.move.collectAsState()
 
-  Column(
-    Modifier
-      .fillMaxWidth()
-      .defaultMinSize(minHeight = 240.dp)
-      .padding(20.dp)
-  ) {
-    val type = PokemonType.from(move.type.name)
-    val color = colorResource(id = type.backgroundResId)
-
-    Text(
-      text = "#%03d".format(move.id),
-      style = MaterialTheme.typography.subtitle1
-    )
-    Space(4.dp)
-    Row(verticalAlignment = Alignment.CenterVertically) {
-      Text(
-        text = move.names.localized.capitalizeAndRemoveHyphen(),
-        style = MaterialTheme.typography.subtitle1
-      )
-      SpaceFill()
-      Text(text = move.damageClass.name.capitalizeAndRemoveHyphen())
-      Space(8.dp)
-      Type(type = type, text = type.name)
-    }
-    Space(12.dp)
-    Text(text = move.flavorTextEntries.localized, style = MaterialTheme.typography.body1)
-    Space(20.dp)
-
-    Row(
+    Column(
       Modifier
         .fillMaxWidth()
-        .height(60.dp)
-        .border(
-          width = 0.5.dp,
-          color = color,
-          shape = CircleShape
-        ), verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceEvenly
+        .defaultMinSize(minHeight = 240.dp)
+        .padding(20.dp)
     ) {
-      Item("Power", color, move.power)
-      Item("Acc", color, move.accuracy)
-      Item("PP", color, move.pp)
-    }
+        val type = PokemonType.from(move.type.name)
+        val color = colorResource(id = type.backgroundResId)
 
-    Space(20.dp)
-
-    LazyVerticalGrid(
-      columns = GridCells.Adaptive(100.dp),
-      content = {
-        items(move.learnedPokemon) {
-          Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(14.dp)) {
-            DarkPokeball(size = 80.dp, rotate = 0f)
-            Image(
-              modifier = Modifier.size(60.dp),
-              painter = rememberImagePainter(it.imageUrl),
-              contentDescription = null
+        Text(
+            text = "#%03d".format(move.id),
+            style = MaterialTheme.typography.subtitle1
+        )
+        Space(height = 4.dp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = move.names.localized.capitalizeAndRemoveHyphen(),
+                style = MaterialTheme.typography.subtitle1
             )
-          }
+            SpaceFill()
+            Text(text = move.damageClass.name.capitalizeAndRemoveHyphen())
+            Space(width = 8.dp)
+            Type(type = type, text = type.name)
         }
-      })
-  }
+        Space(height = 12.dp)
+        Text(text = move.flavorTextEntries.localized, style = MaterialTheme.typography.body1)
+        Space(height = 20.dp)
+
+        Row(
+          Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .border(
+              width = 0.5.dp,
+              color = color,
+              shape = CircleShape
+            ), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Item("Power", color, move.power)
+            Item("Acc", color, move.accuracy)
+            Item("PP", color, move.pp)
+        }
+
+        Space(height = 20.dp)
+
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(100.dp),
+            content = {
+                items(move.learnedPokemon) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(14.dp)) {
+                        DarkPokeball(size = 80.dp, rotate = 0f)
+                        Image(
+                            modifier = Modifier.size(60.dp),
+                            painter = rememberImagePainter(it.imageUrl),
+                            contentDescription = null
+                        )
+                    }
+                }
+            })
+    }
 }
 
 @Composable
 private fun Item(title: String, color: Color, amount: Int) {
-  Column(Modifier.width(60.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-    Text(text = title, style = MaterialTheme.typography.body2, color = color)
-    Text(text = amount.toString(), style = MaterialTheme.typography.body1)
-  }
+    Column(Modifier.width(60.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = title, style = MaterialTheme.typography.body2, color = color)
+        Text(text = amount.toString(), style = MaterialTheme.typography.body1)
+    }
 }

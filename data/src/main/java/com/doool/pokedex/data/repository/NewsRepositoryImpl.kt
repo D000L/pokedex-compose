@@ -7,10 +7,10 @@ import com.doool.pokedex.domain.repository.NewsRepository
 import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
-  private val newsService: NewsService
+    private val newsService: NewsService
 ) : NewsRepository {
 
-  override suspend fun getNewsList(index: Int, count: Int): List<PokemonNews> {
-    return newsService.getNewsList(index, count).map { it.toModel() }
-  }
+    override suspend fun getNewsList(index: Int, count: Int): List<PokemonNews> {
+        return newsService.getNewsList(index, count).map { it.toModel() }
+    }
 }

@@ -7,7 +7,13 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -17,8 +23,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -44,137 +56,137 @@ import com.doool.pokedex.presentation.utils.clipBackground
 import com.doool.pokedex.presentation.utils.ifThen
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
-  News(R.color.background_psychic, NewsDestination.route),
-  Pokemon(R.color.background_flying, PokemonListDestination.route),
-  Games(R.color.background_rock, GamesDestination.route),
-  Move(R.color.background_grass, MoveListDestination.route),
-  Item(R.color.background_poison, ItemDestination.route),
-  Berry(R.color.background_normal, LocationDestination.route),
-  Location(R.color.background_electric, LocationDestination.route),
+    News(R.color.background_psychic, NewsDestination.route),
+    Pokemon(R.color.background_flying, PokemonListDestination.route),
+    Games(R.color.background_rock, GamesDestination.route),
+    Move(R.color.background_grass, MoveListDestination.route),
+    Item(R.color.background_poison, ItemDestination.route),
+    Berry(R.color.background_normal, LocationDestination.route),
+    Location(R.color.background_electric, LocationDestination.route),
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
-  viewModel: SearchViewModel = hiltViewModel(),
-  onClickMenu: (Menu, String?) -> Unit
+    viewModel: SearchViewModel = hiltViewModel(),
+    onClickMenu: (Menu, String?) -> Unit
 ) {
-  var isSearching by rememberSaveable { mutableStateOf(false) }
-  val animationOffset by animateFloatAsState(targetValue = if (isSearching) 0f else 1f)
+    var isSearching by rememberSaveable { mutableStateOf(false) }
+    val animationOffset by animateFloatAsState(targetValue = if (isSearching) 0f else 1f)
 
-  val query by viewModel.query.collectAsState()
+    val query by viewModel.query.collectAsState()
 
-  Column(
-    Modifier
-      .fillMaxWidth()
-      .ifThen(animationOffset != 0f, Modifier.verticalScroll(rememberScrollState()))
-  ) {
-    AnimatedVisibility(visible = !isSearching) {
-      HomeHeader()
-    }
-
-    SearchBox(
-      modifier = Modifier
-        .padding(
-          top = 40.dp * animationOffset,
-          start = 20.dp * animationOffset,
-          end = 20.dp * animationOffset
-        )
-        .background(
-          color = Color.LightGray.copy(alpha = 0.4f),
-          shape = RoundedCornerShape(8.dp * animationOffset)
-        )
-        .clickable(!isSearching) { isSearching = true },
-      isExpended = isSearching,
-      query = query,
-      updateQuery = viewModel::search,
-      clearQuery = viewModel::clearQuery,
-      navigateBack = { isSearching = false }
-    )
-
-    if (isSearching && animationOffset == 0f) {
-      SearchResult(
-        Modifier.verticalScroll(rememberScrollState()),
-      ) {
-        onClickMenu(it, query)
-      }
-    } else {
-      MenuScreen(
+    Column(
         Modifier
-          .padding(start = 20.dp, end = 20.dp, top = 40.dp, bottom = 40.dp)
-          .alpha(animationOffset)
-      )
-    }
-  }
+            .fillMaxWidth()
+            .ifThen(animationOffset != 0f, Modifier.verticalScroll(rememberScrollState()))
+    ) {
+        AnimatedVisibility(visible = !isSearching) {
+            HomeHeader()
+        }
 
-  BackHandler(isSearching) { isSearching = false }
-  LaunchedEffect(isSearching) { if (!isSearching) viewModel.clearQuery() }
+        SearchBox(
+            modifier = Modifier
+                .padding(
+                    top = 40.dp * animationOffset,
+                    start = 20.dp * animationOffset,
+                    end = 20.dp * animationOffset
+                )
+                .background(
+                    color = Color.LightGray.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(8.dp * animationOffset)
+                )
+                .clickable(!isSearching) { isSearching = true },
+            isExpended = isSearching,
+            query = query,
+            updateQuery = viewModel::search,
+            clearQuery = viewModel::clearQuery,
+            navigateBack = { isSearching = false }
+        )
+
+        if (isSearching && animationOffset == 0f) {
+            SearchResult(
+                Modifier.verticalScroll(rememberScrollState()),
+            ) {
+                onClickMenu(it, query)
+            }
+        } else {
+            MenuScreen(
+                Modifier
+                    .padding(start = 20.dp, end = 20.dp, top = 40.dp, bottom = 40.dp)
+                    .alpha(animationOffset)
+            )
+        }
+    }
+
+    BackHandler(isSearching) { isSearching = false }
+    LaunchedEffect(isSearching) { if (!isSearching) viewModel.clearQuery() }
 }
 
 @Composable
 private fun HomeHeader() {
-  Row(
-    Modifier
-      .padding(start = 20.dp, end = 20.dp, top = 48.dp)
-  ) {
-    Text(
-      text = stringResource(id = R.string.home_title),
-      style = MaterialTheme.typography.h1
-    )
+    Row(
+        Modifier
+            .padding(start = 20.dp, end = 20.dp, top = 48.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.home_title),
+            style = MaterialTheme.typography.h1
+        )
 
-    SpaceFill()
+        SpaceFill()
 
-    var showMenu by remember { mutableStateOf(false) }
-    IconButton(onClick = { showMenu = true }) {
-      Icon(Icons.Default.Settings, null)
+        var showMenu by remember { mutableStateOf(false) }
+        IconButton(onClick = { showMenu = true }) {
+            Icon(Icons.Default.Settings, null)
 
-      SettingDropDown(expended = showMenu) {
-        showMenu = false
-      }
+            SettingDropDown(expended = showMenu) {
+                showMenu = false
+            }
+        }
     }
-  }
 }
 
 @Composable
 private fun MenuScreen(modifier: Modifier = Modifier) {
-  val navController = LocalNavController.current
+    val navController = LocalNavController.current
 
-  Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
-    MenuItem(Modifier.fillMaxWidth(), navController, Menu.News)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        MenuItem(Modifier.fillMaxWidth(), navController, Menu.News)
 
-    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-      MenuItem(Modifier.weight(1f), navController, Menu.Pokemon)
-      MenuItem(Modifier.weight(1f), navController, Menu.Move)
+        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            MenuItem(Modifier.weight(1f), navController, Menu.Pokemon)
+            MenuItem(Modifier.weight(1f), navController, Menu.Move)
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            MenuItem(Modifier.weight(1f), navController, Menu.Item)
+            MenuItem(Modifier.weight(1f), navController, Menu.Berry)
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            MenuItem(Modifier.weight(1f), navController, Menu.Games)
+            MenuItem(Modifier.weight(1f), navController, Menu.Location)
+        }
     }
-
-    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-      MenuItem(Modifier.weight(1f), navController, Menu.Item)
-      MenuItem(Modifier.weight(1f), navController, Menu.Berry)
-    }
-
-    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-      MenuItem(Modifier.weight(1f), navController, Menu.Games)
-      MenuItem(Modifier.weight(1f), navController, Menu.Location)
-    }
-  }
 }
 
 @Composable
 private fun MenuItem(
-  modifier: Modifier = Modifier,
-  navController: NavController,
-  menu: Menu,
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    menu: Menu,
 ) {
-  Box(
-    modifier = modifier
-      .height(92.dp)
-      .clipBackground(colorResource(id = menu.colorRes), shape = RoundedCornerShape(8.dp))
-      .clickable {
-        navController.navigate(menu.destination)
-      },
-    contentAlignment = Alignment.Center
-  ) {
-    Pokeball(120.dp, Alignment.CenterEnd, DpOffset(x = 23.dp, y = -25.dp), rotate = 220f)
-    Text(text = menu.name, style = MaterialTheme.typography.h4)
-  }
+    Box(
+        modifier = modifier
+            .height(92.dp)
+            .clipBackground(colorResource(id = menu.colorRes), shape = RoundedCornerShape(8.dp))
+            .clickable {
+                navController.navigate(menu.destination)
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Pokeball(120.dp, Alignment.CenterEnd, DpOffset(x = 23.dp, y = -25.dp), rotate = 220f)
+        Text(text = menu.name, style = MaterialTheme.typography.h4)
+    }
 }

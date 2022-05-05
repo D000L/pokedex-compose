@@ -18,14 +18,18 @@ class WidgetActionsImpl(
     private suspend fun loadPokemonInfo(context: Context, id: Int) {
         getPokemon(GetPokemon.Params.ById(id)).collectSuccess(context) { pokemon ->
             getPokemonSpecies(pokemon.species.id).collectSuccess(context) { species ->
-                updateWidget(context, LoadState.success(WidgetUIModel(
-                    id = id,
-                    name = pokemon.name,
-                    height = pokemon.weight,
-                    weight = pokemon.height,
-                    species = species.genera[0].text,
-                    description = species.flavorText[0].text
-                )))
+                updateWidget(
+                    context, LoadState.success(
+                        WidgetUIModel(
+                            id = id,
+                            name = pokemon.name,
+                            height = pokemon.weight,
+                            weight = pokemon.height,
+                            species = species.genera[0].text,
+                            description = species.flavorText[0].text
+                        )
+                    )
+                )
             }
         }
     }

@@ -14,22 +14,22 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 
 fun Modifier.ifThen(condition: Boolean, modifier: Modifier): Modifier {
-  return if (condition) then(modifier)
-  else this
+    return if (condition) then(modifier)
+    else this
 }
 
 fun Modifier.clipBackground(
-  color: Color,
-  shape: Shape = RectangleShape
+    color: Color,
+    shape: Shape = RectangleShape
 ) = this
-  .background(color, shape)
-  .clip(shape)
+    .background(color, shape)
+    .clip(shape)
 
-fun Modifier.defaultPlaceholder(visible : Boolean = true, shape: Shape = RectangleShape) = composed {
-  this.placeholder(
-    visible,
-    color = colorResource(id = R.color.gray).copy(0.2f),
-    shape = shape,
-    highlight = PlaceholderHighlight.shimmer(colorResource(id = R.color.gray).copy(0.5f))
-  )
+fun Modifier.defaultPlaceholder(visible: Boolean = true, shape: Shape = RectangleShape) = composed {
+    this.placeholder(
+        visible,
+        color = colorResource(id = R.color.gray).copy(0.2f),
+        shape = shape,
+        highlight = PlaceholderHighlight.shimmer(colorResource(id = R.color.gray).copy(0.5f))
+    )
 }

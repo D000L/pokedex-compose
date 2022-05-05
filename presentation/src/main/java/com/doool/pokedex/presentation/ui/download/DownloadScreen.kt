@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,21 +19,21 @@ import com.doool.pokedex.presentation.Process
 @Composable
 fun DownloadScreen(viewModel: DownloadViewModel = hiltViewModel(), completeDownload: () -> Unit) {
 
-  val uiState by remember { viewModel.download() }.collectAsState()
+    val uiState by remember { viewModel.download() }.collectAsState()
 
-  Column(
-    Modifier.fillMaxSize(1f),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center
-  ) {
-    uiState.Process(onError = {
-      Text(text = "Fail Download")
-    }, onLoading = {
-      CircularProgressIndicator()
-    })
-  }
+    Column(
+        Modifier.fillMaxSize(1f),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        uiState.Process(onError = {
+            Text(text = "Fail Download")
+        }, onLoading = {
+            CircularProgressIndicator()
+        })
+    }
 
-  LaunchedEffect(uiState) {
-    if (uiState is LoadState.Success) completeDownload()
-  }
+    LaunchedEffect(uiState) {
+        if (uiState is LoadState.Success) completeDownload()
+    }
 }

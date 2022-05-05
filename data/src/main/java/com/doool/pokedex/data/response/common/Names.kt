@@ -4,6 +4,6 @@ import androidx.annotation.Keep
 
 @Keep
 data class Names(
-  val language: InfoResponse = InfoResponse(),
-  val name: String = ""
+    val language: InfoResponse = InfoResponse(),
+    val name: String = ""
 )

@@ -5,8 +5,8 @@ import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
 class GetMove @Inject constructor(private val pokemonRepository: PokemonRepository) :
-  BaseParamsUseCase<String, PokemonMove>() {
+    BaseParamsUseCase<String, PokemonMove>() {
 
-  override suspend fun execute(params: String): PokemonMove =
-    pokemonRepository.getPokemonMove(params)
+    override suspend fun execute(params: String): PokemonMove =
+        pokemonRepository.getPokemonMove(params)
 }

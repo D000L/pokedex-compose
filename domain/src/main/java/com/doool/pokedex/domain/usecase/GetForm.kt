@@ -5,7 +5,7 @@ import com.doool.pokedex.domain.repository.PokemonRepository
 import javax.inject.Inject
 
 class GetForm @Inject constructor(private val pokemonRepository: PokemonRepository) :
-  BaseParamsUseCase<String, Form>() {
+    BaseParamsUseCase<String, Form>() {
 
-  override suspend fun execute(params: String): Form = pokemonRepository.getForm(params)
+    override suspend fun execute(params: String): Form = pokemonRepository.getForm(params)
 }

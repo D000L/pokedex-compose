@@ -20,7 +20,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.doool.pokedex.presentation.*
+import com.doool.pokedex.presentation.LocalLanguage
+import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.NavDestination
+import com.doool.pokedex.presentation.bottomSheet
+import com.doool.pokedex.presentation.composable
 import com.doool.pokedex.presentation.ui.home.destination.HomeDestination
 import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.move_list.destination.MoveListDestination
@@ -38,93 +42,93 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-  private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    installSplashScreen().run {
-      setKeepOnScreenCondition {
-        !viewModel.isReady
-      }
-    }
-
-    setContent {
-      PokedexTheme {
-        val language by viewModel.language.collectAsState()
-        CompositionLocalProvider(LocalLanguage provides language) {
-          Surface(Modifier.fillMaxSize()) {
-            MainNavHost()
-          }
+        installSplashScreen().run {
+            setKeepOnScreenCondition {
+                !viewModel.isReady
+            }
         }
-      }
-    }
 
-    lifecycleScope.launchWhenResumed {
-      viewModel.needDownload.collectLatest {
-        goDownload()
-      }
+        setContent {
+            PokedexTheme {
+                val language by viewModel.language.collectAsState()
+                CompositionLocalProvider(LocalLanguage provides language) {
+                    Surface(Modifier.fillMaxSize()) {
+                        MainNavHost()
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.needDownload.collectLatest {
+                goDownload()
+            }
+        }
     }
-  }
 }
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun MainNavHost() {
-  val bottomSheetNavigator = rememberBottomSheetNavigator()
-  val navController = rememberNavController(bottomSheetNavigator)
+    val bottomSheetNavigator = rememberBottomSheetNavigator()
+    val navController = rememberNavController(bottomSheetNavigator)
 
-  CompositionLocalProvider(LocalNavController provides navController) {
-    ModalBottomSheetLayout(
-      sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-      bottomSheetNavigator = bottomSheetNavigator
-    ) {
-      NavHost(navController, HomeDestination.route) {
-        navDestinations.forEach { destination ->
-          composable(destination)
+    CompositionLocalProvider(LocalNavController provides navController) {
+        ModalBottomSheetLayout(
+            sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+            bottomSheetNavigator = bottomSheetNavigator
+        ) {
+            NavHost(navController, HomeDestination.route) {
+                navDestinations.forEach { destination ->
+                    composable(destination)
+                }
+
+                bottomSheet(MoveInfoDestination)
+            }
         }
-
-        bottomSheet(MoveInfoDestination)
-      }
     }
-  }
 }
 
 @Composable
 fun NotDevelop() {
-  Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-    Text(text = "Not Developed")
-  }
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Not Developed")
+    }
 }
 
 val navDestinations = listOf(
-  HomeDestination,
-  NewsDestination,
-  GamesDestination,
-  ItemDestination,
-  BerryDestination,
-  LocationDestination,
-  PokemonInfoDestination,
-  PokemonListDestination,
-  MoveListDestination
+    HomeDestination,
+    NewsDestination,
+    GamesDestination,
+    ItemDestination,
+    BerryDestination,
+    LocationDestination,
+    PokemonInfoDestination,
+    PokemonListDestination,
+    MoveListDestination
 )
 
 object GamesDestination : NavDestination() {
-  override val route = "Games"
-  override val content: @Composable () -> Unit = { NotDevelop() }
+    override val route = "Games"
+    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 object ItemDestination : NavDestination() {
-  override val route = "Item"
-  override val content: @Composable () -> Unit = { NotDevelop() }
+    override val route = "Item"
+    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 object BerryDestination : NavDestination() {
-  override val route = "Berry"
-  override val content: @Composable () -> Unit = { NotDevelop() }
+    override val route = "Berry"
+    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 object LocationDestination : NavDestination() {
-  override val route = "Location"
-  override val content: @Composable () -> Unit = { NotDevelop() }
+    override val route = "Location"
+    override val content: @Composable () -> Unit = { NotDevelop() }
 }

@@ -2,7 +2,11 @@ package com.doool.pokedex.presentation.ui.news
 
 import android.widget.TextView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
@@ -25,54 +29,54 @@ import com.doool.pokedex.presentation.ui.widget.listAppBar
 @Composable
 fun NewsScreen(viewModel: NewsViewModel = hiltViewModel()) {
 
-  val news = viewModel.news.collectAsLazyPagingItems()
+    val news = viewModel.news.collectAsLazyPagingItems()
 
-  NewsList(news)
+    NewsList(news)
 }
 
 @Composable
 private fun NewsList(news: LazyPagingItems<PokemonNews>) {
-  val state = rememberLazyListState()
+    val state = rememberLazyListState()
 
-  LazyColumn(state = state) {
-    listAppBar(state = state, title = "Pokemon News")
-    items(news, key = { it.title }) {
-      it?.let { News(it) }
+    LazyColumn(state = state) {
+        listAppBar(state = state, title = "Pokemon News")
+        items(news, key = { it.title }) {
+            it?.let { News(it) }
+        }
     }
-  }
 }
 
 @Composable
 private fun News(news: PokemonNews) {
-  Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-    Image(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(400.dp),
-      painter = rememberImagePainter(news.image),
-      contentDescription = null
-    )
-    Space(height = 8.dp)
-    Row {
-      Text(text = news.date, style = MaterialTheme.typography.body1)
-      Space(width = 12.dp)
-      Text(text = news.tags, style = MaterialTheme.typography.body1)
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            painter = rememberImagePainter(news.image),
+            contentDescription = null
+        )
+        Space(height = 8.dp)
+        Row {
+            Text(text = news.date, style = MaterialTheme.typography.body1)
+            Space(width = 12.dp)
+            Text(text = news.tags, style = MaterialTheme.typography.body1)
+        }
+        Space(height = 8.dp)
+        HtmlText(html = news.title, style = MaterialTheme.typography.body1)
+        Space(height = 4.dp)
+        HtmlText(html = news.shortDescription, style = MaterialTheme.typography.body1)
+        Space(height = 12.dp)
     }
-    Space(height = 8.dp)
-    HtmlText(html = news.title, style = MaterialTheme.typography.body1)
-    Space(height = 4.dp)
-    HtmlText(html = news.shortDescription, style = MaterialTheme.typography.body1)
-    Space(height = 12.dp)
-  }
 }
 
 @Composable
 private fun HtmlText(html: String, style: TextStyle) {
-  AndroidView(factory = {
-    TextView(it).apply {
-      textSize = style.fontSize.value
-    }
-  }, update = {
-    it.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)
-  })
+    AndroidView(factory = {
+        TextView(it).apply {
+            textSize = style.fontSize.value
+        }
+    }, update = {
+        it.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)
+    })
 }

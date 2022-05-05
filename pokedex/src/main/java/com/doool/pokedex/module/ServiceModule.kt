@@ -12,15 +12,15 @@ import retrofit2.Retrofit
 @InstallIn(SingletonComponent::class)
 internal class ServiceModule {
 
-  @Provides
-  fun providePokeApiService(@RetrofitModule.PokeApiRetrofit retrofit: Retrofit): PokeApiService =
-    retrofit.create(
-      PokeApiService::class.java
-    )
+    @Provides
+    fun providePokeApiService(@RetrofitModule.PokeApiRetrofit retrofit: Retrofit): PokeApiService =
+        retrofit.create(
+            PokeApiService::class.java
+        )
 
-  @Provides
-  fun provideNewsService(@RetrofitModule.NewsRetrofit retrofit: Retrofit): NewsService =
-    retrofit.create(
-      NewsService::class.java
-    )
+    @Provides
+    fun provideNewsService(@RetrofitModule.NewsRetrofit retrofit: Retrofit): NewsService =
+        retrofit.create(
+            NewsService::class.java
+        )
 }
