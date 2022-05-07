@@ -2,11 +2,14 @@ package com.doool.pokedex.widget.ui
 
 import android.content.Context
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.model.LocalizedString
+import com.doool.pokedex.domain.repository.SettingRepository
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -18,7 +21,22 @@ import kotlinx.coroutines.yield
 class WidgetActionsImpl(
     private val getPokemon: GetPokemon,
     private val getPokemonSpecies: GetPokemonSpecies,
+    private val settingRepository: SettingRepository,
 ) : WidgetActions {
+
+    private var languageCode: String = EnglishCode
+
+    companion object {
+        private const val EnglishCode = "en"
+    }
+
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            settingRepository.getLanguageCode().collectLatest {
+                languageCode = it ?: EnglishCode
+            }
+        }
+    }
 
     private var job: Job? = null
 
@@ -55,8 +73,8 @@ class WidgetActionsImpl(
                         name = pokemon.data.name,
                         height = pokemon.data.weight,
                         weight = pokemon.data.height,
-                        species = species.data.genera[0].text,
-                        description = species.data.flavorText[0].text
+                        species = species.data.genera.localized,
+                        description = species.data.flavorText.localized
                     )
                 )
             } else null
@@ -70,4 +88,7 @@ class WidgetActionsImpl(
             PokedexWidget(state).update(context, it)
         }
     }
+
+    private val List<LocalizedString>.localized: String
+        get() = firstOrNull { it.language == languageCode }?.text ?: ""
 }

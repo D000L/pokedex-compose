@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.repository.SettingRepository
 import com.doool.pokedex.domain.usecase.CheckIsDownloaded
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
@@ -29,6 +30,9 @@ class PokedexWidgetReceiver : GlanceAppWidgetReceiver() {
     @Inject
     lateinit var getPokemonSpecies: GetPokemonSpecies
 
+    @Inject
+    lateinit var settingRepository: SettingRepository
+
     private val job = SupervisorJob()
     private val coroutineScope = CoroutineScope(Dispatchers.Default + job)
 
@@ -36,7 +40,7 @@ class PokedexWidgetReceiver : GlanceAppWidgetReceiver() {
 
     override fun onEnabled(context: Context?) {
         super.onEnabled(context)
-        widgetActions = WidgetActionsImpl(getPokemon, getPokemonSpecies)
+        widgetActions = WidgetActionsImpl(getPokemon, getPokemonSpecies, settingRepository)
     }
 
     override fun onUpdate(
