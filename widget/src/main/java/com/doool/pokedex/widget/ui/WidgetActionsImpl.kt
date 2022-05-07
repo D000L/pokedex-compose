@@ -4,46 +4,64 @@ import android.content.Context
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 class WidgetActionsImpl(
     private val getPokemon: GetPokemon,
     private val getPokemonSpecies: GetPokemonSpecies,
 ) : WidgetActions {
-    override suspend fun loadPokemon(context: Context, id: Int) {
-        loadPokemonInfo(context, id)
-    }
 
-    private suspend fun loadPokemonInfo(context: Context, id: Int) {
-        getPokemon(GetPokemon.Params.ById(id)).collectSuccess(context) { pokemon ->
-            getPokemonSpecies(pokemon.species.id).collectSuccess(context) { species ->
-                updateWidget(
-                    context, LoadState.success(
-                        WidgetUIModel(
-                            id = id,
-                            name = pokemon.name,
-                            height = pokemon.weight,
-                            weight = pokemon.height,
-                            species = species.genera[0].text,
-                            description = species.flavorText[0].text
-                        )
-                    )
-                )
-            }
+    private var job: Job? = null
+
+    override fun loadPokemon(context: Context, id: Int) {
+        job?.cancel()
+
+        job = CoroutineScope(Dispatchers.Default).launch {
+            updateWidget(context, LoadState.loading(WidgetUIModel(id)))
+            loadPokemonInfo(context, id)
         }
     }
 
-    private suspend fun <T> Flow<LoadState<T>>.collectSuccess(
-        context: Context,
-        onSuccess: suspend (T) -> Unit,
-    ) {
-        collectLatest {
+    private suspend fun loadPokemonInfo(context: Context, id: Int) {
+        val getPokemon = getPokemon(GetPokemon.Params.ById(id)).onEach {
+            yield()
+        }
+        val getSpecies = getPokemon.flatMapLatest {
             when (it) {
-                is LoadState.Error -> {}
-                is LoadState.Loading -> updateWidget(context, LoadState.loading(WidgetUIModel()))
-                is LoadState.Success -> onSuccess(it.data)
+                is LoadState.Error -> flowOf(LoadState.failure(null))
+                is LoadState.Loading -> emptyFlow()
+                is LoadState.Success -> getPokemonSpecies(it.data.species.id)
             }
+        }.onEach {
+            yield()
+        }
+
+        combine(getPokemon, getSpecies) { pokemon, species ->
+            if (pokemon is LoadState.Error || species is LoadState.Error) {
+                LoadState.failure(null)
+            } else if (pokemon is LoadState.Success && species is LoadState.Success) {
+                LoadState.success(
+                    WidgetUIModel(
+                        id = id,
+                        name = pokemon.data.name,
+                        height = pokemon.data.weight,
+                        weight = pokemon.data.height,
+                        species = species.data.genera[0].text,
+                        description = species.data.flavorText[0].text
+                    )
+                )
+            } else null
+        }.collect {
+            it?.let { updateWidget(context, it) }
         }
     }
 

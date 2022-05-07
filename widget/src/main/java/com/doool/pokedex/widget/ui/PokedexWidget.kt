@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -38,10 +39,8 @@ import coil.Coil
 import coil.executeBlocking
 import coil.request.ImageRequest
 import com.doool.pokedex.domain.LoadState
+import com.doool.pokedex.domain.Urls
 import com.doool.pokedex.widget.R
-
-fun getImageUrl(id: Int) =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 
 private val PokemonIdParamKey = ActionParameters.Key<Int>("PokemonId")
 val ReadyPrefKey = booleanPreferencesKey("ready")
@@ -53,7 +52,7 @@ class PokedexWidget(private val state: LoadState<WidgetUIModel>) : GlanceAppWidg
     override fun Content() {
         val isReady = currentState(key = ReadyPrefKey) ?: false
 
-        if (isReady) {
+        if (!isReady) {
             Warning(message = "You need launch Pokedex at least once")
         } else {
             when (state) {
@@ -88,8 +87,7 @@ private fun PokeDexBig(state: WidgetUIModel) {
             GlanceModifier.height(90.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            PokemonDescription(GlanceModifier.defaultWeight(), state.description)
+            PokemonDescription(GlanceModifier.defaultWeight(), state.species, state.description)
             Spacer(GlanceModifier.width(20.dp))
             CrossController(state.id)
         }
@@ -104,16 +102,10 @@ private fun PokemonInfo(modifier: GlanceModifier = GlanceModifier, state: Widget
     ) {
 
         with(state) {
-            PokemonImage(GlanceModifier.defaultWeight().size(120.dp).padding(4.dp), getImageUrl(id))
-            PokemonStatus(GlanceModifier.defaultWeight(), id, species, height, weight)
+            PokemonImage(GlanceModifier.defaultWeight().size(120.dp).padding(4.dp), Urls.getImageUrl(id))
+            Spacer(GlanceModifier.width(4.dp).background(Color.White))
+            PokemonStatus(GlanceModifier.defaultWeight(), id, name, height, weight)
         }
-    }
-}
-
-@Composable
-private fun PokemonDescription(modifier: GlanceModifier = GlanceModifier, description: String) {
-    Box(modifier.height(90.dp).background(Color.Black)) {
-        Text(description, style = TextStyle(color = ColorProvider(R.color.white)))
     }
 }
 
@@ -140,17 +132,45 @@ private fun PokemonImage(modifier: GlanceModifier = GlanceModifier, url: String)
 private fun PokemonStatus(
     modifier: GlanceModifier = GlanceModifier,
     index: Int,
-    species: String,
+    name: String,
     height: Int,
     weight: Int,
 ) {
     Column(modifier) {
-        Text("#%03d".format(index))
-        Text(species)
-        Text("Height")
-        Text("%.1f m".format(height / 10f))
-        Text("Weight")
-        Text("%.1f kg".format(weight / 10f))
+        Text("#%03d".format(index), style = TextStyle(fontSize = 11.sp))
+        Text(name, style = TextStyle(fontSize = 16.sp), maxLines = 1)
+
+        Spacer(GlanceModifier.height(6.dp))
+
+        Row(GlanceModifier.fillMaxWidth()) {
+            Column(GlanceModifier.defaultWeight()) {
+                Text("Height", style = TextStyle(fontSize = 14.sp))
+                Text(
+                    if (height != 0) "%.1f m".format(height / 10f) else "",
+                    style = TextStyle(fontSize = 12.sp)
+                )
+            }
+            Column(GlanceModifier.defaultWeight()) {
+                Text("Weight", style = TextStyle(fontSize = 14.sp))
+                Text(
+                    if (height != 0) "%.1f kg".format(weight / 10f) else "",
+                    style = TextStyle(fontSize = 12.sp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PokemonDescription(
+    modifier: GlanceModifier = GlanceModifier,
+    species: String,
+    description: String
+) {
+    Column(modifier.height(90.dp).background(Color.Black).padding(8.dp)) {
+        Text(species, style = TextStyle(color = ColorProvider(R.color.white), fontSize = 12.sp))
+        Spacer(GlanceModifier.height(2.dp))
+        Text(description, style = TextStyle(color = ColorProvider(R.color.white), fontSize = 10.sp))
     }
 }
 
@@ -160,7 +180,7 @@ private fun CrossController(index: Int) {
         GlanceModifier.size(90.dp).background(ImageProvider(R.drawable.keypad)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ControllerButton((index - 1).coerceAtLeast(0))
+        ControllerButton((index - 1).coerceAtLeast(1))
         Box(GlanceModifier.size(30.dp, 90.dp)) {}
         ControllerButton(index + 1)
     }

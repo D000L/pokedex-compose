@@ -30,9 +30,9 @@ class PokedexWidgetReceiver : GlanceAppWidgetReceiver() {
     lateinit var getPokemonSpecies: GetPokemonSpecies
 
     private val job = SupervisorJob()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + job)
+    private val coroutineScope = CoroutineScope(Dispatchers.Default + job)
 
-    override val glanceAppWidget = PokedexWidget(LoadState.success(WidgetUIModel()))
+    override val glanceAppWidget = PokedexWidget(LoadState.loading(WidgetUIModel()))
 
     override fun onEnabled(context: Context?) {
         super.onEnabled(context)
@@ -57,7 +57,7 @@ class PokedexWidgetReceiver : GlanceAppWidgetReceiver() {
                 updateAppWidgetState(context, id) { state ->
                     state[ReadyPrefKey] = ready
                 }
-                glanceAppWidget.update(context, id)
+                if (ready) widgetActions?.loadPokemon(context, 1)
             }
         }
     }
