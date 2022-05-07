@@ -3,7 +3,6 @@ package com.doool.pokedex.presentation.ui.home
 import androidx.activity.compose.BackHandler
 import androidx.annotation.ColorRes
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -58,14 +57,13 @@ import com.doool.pokedex.presentation.utils.ifThen
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
     News(R.color.background_psychic, NewsDestination.route),
     Pokemon(R.color.background_flying, PokemonListDestination.route),
-    Games(R.color.background_rock, GamesDestination.route),
     Move(R.color.background_grass, MoveListDestination.route),
     Item(R.color.background_poison, ItemDestination.route),
     Berry(R.color.background_normal, LocationDestination.route),
+    Games(R.color.background_rock, GamesDestination.route),
     Location(R.color.background_electric, LocationDestination.route),
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     viewModel: SearchViewModel = hiltViewModel(),
@@ -85,37 +83,49 @@ fun HomeScreen(
             HomeHeader()
         }
 
-        SearchBox(
-            modifier = Modifier
-                .padding(
-                    top = 40.dp * animationOffset,
-                    start = 20.dp * animationOffset,
-                    end = 20.dp * animationOffset
-                )
-                .background(
-                    color = Color.LightGray.copy(alpha = 0.4f),
-                    shape = RoundedCornerShape(8.dp * animationOffset)
-                )
-                .clickable(!isSearching) { isSearching = true },
-            isExpended = isSearching,
-            query = query,
-            updateQuery = viewModel::search,
-            clearQuery = viewModel::clearQuery,
-            navigateBack = { isSearching = false }
-        )
+        val searchBoxModifier = Modifier
+            .padding(
+                top = 40.dp * animationOffset,
+                start = 20.dp * animationOffset,
+                end = 20.dp * animationOffset
+            )
+            .background(
+                color = Color.LightGray.copy(alpha = 0.4f),
+                shape = RoundedCornerShape(8.dp * animationOffset)
+            )
 
-        if (isSearching && animationOffset == 0f) {
-            SearchResult(
-                Modifier.verticalScroll(rememberScrollState()),
-            ) {
-                onClickMenu(it, query)
+        if (!isSearching) {
+            Box(
+                modifier = searchBoxModifier
+                    .height(52.dp)
+                    .fillMaxWidth()
+                    .clickable(!isSearching) { isSearching = true }
+                    .padding(horizontal = 24.dp),
+                contentAlignment = Alignment.CenterStart) {
+                Text(stringResource(R.string.search_hint))
             }
-        } else {
-            MenuScreen(
+
+            MenuList(
                 Modifier
-                    .padding(start = 20.dp, end = 20.dp, top = 40.dp, bottom = 40.dp)
+                    .padding(horizontal = 20.dp, vertical = 40.dp)
                     .alpha(animationOffset)
             )
+        } else {
+            SearchTextField(
+                modifier = searchBoxModifier,
+                query = query,
+                updateQuery = viewModel::search,
+                onClickClear = viewModel::clearQuery,
+                onClickBack = {
+                    viewModel.clearQuery()
+                    isSearching = false
+                })
+
+            if (animationOffset == 0f) {
+                SearchResult {
+                    onClickMenu(it, query)
+                }
+            }
         }
     }
 
@@ -126,8 +136,8 @@ fun HomeScreen(
 @Composable
 private fun HomeHeader() {
     Row(
-        Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 48.dp)
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 48.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = stringResource(id = R.string.home_title),
@@ -137,8 +147,9 @@ private fun HomeHeader() {
         SpaceFill()
 
         var showMenu by remember { mutableStateOf(false) }
+
         IconButton(onClick = { showMenu = true }) {
-            Icon(Icons.Default.Settings, null)
+            Icon(imageVector = Icons.Default.Settings, contentDescription = null)
 
             SettingDropDown(expended = showMenu) {
                 showMenu = false
@@ -148,25 +159,17 @@ private fun HomeHeader() {
 }
 
 @Composable
-private fun MenuScreen(modifier: Modifier = Modifier) {
+private fun MenuList(modifier: Modifier = Modifier) {
     val navController = LocalNavController.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
-        MenuItem(Modifier.fillMaxWidth(), navController, Menu.News)
+        MenuItem(Modifier.fillMaxWidth(), navController, Menu.values().first())
 
-        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            MenuItem(Modifier.weight(1f), navController, Menu.Pokemon)
-            MenuItem(Modifier.weight(1f), navController, Menu.Move)
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            MenuItem(Modifier.weight(1f), navController, Menu.Item)
-            MenuItem(Modifier.weight(1f), navController, Menu.Berry)
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            MenuItem(Modifier.weight(1f), navController, Menu.Games)
-            MenuItem(Modifier.weight(1f), navController, Menu.Location)
+        Menu.values().drop(1).chunked(2).forEach { (left, right) ->
+            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                MenuItem(Modifier.weight(1f), navController, left)
+                MenuItem(Modifier.weight(1f), navController, right)
+            }
         }
     }
 }
@@ -186,7 +189,11 @@ private fun MenuItem(
             },
         contentAlignment = Alignment.Center
     ) {
-        Pokeball(120.dp, Alignment.CenterEnd, DpOffset(x = 23.dp, y = -25.dp), rotate = 220f)
+        Pokeball(
+            size = 120.dp, rotate = 220f,
+            alignment = Alignment.CenterEnd,
+            translateOffset = DpOffset(x = 23.dp, y = -25.dp),
+        )
         Text(text = menu.name, style = MaterialTheme.typography.h4)
     }
 }
