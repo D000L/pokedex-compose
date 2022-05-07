@@ -70,7 +70,7 @@ class WidgetActionsImpl(
                 LoadState.success(
                     WidgetUIModel(
                         id = id,
-                        name = pokemon.data.name,
+                        name = species.data.names.localized,
                         height = pokemon.data.weight,
                         weight = pokemon.data.height,
                         species = species.data.genera.localized,

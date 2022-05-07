@@ -33,11 +33,12 @@ Using MVVM + Clean architecture
   <img src="previews/search.png" width="200">
   <img src="previews/pokemon_news.png" width="200">
   <img src="previews/pokemon_list.png" width="200">
-   <img src="previews/pokemon_about.png" width="200">
- <img src="previews/pokemon_stats.png" width="200">
-   <img src="previews/pokemon_move.png" width="200">
+  <img src="previews/pokemon_about.png" width="200">
+  <img src="previews/pokemon_stats.png" width="200">
+  <img src="previews/pokemon_move.png" width="200">
   <img src="previews/pokemon_move_detail.png" width="200">
   <img src="previews/pokemon_evolution.png" width="200">
+  <img src="previews/pokemon_widget.png" width="200">
 </p>
 
 # License
