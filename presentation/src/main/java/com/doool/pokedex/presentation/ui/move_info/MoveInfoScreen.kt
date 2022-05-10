@@ -3,16 +3,7 @@ package com.doool.pokedex.presentation.ui.move_info
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -30,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.doool.pokedex.presentation.ui.common.PokemonType
-import com.doool.pokedex.presentation.ui.widget.DarkPokeball
+import com.doool.pokedex.presentation.ui.widget.DarkPokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
 import com.doool.pokedex.presentation.ui.widget.Type
@@ -44,10 +35,10 @@ fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
     val move by viewModel.move.collectAsState()
 
     Column(
-      Modifier
-        .fillMaxWidth()
-        .defaultMinSize(minHeight = 240.dp)
-        .padding(20.dp)
+        Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 240.dp)
+            .padding(20.dp)
     ) {
         val type = PokemonType.from(move.type.name)
         val color = colorResource(id = type.backgroundResId)
@@ -72,14 +63,14 @@ fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
         Space(height = 20.dp)
 
         Row(
-          Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .border(
-              width = 0.5.dp,
-              color = color,
-              shape = CircleShape
-            ), verticalAlignment = Alignment.CenterVertically,
+            Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .border(
+                    width = 0.5.dp,
+                    color = color,
+                    shape = CircleShape
+                ), verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Item("Power", color, move.power)
@@ -94,7 +85,11 @@ fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {
             content = {
                 items(move.learnedPokemon) {
                     Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(14.dp)) {
-                        DarkPokeball(size = 80.dp, rotate = 0f)
+                        DarkPokeBall(
+                            modifier = Modifier.align(Alignment.Center),
+                            size = 80.dp,
+                            rotate = 0f
+                        )
                         Image(
                             modifier = Modifier.size(60.dp),
                             painter = rememberImagePainter(it.imageUrl),

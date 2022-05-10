@@ -2,7 +2,6 @@ package com.doool.pokedex.presentation.ui.widget
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.CircleShape
@@ -26,22 +25,25 @@ import com.doool.pokedex.R
 @Composable
 fun PreviewPokeball() {
     Box {
-        Pokeball(60.dp, translateOffset = DpOffset(x = 0.dp, y = -12.dp))
+        PokeBall(
+            modifier = Modifier.align(Alignment.Center),
+            size = 60.dp,
+            translateOffset = DpOffset(x = 0.dp, y = -12.dp)
+        )
     }
 }
 
 @Composable
-fun BoxScope.Pokeball(
+fun PokeBall(
+    modifier: Modifier = Modifier,
     size: Dp,
-    alignment: Alignment = Alignment.Center,
     translateOffset: DpOffset = DpOffset.Zero,
     rotate: Float = 160f,
 ) {
     Image(
-        modifier = Modifier
+        modifier = modifier
             .requiredSize(size)
             .alpha(0.15f)
-            .align(alignment)
             .offset(translateOffset.x, translateOffset.y)
             .rotate(rotate),
         painter = painterResource(id = R.drawable.ic_pokeball),
@@ -50,23 +52,24 @@ fun BoxScope.Pokeball(
 }
 
 @Composable
-fun BoxScope.DarkPokeball(
+fun DarkPokeBall(
     modifier: Modifier = Modifier,
     size: Dp,
-    alignment: Alignment = Alignment.Center,
     translateOffset: DpOffset = DpOffset.Zero,
     rotate: Float = 160f,
 ) {
     Image(
         modifier = Modifier
             .requiredSize(size)
-            .align(alignment)
             .offset(translateOffset.x, translateOffset.y)
             .rotate(rotate)
             .clip(CircleShape)
-            .then(modifier), colorFilter = ColorFilter.tint(
+            .then(modifier),
+        colorFilter = ColorFilter.tint(
             color = colorResource(id = R.color.gray),
             blendMode = BlendMode.DstIn
-        ), painter = painterResource(id = R.drawable.ic_pokeball), contentDescription = null
+        ),
+        painter = painterResource(id = R.drawable.ic_pokeball),
+        contentDescription = null
     )
 }

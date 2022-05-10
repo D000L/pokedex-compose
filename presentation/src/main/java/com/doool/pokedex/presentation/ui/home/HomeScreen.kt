@@ -6,13 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,14 +16,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,7 +37,7 @@ import com.doool.pokedex.presentation.ui.move_list.destination.MoveListDestinati
 import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
 import com.doool.pokedex.presentation.ui.pokemon_list.destination.PokemonListDestination
 import com.doool.pokedex.presentation.ui.setting.SettingDropDown
-import com.doool.pokedex.presentation.ui.widget.Pokeball
+import com.doool.pokedex.presentation.ui.widget.PokeBall
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
 import com.doool.pokedex.presentation.utils.clipBackground
 import com.doool.pokedex.presentation.utils.ifThen
@@ -189,10 +177,11 @@ private fun MenuItem(
             },
         contentAlignment = Alignment.Center
     ) {
-        Pokeball(
-            size = 120.dp, rotate = 220f,
-            alignment = Alignment.CenterEnd,
+        PokeBall(
+            modifier = Modifier.align(Alignment.CenterEnd),
+            size = 120.dp,
             translateOffset = DpOffset(x = 23.dp, y = -25.dp),
+            rotate = 220f,
         )
         Text(text = menu.name, style = MaterialTheme.typography.h4)
     }

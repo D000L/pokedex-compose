@@ -7,11 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.glance.GlanceId
-import androidx.glance.GlanceModifier
-import androidx.glance.Image
-import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
+import androidx.glance.*
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
@@ -19,19 +15,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.background
-import androidx.glance.currentState
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
-import androidx.glance.layout.Column
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.height
-import androidx.glance.layout.padding
-import androidx.glance.layout.size
-import androidx.glance.layout.width
+import androidx.glance.layout.*
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -59,10 +43,10 @@ class PokedexWidget(private val state: LoadState<WidgetUIModel>) : GlanceAppWidg
                 is LoadState.Error -> Warning(message = "Error")
                 is LoadState.Loading -> {
                     val model = state.partialData ?: return Warning(message = "Error")
-                    PokeDexBig(state = model)
+                    PokeDex(state = model)
                 }
                 is LoadState.Success -> {
-                    PokeDexBig(state = state.data)
+                    PokeDex(state = state.data)
                 }
             }
         }
@@ -77,7 +61,7 @@ private fun Warning(message: String) {
 }
 
 @Composable
-private fun PokeDexBig(state: WidgetUIModel) {
+private fun PokeDex(state: WidgetUIModel) {
     Column(GlanceModifier.fillMaxSize().background(ColorProvider(R.color.red)).padding(20.dp)) {
         PokemonInfo(GlanceModifier.defaultWeight().fillMaxWidth(), state)
 
@@ -102,7 +86,10 @@ private fun PokemonInfo(modifier: GlanceModifier = GlanceModifier, state: Widget
     ) {
 
         with(state) {
-            PokemonImage(GlanceModifier.defaultWeight().size(120.dp).padding(4.dp), Urls.getImageUrl(id))
+            PokemonImage(
+                GlanceModifier.defaultWeight().size(120.dp).padding(4.dp),
+                Urls.getImageUrl(id)
+            )
             Spacer(GlanceModifier.width(4.dp).background(Color.White))
             PokemonStatus(GlanceModifier.defaultWeight(), id, name, height, weight)
         }

@@ -2,14 +2,7 @@ package com.doool.pokedex.presentation.ui.pokemon_list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -46,7 +39,7 @@ import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
-import com.doool.pokedex.presentation.ui.widget.Pokeball
+import com.doool.pokedex.presentation.ui.widget.PokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.TypeList
 import com.doool.pokedex.presentation.ui.widget.listAppBar
@@ -153,7 +146,11 @@ private fun Pokemon(
                 )
                 .clickable { onClick(item.name) }
         ) {
-            Pokeball(180.dp, Alignment.CenterEnd, DpOffset(35.dp, 32.dp))
+            PokeBall(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                size = 180.dp,
+                translateOffset = DpOffset(35.dp, 32.dp)
+            )
             PokemonSummary(Modifier.padding(top = 6.dp, start = 16.dp), item)
         }
         Image(

@@ -2,14 +2,7 @@ package com.doool.pokedex.presentation.ui.pokemon_info
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -26,7 +19,7 @@ import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.presentation.ui.common.EvolutionType
 import com.doool.pokedex.presentation.ui.pokemon_info.model.EvolutionListUIModel
-import com.doool.pokedex.presentation.ui.widget.DarkPokeball
+import com.doool.pokedex.presentation.ui.widget.DarkPokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
@@ -88,8 +81,10 @@ private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> 
 @Composable
 private fun Pokemon(pokemonInfo: LocalizedInfo, onClick: (String) -> Unit) {
     Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
-        DarkPokeball(
-            modifier = Modifier.clickable { onClick(pokemonInfo.name) },
+        DarkPokeBall(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .clickable { onClick(pokemonInfo.name) },
             size = 96.dp,
             translateOffset = DpOffset(x = 0.dp, y = -16.dp),
             rotate = 0f
