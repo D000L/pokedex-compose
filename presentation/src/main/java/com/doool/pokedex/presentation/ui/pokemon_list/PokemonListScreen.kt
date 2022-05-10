@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.Pokemon
@@ -42,7 +43,7 @@ import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDes
 import com.doool.pokedex.presentation.ui.widget.PokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.TypeList
-import com.doool.pokedex.presentation.ui.widget.listAppBar
+import com.doool.pokedex.presentation.ui.widget.stickyAppBar
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.clipBackground
 import com.doool.pokedex.presentation.utils.defaultPlaceholder
@@ -52,7 +53,6 @@ import com.doool.pokedex.presentation.utils.localized
 fun PokemonListScreen(
     pokemonListViewModel: PokemonListViewModel = hiltViewModel()
 ) {
-
     val pokemonList by pokemonListViewModel.pokemonList.observeAsState(initial = emptyList())
 
     if (pokemonList.isNotEmpty()) PokemonList(pokemonListViewModel, pokemonList)
@@ -74,7 +74,8 @@ private fun PokemonList(
         state = state,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        listAppBar(state = state, title = "Pokemon")
+        stickyAppBar(state = state, title = R.string.pokemon_title)
+
         items(list, key = { it.id }) {
             val itemState by remember { viewModel.getItemState(it.name) }.collectAsState()
 
@@ -130,11 +131,18 @@ private fun Pokemon(
                 .height(96.dp)
                 .drawWithContent {
                     withTransform({
-                        translate(left = density.run { 5.dp.toPx() }, top = density.run { 10.dp.toPx() })
+                        translate(
+                            left = density.run { 5.dp.toPx() },
+                            top = density.run { 10.dp.toPx() })
                         scale(1.00f)
                     }) {
                         drawRoundRect(
-                            brush = Brush.verticalGradient(colors = listOf(color.copy(0.3f), color.copy(0.2f))),
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    color.copy(0.3f),
+                                    color.copy(0.2f)
+                                )
+                            ),
                             cornerRadius = CornerRadius(60f, 60f)
                         )
                     }

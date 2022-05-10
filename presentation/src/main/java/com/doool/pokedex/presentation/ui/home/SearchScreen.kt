@@ -79,7 +79,7 @@ import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestinati
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.pokedex.presentation.ui.widget.Type
+import com.doool.pokedex.presentation.ui.widget.TypeText
 import com.doool.pokedex.presentation.ui.widget.TypeList
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.clipBackground
@@ -469,7 +469,7 @@ private fun MoveThumbnail(move: PokemonMove, onClick: () -> Unit = {}) {
         Space(height = 4.dp)
 
         val type = PokemonType.from(move.type.name)
-        Type(
+        TypeText(
             color = type.typeColorResId,
             size = 20.dp,
             fontSize = 13.sp,

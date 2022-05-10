@@ -26,10 +26,12 @@ fun Modifier.clipBackground(
     .clip(shape)
 
 fun Modifier.defaultPlaceholder(visible: Boolean = true, shape: Shape = RectangleShape) = composed {
+    val grayColor = colorResource(id = R.color.gray)
+
     this.placeholder(
-        visible,
-        color = colorResource(id = R.color.gray).copy(0.2f),
+        visible = visible,
+        color = grayColor.copy(0.2f),
         shape = shape,
-        highlight = PlaceholderHighlight.shimmer(colorResource(id = R.color.gray).copy(0.5f))
+        highlight = PlaceholderHighlight.shimmer(grayColor.copy(0.5f))
     )
 }

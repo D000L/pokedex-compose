@@ -2,13 +2,7 @@ package com.doool.pokedex.presentation.ui.widget
 
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -52,11 +46,11 @@ fun Type(type: PokemonType, size: Dp = 26.dp, text: String? = null) {
     val color = colorResource(id = type.typeColorResId)
 
     Row(
-      Modifier
-        .requiredHeight(size)
-        .shadow(4.dp, RoundedCornerShape(size / 2))
-        .background(color, RoundedCornerShape(size / 2))
-        .padding(horizontal = size / 4),
+        Modifier
+            .requiredHeight(size)
+            .shadow(4.dp, RoundedCornerShape(size / 2))
+            .background(color, RoundedCornerShape(size / 2))
+            .padding(horizontal = size / 4),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -73,15 +67,15 @@ fun Type(type: PokemonType, size: Dp = 26.dp, text: String? = null) {
 }
 
 @Composable
-fun Type(@ColorRes color: Int, size: Dp = 26.dp, fontSize: TextUnit = 14.sp, text: String) {
+fun TypeText(@ColorRes color: Int, size: Dp = 26.dp, fontSize: TextUnit = 14.sp, text: String) {
     val color = colorResource(id = color)
 
     Row(
-      Modifier
-        .requiredHeight(size)
-        .shadow(4.dp, RoundedCornerShape(size / 2))
-        .background(color, RoundedCornerShape(size / 2))
-        .padding(horizontal = size / 4),
+        Modifier
+            .requiredHeight(size)
+            .shadow(4.dp, RoundedCornerShape(size / 2))
+            .background(color, RoundedCornerShape(size / 2))
+            .padding(horizontal = size / 4),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = text, color = Color.White, fontSize = fontSize)

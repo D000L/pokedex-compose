@@ -2,16 +2,14 @@ package com.doool.pokedex.presentation.ui.news
 
 import android.widget.TextView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -21,14 +19,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.PokemonNews
 import com.doool.pokedex.presentation.ui.widget.Space
-import com.doool.pokedex.presentation.ui.widget.listAppBar
+import com.doool.pokedex.presentation.ui.widget.stickyAppBar
 
 @Composable
 fun NewsScreen(viewModel: NewsViewModel = hiltViewModel()) {
-
     val news = viewModel.news.collectAsLazyPagingItems()
 
     NewsList(news)
@@ -39,9 +38,11 @@ private fun NewsList(news: LazyPagingItems<PokemonNews>) {
     val state = rememberLazyListState()
 
     LazyColumn(state = state) {
-        listAppBar(state = state, title = "Pokemon News")
-        items(news, key = { it.title }) {
-            it?.let { News(it) }
+        stickyAppBar(state = state, title = R.string.pokemon_news_title)
+
+        items(news, key = { it.title }) { news ->
+            news ?: return@items
+            News(news)
         }
     }
 }
@@ -49,29 +50,47 @@ private fun NewsList(news: LazyPagingItems<PokemonNews>) {
 @Composable
 private fun News(news: PokemonNews) {
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp),
-            painter = rememberImagePainter(news.image),
-            contentDescription = null
-        )
+        NewsThumbnail(news.image)
         Space(height = 8.dp)
-        Row {
-            Text(text = news.date, style = MaterialTheme.typography.body1)
-            Space(width = 12.dp)
-            Text(text = news.tags, style = MaterialTheme.typography.body1)
-        }
+        NewsInfo(news)
+    }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+private fun NewsThumbnail(imageUrl: String) {
+    Image(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp),
+        painter = rememberImagePainter(imageUrl),
+        contentDescription = null
+    )
+}
+
+@Composable
+private fun NewsInfo(news: PokemonNews) {
+    CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.body1) {
+        DataAndTags(news.date, news.tags)
         Space(height = 8.dp)
-        HtmlText(html = news.title, style = MaterialTheme.typography.body1)
+        HtmlText(html = news.title)
         Space(height = 4.dp)
-        HtmlText(html = news.shortDescription, style = MaterialTheme.typography.body1)
+        HtmlText(html = news.shortDescription)
         Space(height = 12.dp)
     }
 }
 
 @Composable
-private fun HtmlText(html: String, style: TextStyle) {
+private fun DataAndTags(date: String, tags: String) {
+    Row {
+        Text(text = date)
+        Space(width = 12.dp)
+        Text(text = tags)
+    }
+}
+
+@Composable
+private fun HtmlText(html: String, style: TextStyle = LocalTextStyle.current) {
     AndroidView(factory = {
         TextView(it).apply {
             textSize = style.fontSize.value

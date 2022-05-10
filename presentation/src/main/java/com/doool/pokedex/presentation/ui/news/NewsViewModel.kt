@@ -12,7 +12,14 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(private val getPokemonNews: GetPokemonNews) : ViewModel() {
 
-    val news = Pager(PagingConfig(6, prefetchDistance = 2, initialLoadSize = 6, enablePlaceholders = false)) {
+    val news = Pager(
+        PagingConfig(
+            6,
+            prefetchDistance = 2,
+            initialLoadSize = 6,
+            enablePlaceholders = false
+        )
+    ) {
         NewsPagingSource(getPokemonNews)
     }.flow.cachedIn(viewModelScope)
 }

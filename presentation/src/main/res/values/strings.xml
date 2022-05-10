@@ -3,4 +3,13 @@
 
     <string name="home_title">Pokedex</string>
     <string name="search_hint">Search anything about Pokemon.</string>
+
+    <string name="pokemon_news_title">Pokemon News</string>
+    <string name="pokemon_move_title">Move</string>
+    <string name="pokemon_title">Pokemon</string>
+    <string name="move_name_label">Move Name</string>
+    <string name="move_power_label">Power</string>
+    <string name="move_accurary_label">Acc</string>
+    <string name="move_power_point_label">PP</string>
+    <string name="move_type_label">Type</string>
 </resources>

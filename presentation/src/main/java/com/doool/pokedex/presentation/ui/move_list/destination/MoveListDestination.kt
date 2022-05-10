@@ -8,8 +8,6 @@ import com.doool.pokedex.presentation.NavDestination
 import com.doool.pokedex.presentation.nullableType
 import com.doool.pokedex.presentation.ui.move_list.MoveListScreen
 
-const val QUERY_PARAM = "query"
-
 object MoveListDestination : NavDestination() {
 
     override val route: String = "move?$QUERY_PARAM={$QUERY_PARAM}"
@@ -24,3 +22,5 @@ object MoveListDestination : NavDestination() {
         return route.replace("{$QUERY_PARAM}", query ?: "")
     }
 }
+
+const val QUERY_PARAM = "query"

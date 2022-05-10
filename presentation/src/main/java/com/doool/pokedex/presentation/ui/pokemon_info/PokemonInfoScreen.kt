@@ -5,25 +5,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -56,23 +43,17 @@ import com.doool.pokedex.presentation.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
+import com.doool.pokedex.presentation.ui.move_list.Move
+import com.doool.pokedex.presentation.ui.move_list.MoveHeaders
 import com.doool.pokedex.presentation.ui.pokemon_info.model.HeaderUIModel
-import com.doool.pokedex.presentation.ui.widget.DefaultAppBar
-import com.doool.pokedex.presentation.ui.widget.Space
-import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.pokedex.presentation.ui.widget.TOOLBAR_HEIGHT
-import com.doool.pokedex.presentation.ui.widget.TypeListWithTitle
+import com.doool.pokedex.presentation.ui.widget.*
 import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.presentation.utils.defaultPlaceholder
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 import com.doool.pokedex.presentation.utils.localized
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.rememberPagerState
-import kotlin.math.abs
+import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 private val THUMBNAIL_VIEWPAGER_HEIGHT = 130.dp
 private val TITLE_HEIGHT = 112.dp
@@ -167,7 +148,7 @@ fun PokemonInfo(
                 )
                 Tab(tabState) { tabState = it }
             }
-            DefaultAppBar(tintColor = Color.White, showDivider = false)
+            DefaultAppBar(backButtonColor = Color.White, showDivider = false)
         }
     }
 }
@@ -205,7 +186,7 @@ private fun Body(
             }
             TabState.Move -> {
                 item {
-                    MoveHeader(
+                    MoveHeaders(
                         Modifier.padding(
                             start = 20.dp,
                             end = 20.dp,
