@@ -179,7 +179,7 @@ private fun Body(
             TabState.Stats -> item("Stats") {
                 val statsUIState by viewModel.statsUIState.collectAsState()
 
-                Stats(
+                PokemonStats(
                     modifier = modifier.padding(20.dp),
                     statsUIState = statsUIState,
                 )

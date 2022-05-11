@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,23 +33,24 @@ import com.doool.pokedex.presentation.ui.widget.Type
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
-fun Stats(
+fun PokemonStats(
     modifier: Modifier = Modifier,
     statsUIState: LoadState<StatsUIModel>
 ) {
     Box {
         Column(
-            modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             statsUIState.getData()?.let { statsUIModel ->
-                BaseStats(statsUIModel.stats)
+                BaseStats(stats = statsUIModel.stats)
                 Space(height = 12.dp)
-                TypeDefenses(statsUIModel.damageRelations)
+                TypeDefenses(damageRelations = statsUIModel.damageRelations)
             }
         }
-        if (statsUIState.isLoading()) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        if (statsUIState.isLoading())
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 
@@ -59,7 +59,52 @@ private fun BaseStats(stats: List<Stat>) {
     CommonSubTitle("Base Stats")
 
     stats.forEach { stat ->
-        Stat(StatType.from(stat.name), LocalPokemonColor.current, stat.amount)
+        Stat(
+            stat = StatType.from(stat.name),
+            color = LocalPokemonColor.current,
+            amount = stat.amount
+        )
+    }
+}
+
+@Composable
+private fun Stat(stat: StatType, color: Color, amount: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = stat.statName,
+            style = MaterialTheme.typography.body2,
+            modifier = Modifier.width(54.dp)
+        )
+        Space(width = 6.dp)
+
+        Text(
+            text = amount.toString(),
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.width(30.dp),
+            textAlign = TextAlign.End
+        )
+        Space(width = 12.dp)
+
+        StatBar(amount = amount, color = color)
+    }
+}
+
+@Composable
+private fun StatBar(amount: Int, color: Color) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(4.dp)
+            .background(color = Color.LightGray, shape = RoundedCornerShape(8.dp))
+    ) {
+        val fraction = amount / 255.0f
+
+        Box(
+            Modifier
+                .fillMaxWidth(fraction)
+                .height(4.dp)
+                .background(color = color, shape = RoundedCornerShape(8.dp))
+        )
     }
 }
 
@@ -72,61 +117,42 @@ private fun TypeDefenses(damageRelations: List<Damage>) {
         val damageMap = damageRelations.associateBy { it.type }
 
         PokemonType.values().forEach {
-            val damage = damageMap[it.name.lowercase()]?.amount ?: 1f
-            DamageType(it, damage)
+            val typeName = it.name.lowercase()
+            val damageRelation = damageMap[typeName]?.amount ?: 1f
+
+            TypeAndDamageRelation(type = it, damageRelation = damageRelation)
         }
     }
 }
 
 @Composable
-private fun DamageType(type: PokemonType, damage: Float) {
+private fun TypeAndDamageRelation(type: PokemonType, damageRelation: Float) {
     Column(
         modifier = Modifier
-          .padding(horizontal = 4.dp, vertical = 2.dp)
-          .height(46.dp),
+            .padding(horizontal = 4.dp, vertical = 2.dp)
+            .height(46.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Type(type = type, size = 24.dp)
         Space(height = 4.dp)
-        if (damage != 1f) Text(text = getDamageString(damage), style = MaterialTheme.typography.body1)
-    }
-}
-
-private fun getDamageString(amount: Float): String {
-    return when (amount) {
-        0f -> "0"
-        2f -> "2"
-        0.5f -> "½"
-        0.25f -> "¼"
-        else -> amount.toString()
+        DamageRelation(amount = damageRelation)
     }
 }
 
 @Composable
-private fun Stat(stat: StatType, color: Color, amount: Int) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = stat.text, style = MaterialTheme.typography.body2, modifier = Modifier.width(54.dp))
-        Spacer(modifier = Modifier.width(6.dp))
-        Text(
-            text = amount.toString(),
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier.width(30.dp),
-            textAlign = TextAlign.End
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Box(
-          Modifier
-            .fillMaxWidth()
-            .height(4.dp)
-            .background(Color.LightGray, RoundedCornerShape(8.dp))
-        ) {
-            val fraction = amount / 255.0f
-            Box(
-              Modifier
-                .fillMaxWidth(fraction)
-                .height(4.dp)
-                .background(color, RoundedCornerShape(8.dp))
-            )
+private fun DamageRelation(amount: Float) {
+    if (amount != 1f) {
+        val amountString = when (amount) {
+            0f -> "0"
+            2f -> "2"
+            0.5f -> "½"
+            0.25f -> "¼"
+            else -> amount.toString()
         }
+
+        Text(
+            text = amountString,
+            style = MaterialTheme.typography.body1
+        )
     }
 }

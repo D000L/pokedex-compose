@@ -23,25 +23,37 @@ import com.doool.pokedex.presentation.ui.widget.Space
 fun SettingDropDown(expended: Boolean, dismiss: () -> Unit) {
     val viewModel: SettingViewModel = hiltViewModel()
 
-    DropdownMenu(expanded = expended, onDismissRequest = { dismiss() }) {
+    DropdownMenu(expanded = expended, onDismissRequest = dismiss) {
         val currentLanguage by viewModel.language.collectAsState()
 
-        Language.values().forEach {
-            val color = if (currentLanguage == it) Color.Gray else Color.White
-            DropdownMenuItem(modifier = Modifier.background(color), onClick = {
-                viewModel.updateLanguage(it)
-                dismiss()
-            }) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(id = it.flagResId),
-                        contentDescription = null
-                    )
-                    Space(width = 12.dp)
-                    Text(text = it.title)
-                }
-            }
+        Language.values().forEach { language ->
+            LanguageMenuItem(
+                language = language,
+                isSelected = currentLanguage == language,
+                onClick = {
+                    viewModel.updateLanguage(language)
+                    dismiss()
+                })
+        }
+    }
+}
+
+@Composable
+private fun LanguageMenuItem(language: Language, isSelected: Boolean, onClick: () -> Unit) {
+    val color = if (isSelected) Color.Gray else Color.White
+
+    DropdownMenuItem(
+        modifier = Modifier.background(color),
+        onClick = onClick
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(id = language.flagResId),
+                contentDescription = null
+            )
+            Space(width = 12.dp)
+            Text(text = language.title)
         }
     }
 }

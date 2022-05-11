@@ -1,6 +1,6 @@
 package com.doool.pokedex.presentation.ui.common
 
-enum class StatType(val text: String) {
+enum class StatType(val statName: String) {
     Hp("HP"),
     Attack("Attack"),
     Defense("Defense"),

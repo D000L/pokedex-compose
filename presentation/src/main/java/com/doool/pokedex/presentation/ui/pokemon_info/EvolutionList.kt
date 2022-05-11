@@ -2,7 +2,14 @@ package com.doool.pokedex.presentation.ui.pokemon_info
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -15,6 +22,7 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.getData
 import com.doool.pokedex.domain.isLoading
+import com.doool.pokedex.domain.model.Condition
 import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.presentation.ui.common.EvolutionType
@@ -46,33 +54,28 @@ fun EvolutionList(
                     )
                 } else {
                     evolutionListUIModel.evolutions.forEach {
-                        Evolution(it, onClickPokemon)
+                        Evolution(chain = it, onClickPokemon = onClickPokemon)
                     }
                 }
             }
         }
-        if (evolutionListUIState.isLoading()) CircularProgressIndicator(
-            modifier = Modifier.align(
-                Alignment.Center
+
+        if (evolutionListUIState.isLoading())
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
-        )
     }
 }
 
 @Composable
 private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> Unit) {
-    val evolutionType = EvolutionType.values().find { it.text == chain.condition.trigger.name }
-
     Row {
         Pokemon(chain.from, onClickPokemon)
         SpaceFill()
-        Column(Modifier.align(Alignment.CenterVertically)) {
-            when (evolutionType) {
-                EvolutionType.LevelUp -> LevelEvolution(chain.condition.minLevel)
-                EvolutionType.Item -> ItemEvolution(chain.condition.item?.name ?: "")
-                EvolutionType.Trade -> TradeEvolution()
-            }
-        }
+        EvolutionTrigger(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            condition = chain.condition
+        )
         SpaceFill()
         Pokemon(chain.to, onClickPokemon)
     }
@@ -80,27 +83,59 @@ private fun Evolution(chain: PokemonEvolutionChain, onClickPokemon: (String) -> 
 
 @Composable
 private fun Pokemon(pokemonInfo: LocalizedInfo, onClick: (String) -> Unit) {
-    Box(modifier = Modifier.height(120.dp), contentAlignment = Alignment.Center) {
-        DarkPokeBall(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clickable { onClick(pokemonInfo.name) },
-            size = 96.dp,
-            translateOffset = DpOffset(x = 0.dp, y = -16.dp),
-            rotate = 0f
+    Box(
+        modifier = Modifier
+            .height(120.dp)
+            .clickable { onClick(pokemonInfo.name) },
+        contentAlignment = Alignment.Center
+    ) {
+        PokemonBackground(modifier = Modifier.align(Alignment.Center))
+
+        PokemonThumbnailAndName(
+            imageUrl = pokemonInfo.imageUrl,
+            name = pokemonInfo.names.localized.capitalizeAndRemoveHyphen()
         )
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                modifier = Modifier
-                    .size(76.dp),
-                painter = rememberImagePainter(pokemonInfo.imageUrl),
-                contentDescription = null
-            )
-            Space(height = 4.dp)
-            Text(
-                text = pokemonInfo.names.localized.capitalizeAndRemoveHyphen(),
-                style = MaterialTheme.typography.body1
-            )
+    }
+}
+
+@Composable
+private fun PokemonBackground(modifier: Modifier = Modifier) {
+    DarkPokeBall(
+        modifier = modifier,
+        size = 96.dp,
+        translateOffset = DpOffset(x = 0.dp, y = -16.dp),
+        rotate = 0f
+    )
+}
+
+@Composable
+private fun PokemonThumbnailAndName(imageUrl: String, name: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+            modifier = Modifier.size(76.dp),
+            painter = rememberImagePainter(imageUrl),
+            contentDescription = null
+        )
+        Space(height = 4.dp)
+        Text(
+            text = name,
+            style = MaterialTheme.typography.body1
+        )
+    }
+}
+
+@Composable
+private fun EvolutionTrigger(modifier: Modifier = Modifier, condition: Condition) {
+    val evolutionType = EvolutionType.from(condition.trigger.name)
+
+    Column(modifier) {
+        when (evolutionType) {
+            EvolutionType.LevelUp -> LevelEvolution(level = condition.minLevel)
+            EvolutionType.Item -> ItemEvolution(name = condition.item?.name ?: "")
+            EvolutionType.Trade -> TradeEvolution()
+            EvolutionType.Shed -> {}
+            EvolutionType.Other -> {}
+            null -> {}
         }
     }
 }
