@@ -69,7 +69,7 @@ import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.common.MoveCategoryColor

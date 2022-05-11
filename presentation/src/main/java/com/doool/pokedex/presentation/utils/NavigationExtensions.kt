@@ -6,7 +6,9 @@ import com.doool.pokedex.presentation.ui.download.DownloadActivity
 import com.doool.pokedex.presentation.ui.main.MainActivity
 
 fun Context.goMain() {
-    startActivity(Intent(this, MainActivity::class.java))
+    startActivity(
+        Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    )
 }
 
 fun Context.goDownload() {

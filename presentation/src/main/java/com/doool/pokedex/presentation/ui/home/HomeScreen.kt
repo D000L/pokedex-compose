@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.doool.pokedex.R
-import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.ui.main.GamesDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
 import com.doool.pokedex.presentation.ui.main.LocationDestination

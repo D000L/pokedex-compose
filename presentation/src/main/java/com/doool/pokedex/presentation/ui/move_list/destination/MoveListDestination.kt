@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.doool.pokedex.presentation.NavDestination
-import com.doool.pokedex.presentation.nullableType
+import com.doool.pokedex.presentation.nav.NavDestination
+import com.doool.pokedex.presentation.nav.nullableType
 import com.doool.pokedex.presentation.ui.move_list.MoveListScreen
 
 object MoveListDestination : NavDestination() {

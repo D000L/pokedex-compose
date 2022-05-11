@@ -39,7 +39,7 @@ import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.getData
 import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.Pokemon
-import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination

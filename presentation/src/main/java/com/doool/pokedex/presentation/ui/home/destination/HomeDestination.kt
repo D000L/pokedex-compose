@@ -1,8 +1,8 @@
 package com.doool.pokedex.presentation.ui.home.destination
 
 import androidx.compose.runtime.Composable
-import com.doool.pokedex.presentation.LocalNavController
-import com.doool.pokedex.presentation.NavDestination
+import com.doool.pokedex.presentation.nav.LocalNavController
+import com.doool.pokedex.presentation.nav.NavDestination
 import com.doool.pokedex.presentation.ui.home.HomeScreen
 import com.doool.pokedex.presentation.ui.home.Menu
 import com.doool.pokedex.presentation.ui.main.BerryDestination

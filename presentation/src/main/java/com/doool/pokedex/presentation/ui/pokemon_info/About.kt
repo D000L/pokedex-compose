@@ -40,22 +40,36 @@ fun About(
             }
 
         }
-        if (aboutUIState.isLoading()) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        if (aboutUIState.isLoading())
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 
 @Composable
+private fun Description(desc: String) {
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = desc,
+        style = MaterialTheme.typography.body1,
+    )
+}
+
+
+@Composable
 private fun PokedexData(aboutUIModel: AboutUIModel) {
     CommonSubTitle("Pokedex Data")
-    InfoItem("Species", aboutUIModel.genera.localized)
-    InfoItem("Height", "%.1f m".format(aboutUIModel.height / 10f))
-    InfoItem("Weight", "%.1f kg".format(aboutUIModel.weight / 10f))
-    InfoItem(
-        "Abilities",
-        aboutUIModel.abilities.sortedBy { it.id }.map { it.names.localized.capitalizeAndRemoveHyphen() }
-            .joinToString(
-                separator = ", "
-            )
+
+    Info(name = "Species", content = aboutUIModel.genera.localized)
+    Info(name = "Height", content = "%.1f m".format(aboutUIModel.height / 10f))
+    Info(name = "Weight", content = "%.1f kg".format(aboutUIModel.weight / 10f))
+
+    Info(
+        name = "Abilities",
+        content = aboutUIModel.abilities
+            .sortedBy { it.id }
+            .fold("") { acc, ability ->
+                "$acc, ${ability.names.localized.capitalizeAndRemoveHyphen()}"
+            }
     )
 }
 
@@ -63,31 +77,33 @@ private fun PokedexData(aboutUIModel: AboutUIModel) {
 private fun Breeding(aboutUIModel: AboutUIModel) {
     CommonSubTitle("Breeding")
 
-    InfoItem(
-        "Gender",
-        if (aboutUIModel.isGenderless) {
-            "Genderless"
-        } else {
-            "♀ %.1f%%, ♂ %.1f%%".format(
-                aboutUIModel.maleRate.toFloat(),
-                aboutUIModel.femaleRate.toFloat()
-            )
-        }
-    )
-    InfoItem(
-        "Egg Groups",
-        aboutUIModel.eggGroups.map { it.name.capitalizeAndRemoveHyphen() }.joinToString(
-            separator = ", "
+    val genderRate = if (aboutUIModel.isGenderless) {
+        "Genderless"
+    } else {
+        "♀ %.1f%%, ♂ %.1f%%".format(
+            aboutUIModel.maleRate.toFloat(),
+            aboutUIModel.femaleRate.toFloat()
         )
+    }
+
+    Info(
+        name = "Gender",
+        content = genderRate
+    )
+    Info(
+        name = "Egg Groups",
+        content = aboutUIModel.eggGroups.joinToString(separator = ", ") {
+            it.name.capitalizeAndRemoveHyphen()
+        }
     )
 }
 
 @Composable
-private fun InfoItem(title: String, content: String) {
+private fun Info(name: String, content: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             modifier = Modifier.width(100.dp),
-            text = title,
+            text = name,
             style = MaterialTheme.typography.body2,
         )
         Text(
@@ -95,13 +111,4 @@ private fun InfoItem(title: String, content: String) {
             style = MaterialTheme.typography.body1,
         )
     }
-}
-
-@Composable
-fun Description(desc: String) {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = desc,
-        style = MaterialTheme.typography.body1,
-    )
 }

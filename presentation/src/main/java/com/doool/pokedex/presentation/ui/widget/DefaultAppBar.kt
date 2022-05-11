@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.utils.getItemTopOffset
 
 val TOOLBAR_HEIGHT = 56.dp

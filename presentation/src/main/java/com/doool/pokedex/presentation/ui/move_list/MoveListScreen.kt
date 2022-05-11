@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.doool.pokedex.R
-import com.doool.pokedex.presentation.LocalNavController
+import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.widget.stickyAppBar
 

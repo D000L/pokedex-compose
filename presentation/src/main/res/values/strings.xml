@@ -7,6 +7,7 @@
     <string name="pokemon_news_title">Pokemon News</string>
     <string name="pokemon_move_title">Move</string>
     <string name="pokemon_title">Pokemon</string>
+
     <string name="move_name_label">Move Name</string>
     <string name="move_power_label">Power</string>
     <string name="move_accurary_label">Acc</string>
