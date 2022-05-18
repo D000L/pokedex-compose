@@ -30,8 +30,8 @@ import com.doool.pokedex.presentation.ui.pokemon_info.model.EvolutionListUIModel
 import com.doool.pokedex.presentation.ui.widget.DarkPokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.localized
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.localized
 
 @Composable
 fun EvolutionList(

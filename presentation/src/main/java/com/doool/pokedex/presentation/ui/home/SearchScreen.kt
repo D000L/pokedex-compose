@@ -81,10 +81,10 @@ import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
 import com.doool.pokedex.presentation.ui.widget.TypeText
 import com.doool.pokedex.presentation.ui.widget.TypeList
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.clipBackground
-import com.doool.pokedex.presentation.utils.defaultPlaceholder
-import com.doool.pokedex.presentation.utils.localized
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.clipBackground
+import com.doool.core.utils.defaultPlaceholder
+import com.doool.core.utils.localized
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

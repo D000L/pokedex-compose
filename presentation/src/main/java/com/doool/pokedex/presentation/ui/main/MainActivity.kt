@@ -20,7 +20,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.doool.pokedex.presentation.LocalLanguage
+import com.doool.core.LocalLanguage
+import com.doool.core.theme.PokedexTheme
 import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.nav.NavDestination
 import com.doool.pokedex.presentation.nav.bottomSheet
@@ -31,7 +32,6 @@ import com.doool.pokedex.presentation.ui.move_list.destination.MoveListDestinati
 import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.pokemon_list.destination.PokemonListDestination
-import com.doool.pokedex.presentation.ui.theme.PokedexTheme
 import com.doool.pokedex.presentation.utils.goDownload
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout

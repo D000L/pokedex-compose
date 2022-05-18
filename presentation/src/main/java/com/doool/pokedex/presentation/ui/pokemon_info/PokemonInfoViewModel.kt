@@ -14,7 +14,7 @@ import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonEvolutionChain
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import com.doool.pokedex.presentation.base.BaseViewModel
+import com.doool.core.base.BaseViewModel
 import com.doool.pokedex.presentation.combineLoadState
 import com.doool.pokedex.presentation.flatMapLatestState
 import com.doool.pokedex.presentation.mapData

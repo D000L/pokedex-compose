@@ -2,7 +2,14 @@ package com.doool.pokedex.presentation.ui.pokemon_list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,22 +39,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.clipBackground
+import com.doool.core.utils.defaultPlaceholder
+import com.doool.core.utils.localized
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.Pokemon
-import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
+import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.widget.PokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.TypeList
 import com.doool.pokedex.presentation.ui.widget.stickyAppBar
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.clipBackground
-import com.doool.pokedex.presentation.utils.defaultPlaceholder
-import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun PokemonListScreen(

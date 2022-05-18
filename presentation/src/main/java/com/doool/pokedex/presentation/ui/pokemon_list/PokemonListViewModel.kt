@@ -8,7 +8,7 @@ import com.doool.pokedex.domain.usecase.GetForm
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import com.doool.pokedex.presentation.base.BaseViewModel
+import com.doool.core.base.BaseViewModel
 import com.doool.pokedex.presentation.ui.pokemon_list.destination.QUERY_PARAM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

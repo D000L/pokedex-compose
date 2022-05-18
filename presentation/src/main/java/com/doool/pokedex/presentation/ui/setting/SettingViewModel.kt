@@ -1,9 +1,9 @@
 package com.doool.pokedex.presentation.ui.setting
 
 import androidx.lifecycle.viewModelScope
+import com.doool.core.Language
+import com.doool.core.base.BaseViewModel
 import com.doool.pokedex.domain.repository.SettingRepository
-import com.doool.pokedex.presentation.Language
-import com.doool.pokedex.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

@@ -47,10 +47,10 @@ import com.doool.pokedex.presentation.ui.move_list.Move
 import com.doool.pokedex.presentation.ui.move_list.MoveHeaders
 import com.doool.pokedex.presentation.ui.pokemon_info.model.HeaderUIModel
 import com.doool.pokedex.presentation.ui.widget.*
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.defaultPlaceholder
-import com.doool.pokedex.presentation.utils.getItemTopOffset
-import com.doool.pokedex.presentation.utils.localized
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.defaultPlaceholder
+import com.doool.core.utils.getItemTopOffset
+import com.doool.core.utils.localized
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs

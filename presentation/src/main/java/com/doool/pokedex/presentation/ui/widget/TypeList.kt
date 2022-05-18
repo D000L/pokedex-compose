@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.presentation.ui.common.PokemonType
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.capitalizeAndRemoveHyphen
 
 @Composable
 fun TypeList(modifier: Modifier = Modifier, types: List<Info>) {

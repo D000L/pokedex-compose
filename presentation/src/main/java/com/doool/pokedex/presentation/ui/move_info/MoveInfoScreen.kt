@@ -20,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.localized
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.domain.model.PokemonMove
@@ -28,8 +30,6 @@ import com.doool.pokedex.presentation.ui.widget.DarkPokeBall
 import com.doool.pokedex.presentation.ui.widget.Space
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
 import com.doool.pokedex.presentation.ui.widget.Type
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.localized
 
 @Composable
 fun MoveInfoScreen(viewModel: MoveInfoViewModel = hiltViewModel()) {

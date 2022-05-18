@@ -39,8 +39,8 @@ import com.doool.pokedex.presentation.ui.pokemon_list.destination.PokemonListDes
 import com.doool.pokedex.presentation.ui.setting.SettingDropDown
 import com.doool.pokedex.presentation.ui.widget.PokeBall
 import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.pokedex.presentation.utils.clipBackground
-import com.doool.pokedex.presentation.utils.ifThen
+import com.doool.core.utils.clipBackground
+import com.doool.core.utils.ifThen
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
     News(R.color.background_psychic, NewsDestination.route),

@@ -23,9 +23,9 @@ import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.ui.common.PokemonType
-import com.doool.pokedex.presentation.utils.capitalizeAndRemoveHyphen
-import com.doool.pokedex.presentation.utils.defaultPlaceholder
-import com.doool.pokedex.presentation.utils.localized
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.defaultPlaceholder
+import com.doool.core.utils.localized
 
 @Composable
 fun Move(moveState: LoadState<PokemonMove>, onItemClicked: (String) -> Unit = {}) {
