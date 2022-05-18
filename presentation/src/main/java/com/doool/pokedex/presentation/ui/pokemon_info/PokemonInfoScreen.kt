@@ -10,7 +10,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -34,24 +38,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.core.LocalPokemonColor
+import com.doool.core.nav.LocalNavController
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.defaultPlaceholder
+import com.doool.core.utils.getItemTopOffset
+import com.doool.core.utils.localized
+import com.doool.core.widget.DefaultAppBar
+import com.doool.core.widget.Space
+import com.doool.core.widget.SpaceFill
+import com.doool.core.widget.TOOLBAR_HEIGHT
+import com.doool.core.widget.TypeListWithTitle
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.getData
 import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.Pokemon
-import com.doool.pokedex.presentation.nav.LocalNavController
-import com.doool.pokedex.presentation.LocalPokemonColor
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
-import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
-import com.doool.pokedex.presentation.ui.move_list.Move
-import com.doool.pokedex.presentation.ui.move_list.MoveHeaders
+import com.doool.pokedex.presentation.ui.move.info.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.model.HeaderUIModel
-import com.doool.pokedex.presentation.ui.widget.*
-import com.doool.core.utils.capitalizeAndRemoveHyphen
-import com.doool.core.utils.defaultPlaceholder
-import com.doool.core.utils.getItemTopOffset
-import com.doool.core.utils.localized
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -186,7 +196,7 @@ private fun Body(
             }
             TabState.Move -> {
                 item {
-                    MoveHeaders(
+                    com.doool.pokedex.presentation.ui.move.list.MoveHeaders(
                         Modifier.padding(
                             start = 20.dp,
                             end = 20.dp,
@@ -205,7 +215,7 @@ private fun Body(
                     moveUIState.getData()?.let { moveItems ->
                         items(moveItems.moves, key = { it.name }) {
                             val move by remember(it.name) { viewModel.loadPokemonMove(it.name) }.collectAsState()
-                            Move(move) {
+                            com.doool.pokedex.presentation.ui.move.list.Move(move) {
                                 navController.navigate(MoveInfoDestination.getRouteByName(it))
                             }
                         }

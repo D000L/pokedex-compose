@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.doool.pokedex.presentation.nav.NavDestination
+import com.doool.core.nav.NavDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.PokemonInfoScreen
 
 const val NAME_PARAM = "name"

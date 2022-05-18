@@ -24,12 +24,12 @@ import com.doool.pokedex.domain.getData
 import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.Damage
 import com.doool.pokedex.domain.model.Stat
-import com.doool.pokedex.presentation.LocalPokemonColor
-import com.doool.pokedex.presentation.ui.common.PokemonType
+import com.doool.core.LocalPokemonColor
+import com.doool.core.common.PokemonType
 import com.doool.pokedex.presentation.ui.common.StatType
 import com.doool.pokedex.presentation.ui.pokemon_info.model.StatsUIModel
-import com.doool.pokedex.presentation.ui.widget.Space
-import com.doool.pokedex.presentation.ui.widget.Type
+import com.doool.core.widget.Space
+import com.doool.core.widget.Type
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable

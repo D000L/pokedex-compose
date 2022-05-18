@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.doool.pokedex.presentation.nav.NavDestination
-import com.doool.pokedex.presentation.nav.nullableType
+import com.doool.core.nav.NavDestination
+import com.doool.core.nav.nullableType
 import com.doool.pokedex.presentation.ui.pokemon_list.PokemonListScreen
 
 const val QUERY_PARAM = "query"

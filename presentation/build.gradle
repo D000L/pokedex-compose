@@ -44,6 +44,9 @@ android {
 dependencies {
 
     implementation project(":core")
+    implementation project(":news")
+    implementation project(":move")
+    implementation project(":download")
     implementation project(":domain")
 
     implementation 'androidx.core:core-ktx:1.6.0'

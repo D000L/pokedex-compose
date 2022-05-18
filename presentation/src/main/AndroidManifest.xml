@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.ui.download.DownloadActivity" />
+        <activity android:name="com.doool.download.DownloadActivity" />
     </application>
 
 </manifest>

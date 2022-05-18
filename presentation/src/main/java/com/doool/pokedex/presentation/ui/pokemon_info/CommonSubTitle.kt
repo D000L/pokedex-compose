@@ -5,7 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
-import com.doool.pokedex.presentation.LocalPokemonColor
+import com.doool.core.LocalPokemonColor
 
 @Composable
 fun CommonSubTitle(title: String, @ColorRes color: Int? = null) {

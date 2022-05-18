@@ -19,6 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.localized
+import com.doool.core.widget.Space
+import com.doool.core.widget.SpaceFill
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.getData
 import com.doool.pokedex.domain.isLoading
@@ -27,11 +31,7 @@ import com.doool.pokedex.domain.model.LocalizedInfo
 import com.doool.pokedex.domain.model.PokemonEvolutionChain
 import com.doool.pokedex.presentation.ui.common.EvolutionType
 import com.doool.pokedex.presentation.ui.pokemon_info.model.EvolutionListUIModel
-import com.doool.pokedex.presentation.ui.widget.DarkPokeBall
-import com.doool.pokedex.presentation.ui.widget.Space
-import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.core.utils.capitalizeAndRemoveHyphen
-import com.doool.core.utils.localized
+import com.doool.core.widget.DarkPokeBall
 
 @Composable
 fun EvolutionList(

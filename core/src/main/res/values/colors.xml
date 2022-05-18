@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#17171B</color>
+    <color name="gray">#747476</color>
+
+    <color name="background_bug">#8BD674</color>
+    <color name="background_dark">#6F6E78</color>
+    <color name="background_dragon">#7383B9</color>
+    <color name="background_electric">#F2CB55</color>
+    <color name="background_fairy">#EBA8C3</color>
+    <color name="background_fighting">#EB4971</color>
+    <color name="background_fire">#FFA756</color>
+    <color name="background_flying">#83A2E3</color>
+    <color name="background_ghost">#8571BE</color>
+    <color name="background_grass">#8BBE8A</color>
+    <color name="background_ground">#F78551</color>
+    <color name="background_ice">#91D8DF</color>
+    <color name="background_normal">#B5B9C4</color>
+    <color name="background_poison">#9F6E97</color>
+    <color name="background_psychic">#FF6568</color>
+    <color name="background_rock">#D4C294</color>
+    <color name="background_steel">#4C91B2</color>
+    <color name="background_water">#58ABF6</color>
+
+    <color name="type_bug">#8CB230</color>
+    <color name="type_dark">#58575F</color>
+    <color name="type_dragon">#0F6AC0</color>
+    <color name="type_electric">#EED535</color>
+    <color name="type_fairy">#ED6EC7</color>
+    <color name="type_fighting">#D04164</color>
+    <color name="type_fire">#FD7D24</color>
+    <color name="type_flying">#748FC9</color>
+    <color name="type_ghost">#556AAE</color>
+    <color name="type_grass">#62B957</color>
+    <color name="type_ground">#DD7748</color>
+    <color name="type_ice">#61CEC0</color>
+    <color name="type_normal">#9DA0AA</color>
+    <color name="type_poison">#A552CC</color>
+    <color name="type_psychic">#EA5D60</color>
+    <color name="type_rock">#BAAB82</color>
+    <color name="type_steel">#417D9A</color>
+    <color name="type_water">#4A90DA</color>
+</resources>

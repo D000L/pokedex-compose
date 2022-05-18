@@ -2,7 +2,6 @@ package com.doool.pokedex.presentation.utils
 
 import android.content.Context
 import android.content.Intent
-import com.doool.pokedex.presentation.ui.download.DownloadActivity
 import com.doool.pokedex.presentation.ui.main.MainActivity
 
 fun Context.goMain() {
@@ -12,5 +11,5 @@ fun Context.goMain() {
 }
 
 fun Context.goDownload() {
-    startActivity(Intent(this, DownloadActivity::class.java))
+    startActivity(Intent(this, com.doool.download.DownloadActivity::class.java))
 }

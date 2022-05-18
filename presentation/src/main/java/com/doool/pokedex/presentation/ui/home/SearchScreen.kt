@@ -61,6 +61,17 @@ import coil.Coil
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.doool.core.Process
+import com.doool.core.common.PokemonType
+import com.doool.core.nav.LocalNavController
+import com.doool.core.utils.capitalizeAndRemoveHyphen
+import com.doool.core.utils.clipBackground
+import com.doool.core.utils.defaultPlaceholder
+import com.doool.core.utils.localized
+import com.doool.core.widget.Space
+import com.doool.core.widget.SpaceFill
+import com.doool.core.widget.TypeList
+import com.doool.core.widget.TypeText
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.Info
@@ -69,22 +80,11 @@ import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.presentation.nav.LocalNavController
-import com.doool.pokedex.presentation.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.common.MoveCategoryColor
-import com.doool.pokedex.presentation.ui.common.PokemonType
 import com.doool.pokedex.presentation.ui.main.ItemDestination
-import com.doool.pokedex.presentation.ui.move_info.destination.MoveInfoDestination
+import com.doool.pokedex.presentation.ui.move.info.MoveInfoDestination
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
-import com.doool.pokedex.presentation.ui.widget.Space
-import com.doool.pokedex.presentation.ui.widget.SpaceFill
-import com.doool.pokedex.presentation.ui.widget.TypeText
-import com.doool.pokedex.presentation.ui.widget.TypeList
-import com.doool.core.utils.capitalizeAndRemoveHyphen
-import com.doool.core.utils.clipBackground
-import com.doool.core.utils.defaultPlaceholder
-import com.doool.core.utils.localized
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

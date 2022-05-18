@@ -17,7 +17,7 @@ import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.getData
 import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.presentation.ui.pokemon_info.model.AboutUIModel
-import com.doool.pokedex.presentation.ui.widget.Space
+import com.doool.core.widget.Space
 import com.doool.core.utils.capitalizeAndRemoveHyphen
 import com.doool.core.utils.localized
 

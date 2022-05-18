@@ -15,10 +15,10 @@ import com.doool.pokedex.domain.usecase.GetPokemonEvolutionChain
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
 import com.doool.core.base.BaseViewModel
-import com.doool.pokedex.presentation.combineLoadState
-import com.doool.pokedex.presentation.flatMapLatestState
-import com.doool.pokedex.presentation.mapData
-import com.doool.pokedex.presentation.scanLoadState
+import com.doool.core.combineLoadState
+import com.doool.core.flatMapLatestState
+import com.doool.core.mapData
+import com.doool.core.scanLoadState
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.NAME_PARAM
 import com.doool.pokedex.presentation.ui.pokemon_info.model.AboutUIModel
 import com.doool.pokedex.presentation.ui.pokemon_info.model.EvolutionListUIModel

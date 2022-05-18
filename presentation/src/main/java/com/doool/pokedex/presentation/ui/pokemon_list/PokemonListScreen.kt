@@ -39,22 +39,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.doool.core.nav.LocalNavController
 import com.doool.core.utils.capitalizeAndRemoveHyphen
 import com.doool.core.utils.clipBackground
 import com.doool.core.utils.defaultPlaceholder
 import com.doool.core.utils.localized
+import com.doool.core.widget.Space
+import com.doool.core.widget.stickyAppBar
 import com.doool.pokedex.R
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.Pokemon
-import com.doool.pokedex.presentation.Process
+import com.doool.core.Process
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
-import com.doool.pokedex.presentation.nav.LocalNavController
 import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
-import com.doool.pokedex.presentation.ui.widget.PokeBall
-import com.doool.pokedex.presentation.ui.widget.Space
-import com.doool.pokedex.presentation.ui.widget.TypeList
-import com.doool.pokedex.presentation.ui.widget.stickyAppBar
+import com.doool.core.widget.PokeBall
+import com.doool.core.widget.TypeList
 
 @Composable
 fun PokemonListScreen(
