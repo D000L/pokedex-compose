@@ -49,9 +49,9 @@ import com.doool.pokedex.R
 import com.doool.pokedex.presentation.ui.main.GamesDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
 import com.doool.pokedex.presentation.ui.main.LocationDestination
-import com.doool.pokedex.presentation.ui.move.list.MoveListDestination
+import com.doool.pokedex.move.list.MoveListDestination
 import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
-import com.doool.pokedex.presentation.ui.pokemon_list.destination.PokemonListDestination
+import com.doool.pokedex.pokemon.list.destination.PokemonListDestination
 import com.doool.pokedex.presentation.ui.setting.SettingDropDown
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {

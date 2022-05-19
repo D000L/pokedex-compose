@@ -27,11 +27,11 @@ import com.doool.core.nav.bottomSheet
 import com.doool.core.nav.composable
 import com.doool.core.theme.PokedexTheme
 import com.doool.pokedex.presentation.ui.home.destination.HomeDestination
-import com.doool.pokedex.presentation.ui.move.info.MoveInfoDestination
-import com.doool.pokedex.presentation.ui.move.list.MoveListDestination
+import com.doool.pokedex.move.info.MoveInfoDestination
+import com.doool.pokedex.move.list.MoveListDestination
 import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
-import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
-import com.doool.pokedex.presentation.ui.pokemon_list.destination.PokemonListDestination
+import com.doool.pokedex.pokemon.info.destination.PokemonInfoDestination
+import com.doool.pokedex.pokemon.list.destination.PokemonListDestination
 import com.doool.pokedex.presentation.utils.goDownload
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout

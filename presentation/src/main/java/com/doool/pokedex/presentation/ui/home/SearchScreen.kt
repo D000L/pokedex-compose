@@ -80,11 +80,11 @@ import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
+import com.doool.pokedex.move.info.MoveInfoDestination
+import com.doool.pokedex.pokemon.info.destination.PokemonInfoDestination
 import com.doool.pokedex.presentation.extensions.getBackgroundColor
 import com.doool.pokedex.presentation.ui.common.MoveCategoryColor
 import com.doool.pokedex.presentation.ui.main.ItemDestination
-import com.doool.pokedex.presentation.ui.move.info.MoveInfoDestination
-import com.doool.pokedex.presentation.ui.pokemon_info.destination.PokemonInfoDestination
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
