@@ -2,7 +2,7 @@ package com.doool.pokedex.presentation.utils
 
 import android.content.Context
 import android.content.Intent
-import com.doool.pokedex.download.DownloadActivity
+import com.doool.pokedex.download.feature.DownloadActivity
 import com.doool.pokedex.presentation.ui.main.MainActivity
 
 fun Context.goMain() {

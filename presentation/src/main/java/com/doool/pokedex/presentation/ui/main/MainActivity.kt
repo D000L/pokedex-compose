@@ -20,18 +20,16 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.doool.core.LocalLanguage
-import com.doool.core.nav.LocalNavController
-import com.doool.core.nav.NavDestination
-import com.doool.core.nav.bottomSheet
-import com.doool.core.nav.composable
-import com.doool.core.theme.PokedexTheme
+import com.doool.pokedex.core.LocalLanguage
+import com.doool.pokedex.core.theme.PokedexTheme
+import com.doool.pokedex.move.destination.MoveInfoDestination
+import com.doool.pokedex.move.destination.MoveListDestination
+import com.doool.pokedex.navigation.bottomSheet
+import com.doool.pokedex.navigation.composable
+import com.doool.pokedex.news.destination.NewsDestination
+import com.doool.pokedex.pokemon.destination.PokemonInfoDestination
+import com.doool.pokedex.pokemon.destination.PokemonListDestination
 import com.doool.pokedex.presentation.ui.home.destination.HomeDestination
-import com.doool.pokedex.move.info.MoveInfoDestination
-import com.doool.pokedex.move.list.MoveListDestination
-import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
-import com.doool.pokedex.pokemon.info.destination.PokemonInfoDestination
-import com.doool.pokedex.pokemon.list.destination.PokemonListDestination
 import com.doool.pokedex.presentation.utils.goDownload
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -77,7 +75,7 @@ fun MainNavHost() {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
 
-    CompositionLocalProvider(LocalNavController provides navController) {
+    CompositionLocalProvider(com.doool.pokedex.navigation.LocalNavController provides navController) {
         ModalBottomSheetLayout(
             sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
             bottomSheetNavigator = bottomSheetNavigator
@@ -103,24 +101,20 @@ private val navDestinations = listOf(
     MoveListDestination
 )
 
-object GamesDestination : NavDestination() {
+object GamesDestination : com.doool.pokedex.navigation.NavDestination() {
     override val route = "Games"
-    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object ItemDestination : NavDestination() {
+object ItemDestination : com.doool.pokedex.navigation.NavDestination() {
     override val route = "Item"
-    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object BerryDestination : NavDestination() {
+object BerryDestination : com.doool.pokedex.navigation.NavDestination() {
     override val route = "Berry"
-    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
-object LocationDestination : NavDestination() {
+object LocationDestination : com.doool.pokedex.navigation.NavDestination() {
     override val route = "Location"
-    override val content: @Composable () -> Unit = { NotDevelop() }
 }
 
 @Composable

@@ -1,8 +1,8 @@
 package com.doool.pokedex.presentation.ui.main
 
 import androidx.lifecycle.viewModelScope
-import com.doool.core.Language
-import com.doool.core.base.BaseViewModel
+import com.doool.pokedex.core.Language
+import com.doool.pokedex.core.base.BaseViewModel
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.repository.SettingRepository
 import com.doool.pokedex.domain.usecase.CheckIsDownloaded

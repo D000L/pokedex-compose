@@ -40,18 +40,17 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.doool.core.nav.LocalNavController
-import com.doool.core.utils.clipBackground
-import com.doool.core.utils.ifThen
-import com.doool.core.widget.PokeBall
-import com.doool.core.widget.SpaceFill
-import com.doool.pokedex.R
+import com.doool.pokedex.core.utils.clipBackground
+import com.doool.pokedex.core.utils.ifThen
+import com.doool.pokedex.core.widget.PokeBall
+import com.doool.pokedex.core.widget.SpaceFill
+import com.doool.pokedex.pokemon.feature.R
+import com.doool.pokedex.move.destination.MoveListDestination
+import com.doool.pokedex.pokemon.destination.PokemonListDestination
 import com.doool.pokedex.presentation.ui.main.GamesDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
 import com.doool.pokedex.presentation.ui.main.LocationDestination
-import com.doool.pokedex.move.list.MoveListDestination
-import com.doool.pokedex.presentation.ui.news.destination.NewsDestination
-import com.doool.pokedex.pokemon.list.destination.PokemonListDestination
+import com.doool.pokedex.news.destination.NewsDestination
 import com.doool.pokedex.presentation.ui.setting.SettingDropDown
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {
@@ -160,7 +159,7 @@ private fun HomeHeader() {
 
 @Composable
 private fun MenuList(modifier: Modifier = Modifier) {
-    val navController = LocalNavController.current
+    val navController = com.doool.pokedex.navigation.LocalNavController.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
         MenuItem(Modifier.fillMaxWidth(), navController, Menu.values().first())

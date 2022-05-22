@@ -61,17 +61,18 @@ import coil.Coil
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.doool.core.Process
-import com.doool.core.common.PokemonType
-import com.doool.core.nav.LocalNavController
-import com.doool.core.utils.capitalizeAndRemoveHyphen
-import com.doool.core.utils.clipBackground
-import com.doool.core.utils.defaultPlaceholder
-import com.doool.core.utils.localized
-import com.doool.core.widget.Space
-import com.doool.core.widget.SpaceFill
-import com.doool.core.widget.TypeList
-import com.doool.core.widget.TypeText
+import com.doool.pokedex.core.Process
+import com.doool.pokedex.core.common.MoveCategoryColor
+import com.doool.pokedex.core.common.PokemonType
+import com.doool.pokedex.core.extensions.getBackgroundColor
+import com.doool.pokedex.core.utils.capitalizeAndRemoveHyphen
+import com.doool.pokedex.core.utils.clipBackground
+import com.doool.pokedex.core.utils.defaultPlaceholder
+import com.doool.pokedex.core.utils.localized
+import com.doool.pokedex.core.widget.Space
+import com.doool.pokedex.core.widget.SpaceFill
+import com.doool.pokedex.core.widget.TypeList
+import com.doool.pokedex.core.widget.TypeText
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Effect
 import com.doool.pokedex.domain.model.Info
@@ -80,10 +81,8 @@ import com.doool.pokedex.domain.model.LocalizedString
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
-import com.doool.pokedex.move.info.MoveInfoDestination
-import com.doool.pokedex.pokemon.info.destination.PokemonInfoDestination
-import com.doool.pokedex.presentation.extensions.getBackgroundColor
-import com.doool.pokedex.presentation.ui.common.MoveCategoryColor
+import com.doool.pokedex.move.destination.MoveInfoDestination
+import com.doool.pokedex.pokemon.destination.PokemonInfoDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -190,7 +189,7 @@ private fun SearchResult(
             SummaryList("Items", (0..6).toList()) { SummaryItemPlaceholder(92.dp) }
             SummaryList("Moves", (0..6).toList()) { SummaryItemPlaceholder(120.dp) }
         }, onComplete = { result ->
-            val navController = LocalNavController.current
+            val navController = com.doool.pokedex.navigation.LocalNavController.current
 
             SummaryList("Pokemon", result.pokemon, { onClickMore(Menu.Pokemon) }, {
                 PokemonSummary(pokemon = it.first, it.second) {

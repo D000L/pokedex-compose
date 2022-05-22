@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.doool.core.Language
-import com.doool.core.widget.Space
+import com.doool.pokedex.core.Language
+import com.doool.pokedex.core.widget.Space
 
 @Composable
 fun SettingDropDown(expended: Boolean, dismiss: () -> Unit) {

@@ -7,7 +7,7 @@ import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.usecase.search.Search
-import com.doool.core.base.BaseViewModel
+import com.doool.pokedex.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
