@@ -6,21 +6,26 @@ buildscript {
         hilt_version = '2.41'
         room_version = '2.4.2'
         paging_version = '3.1.1'
+        accompanist_version = '0.24.5-alpha'
     }
     repositories {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.0"
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
 
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath "com.autonomousapps:dependency-analysis-gradle-plugin:1.2.1"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+
+apply plugin: "com.autonomousapps.dependency-analysis"
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
