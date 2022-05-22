@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feature.DownloadActivity" />
+        <activity android:name="com.doool.pokedex.download.feature.DownloadActivity" />
     </application>
 
 </manifest>

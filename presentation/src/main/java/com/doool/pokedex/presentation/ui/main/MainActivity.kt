@@ -32,12 +32,12 @@ import com.doool.pokedex.news.destination.NewsDestination
 import com.doool.pokedex.news.feature.NewsScreen
 import com.doool.pokedex.pokemon.destination.PokemonInfoDestination
 import com.doool.pokedex.pokemon.destination.PokemonListDestination
+import com.doool.pokedex.pokemon.destination.goDownload
 import com.doool.pokedex.pokemon.feature.info.PokemonInfoScreen
 import com.doool.pokedex.pokemon.feature.list.PokemonListScreen
 import com.doool.pokedex.presentation.ui.home.HomeScreen
 import com.doool.pokedex.presentation.ui.home.Menu
 import com.doool.pokedex.presentation.ui.home.destination.HomeDestination
-import com.doool.pokedex.presentation.utils.goDownload
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet

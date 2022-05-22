@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
-import com.doool.pokedex.pokemon.feature.R
 import com.doool.pokedex.core.Process
 import com.doool.pokedex.core.extensions.getBackgroundColor
 import com.doool.pokedex.core.utils.capitalizeAndRemoveHyphen
@@ -54,6 +53,7 @@ import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Info
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.pokemon.destination.PokemonInfoDestination
+import com.doool.pokedex.pokemon.feature.R
 
 @Composable
 fun PokemonListScreen(

@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
-import com.doool.pokedex.pokemon.feature.R
 import com.doool.pokedex.core.LocalPokemonColor
 import com.doool.pokedex.core.components.Move
 import com.doool.pokedex.core.components.MoveHeaders
@@ -58,6 +57,7 @@ import com.doool.pokedex.domain.isLoading
 import com.doool.pokedex.domain.model.Pokemon
 import com.doool.pokedex.move.destination.MoveInfoDestination
 import com.doool.pokedex.navigation.LocalNavController
+import com.doool.pokedex.pokemon.feature.R
 import com.doool.pokedex.pokemon.feature.info.model.HeaderUIModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager

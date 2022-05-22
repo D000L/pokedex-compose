@@ -1,20 +1,20 @@
 package com.doool.pokedex.presentation.ui.home
 
 import androidx.lifecycle.viewModelScope
+import com.doool.pokedex.core.base.BaseViewModel
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.Item
 import com.doool.pokedex.domain.model.PokemonDetail
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.model.PokemonSpecies
 import com.doool.pokedex.domain.usecase.search.Search
-import com.doool.pokedex.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class SearchUIModel(
     var pokemon: List<Pair<PokemonDetail, PokemonSpecies>> = emptyList(),

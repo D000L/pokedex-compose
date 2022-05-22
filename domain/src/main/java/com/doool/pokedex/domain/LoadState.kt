@@ -12,5 +12,7 @@ sealed class LoadState<out T> {
     }
 }
 
-fun <T> LoadState<T>.getData() = (this as? LoadState.Success)?.data ?: (this as? LoadState.Loading)?.partialData
+fun <T> LoadState<T>.getData() =
+    (this as? LoadState.Success)?.data ?: (this as? LoadState.Loading)?.partialData
+
 fun <T> LoadState<T>.isLoading() = this is LoadState.Loading

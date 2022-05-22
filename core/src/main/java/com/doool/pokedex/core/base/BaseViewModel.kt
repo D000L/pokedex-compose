@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.stateIn
 
 open class BaseViewModel : ViewModel() {
 
-    inline fun <reified T> Flow<T>.stateInWhileSubscribed(delay: Long = 0, initFactory: () -> T? = { null }) =
+    inline fun <reified T> Flow<T>.stateInWhileSubscribed(
+        delay: Long = 0,
+        initFactory: () -> T? = { null }
+    ) =
         this.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(delay), initFactory() ?: T::class.java.newInstance()

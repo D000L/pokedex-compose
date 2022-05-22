@@ -63,7 +63,8 @@ class PokemonInfoViewModel @Inject constructor(
         emit(info)
     }
 
-    private val pokemon = currentPokemon.flatMapLatest { getPokemonUsecase(GetPokemon.Params.ByName(it)) }
+    private val pokemon =
+        currentPokemon.flatMapLatest { getPokemonUsecase(GetPokemon.Params.ByName(it)) }
     private val species = pokemon.flatMapLatestState { getPokemonSpecies(it.species.id) }
 
     val headerState = combineLoadState(pokemon, species)

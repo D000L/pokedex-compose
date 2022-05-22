@@ -10,5 +10,10 @@ fun AbilityResponse.toModel(): Ability = with(this) {
         name,
         names = names.map { LocalizedString(it.name, it.language.name) },
         effectEntries = effectEntries.map { it.toModel() },
-        flavorTextEntries = flavorTextEntries.map { LocalizedString(it.flavorText, it.language.name) })
+        flavorTextEntries = flavorTextEntries.map {
+            LocalizedString(
+                it.flavorText,
+                it.language.name
+            )
+        })
 }

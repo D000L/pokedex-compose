@@ -15,8 +15,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.doool.pokedex.core.components.Move
 import com.doool.pokedex.core.components.MoveHeaders
 import com.doool.pokedex.core.widget.stickyAppBar
-import com.doool.pokedex.move.feature.R
 import com.doool.pokedex.move.destination.MoveInfoDestination
+import com.doool.pokedex.move.feature.R
 import com.doool.pokedex.navigation.LocalNavController
 
 @Composable

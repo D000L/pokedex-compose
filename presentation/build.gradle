@@ -57,6 +57,7 @@ dependencies {
     implementation project(path: ':news:destination')
     implementation project(path: ':pokemon:destination')
     implementation project(path: ':move:destination')
+    implementation project(path: ':download:destination')
 
     testImplementation 'junit:junit:4.13.2'
 

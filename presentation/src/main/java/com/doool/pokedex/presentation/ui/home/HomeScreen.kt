@@ -44,13 +44,13 @@ import com.doool.pokedex.core.utils.clipBackground
 import com.doool.pokedex.core.utils.ifThen
 import com.doool.pokedex.core.widget.PokeBall
 import com.doool.pokedex.core.widget.SpaceFill
-import com.doool.pokedex.pokemon.feature.R
 import com.doool.pokedex.move.destination.MoveListDestination
+import com.doool.pokedex.news.destination.NewsDestination
 import com.doool.pokedex.pokemon.destination.PokemonListDestination
+import com.doool.pokedex.pokemon.feature.R
 import com.doool.pokedex.presentation.ui.main.GamesDestination
 import com.doool.pokedex.presentation.ui.main.ItemDestination
 import com.doool.pokedex.presentation.ui.main.LocationDestination
-import com.doool.pokedex.news.destination.NewsDestination
 import com.doool.pokedex.presentation.ui.setting.SettingDropDown
 
 enum class Menu(@ColorRes val colorRes: Int, val destination: String) {

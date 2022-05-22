@@ -2,7 +2,6 @@ package com.doool.pokedex.core
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.compositionLocalOf
-import com.doool.pokedex.core.R
 
 enum class Language(val code: String, val title: String, @DrawableRes val flagResId: Int) {
     English("en", "English", R.drawable.english),

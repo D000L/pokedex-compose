@@ -28,7 +28,6 @@ import coil.compose.rememberImagePainter
 import com.doool.pokedex.core.widget.Space
 import com.doool.pokedex.core.widget.stickyAppBar
 import com.doool.pokedex.domain.model.PokemonNews
-import com.doool.pokedex.news.feature.R
 
 @Composable
 fun NewsScreen(viewModel: NewsViewModel = hiltViewModel()) {

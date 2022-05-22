@@ -376,7 +376,13 @@ private fun ItemSummary(item: Item, onClick: () -> Unit = {}) {
 private fun generateBitmapPalette(imageUrl: String): State<Triple<ImageBitmap?, Color, Color>> {
     val context = LocalContext.current
 
-    return produceState(initialValue = Triple<ImageBitmap?, Color, Color>(null, Color.Gray, Color.White)) {
+    return produceState(
+        initialValue = Triple<ImageBitmap?, Color, Color>(
+            null,
+            Color.Gray,
+            Color.White
+        )
+    ) {
         val image = ImageRequest.Builder(context)
             .data(imageUrl)
             .apply {
@@ -384,7 +390,8 @@ private fun generateBitmapPalette(imageUrl: String): State<Triple<ImageBitmap?, 
             }
             .build()
 
-        val bitmap = Coil.imageLoader(context).execute(image).drawable?.toBitmap() ?: return@produceState
+        val bitmap =
+            Coil.imageLoader(context).execute(image).drawable?.toBitmap() ?: return@produceState
 
         Palette.Builder(bitmap).generate {
             val color = it?.lightVibrantSwatch?.rgb?.let { Color(it) } ?: Color.Gray
