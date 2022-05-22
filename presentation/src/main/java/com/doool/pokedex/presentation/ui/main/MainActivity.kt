@@ -19,20 +19,28 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.doool.pokedex.core.LocalLanguage
 import com.doool.pokedex.core.theme.PokedexTheme
 import com.doool.pokedex.move.destination.MoveInfoDestination
 import com.doool.pokedex.move.destination.MoveListDestination
-import com.doool.pokedex.navigation.bottomSheet
-import com.doool.pokedex.navigation.composable
+import com.doool.pokedex.move.feature.info.MoveInfoScreen
+import com.doool.pokedex.move.feature.list.MoveListScreen
+import com.doool.pokedex.navigation.NavDestination
 import com.doool.pokedex.news.destination.NewsDestination
+import com.doool.pokedex.news.feature.NewsScreen
 import com.doool.pokedex.pokemon.destination.PokemonInfoDestination
 import com.doool.pokedex.pokemon.destination.PokemonListDestination
+import com.doool.pokedex.pokemon.feature.info.PokemonInfoScreen
+import com.doool.pokedex.pokemon.feature.list.PokemonListScreen
+import com.doool.pokedex.presentation.ui.home.HomeScreen
+import com.doool.pokedex.presentation.ui.home.Menu
 import com.doool.pokedex.presentation.ui.home.destination.HomeDestination
 import com.doool.pokedex.presentation.utils.goDownload
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -81,39 +89,79 @@ fun MainNavHost() {
             bottomSheetNavigator = bottomSheetNavigator
         ) {
             NavHost(navController, HomeDestination.route) {
-                navDestinations.forEach(::composable)
+                navDestinations.forEach { (navDestination, content) ->
+                    composable(navDestination.route, arguments = navDestination.arguments) {
+                        content()
+                    }
+                }
 
-                bottomSheet(MoveInfoDestination)
+                bottomSheet(MoveInfoDestination.route, arguments = MoveInfoDestination.arguments) {
+                    MoveInfoScreen()
+                }
             }
         }
     }
 }
 
-private val navDestinations = listOf(
-    HomeDestination,
-    NewsDestination,
-    GamesDestination,
-    ItemDestination,
-    BerryDestination,
-    LocationDestination,
-    PokemonInfoDestination,
-    PokemonListDestination,
-    MoveListDestination
+private val navDestinations = listOf<Pair<NavDestination, @Composable () -> Unit>>(
+    HomeDestination to {
+        val navController = com.doool.pokedex.navigation.LocalNavController.current
+
+        HomeScreen { menu, query ->
+            when (menu) {
+                Menu.News -> navController.navigate(NewsDestination.route)
+                Menu.Pokemon -> navController.navigate(
+                    PokemonListDestination.getRouteWithQuery(
+                        query
+                    )
+                )
+                Menu.Games -> navController.navigate(GamesDestination.route)
+                Menu.Move -> navController.navigate(MoveListDestination.getRouteWithQuery(query))
+                Menu.Item -> navController.navigate(ItemDestination.route)
+                Menu.Berry -> navController.navigate(BerryDestination.route)
+                Menu.Location -> navController.navigate(LocationDestination.route)
+            }
+        }
+    },
+    NewsDestination to {
+        NewsScreen()
+    },
+    GamesDestination to {
+        NotDevelop()
+    },
+    ItemDestination to {
+        NotDevelop()
+    },
+    BerryDestination to {
+        NotDevelop()
+    },
+    LocationDestination to {
+        NotDevelop()
+    },
+    PokemonInfoDestination to {
+        PokemonInfoScreen()
+    },
+    PokemonListDestination to {
+        PokemonListScreen()
+    },
+    MoveListDestination to {
+        MoveListScreen()
+    }
 )
 
-object GamesDestination : com.doool.pokedex.navigation.NavDestination() {
+object GamesDestination : NavDestination() {
     override val route = "Games"
 }
 
-object ItemDestination : com.doool.pokedex.navigation.NavDestination() {
+object ItemDestination : NavDestination() {
     override val route = "Item"
 }
 
-object BerryDestination : com.doool.pokedex.navigation.NavDestination() {
+object BerryDestination : NavDestination() {
     override val route = "Berry"
 }
 
-object LocationDestination : com.doool.pokedex.navigation.NavDestination() {
+object LocationDestination : NavDestination() {
     override val route = "Location"
 }
 
