@@ -8,3 +8,6 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-placeholder:$accompanist_version")
 }
+android {
+    namespace = "com.doool.pokedex.core"
+}

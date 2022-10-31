@@ -8,6 +8,7 @@ android {
             }
         }
     }
+    namespace = "com.doool.pokedex.data"
 }
 
 dependencies {
@@ -28,9 +29,9 @@ dependencies {
 
     implementation("javax.inject:javax.inject:1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
-    implementation("androidx.room:room-ktx:2.4.2")
+    implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
 

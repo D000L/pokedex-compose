@@ -9,11 +9,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun Project.applyAndroidConfig() {
     extensions.getByType<BaseExtension>().run {
-        compileSdkVersion(32)
+        compileSdkVersion(33)
 
         defaultConfig {
             minSdk = 23
-            targetSdk = 32
+            targetSdk = 33
 
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             consumerProguardFile("consumer-rules.pro")
@@ -46,7 +46,7 @@ fun Project.applyComposeConfig() {
         buildFeatures.compose = true
 
         composeOptions {
-            kotlinCompilerExtensionVersion = compose_version
+            kotlinCompilerExtensionVersion = compose_compiler_version
         }
     }
 }
@@ -124,6 +124,14 @@ fun Project.applyLifecycleDependencies() {
     }
 }
 
+fun Project.applyCoil() {
+    project.dependencies {
+        implementation(
+            "io.coil-kt:coil-compose:$coil_version"
+        )
+    }
+}
+
 fun Project.applyPlugin() {
     val hasBuildGradle = buildFile.isFile
 
@@ -134,6 +142,7 @@ fun Project.applyPlugin() {
                 plugin("kotlin-android")
                 plugin("kotlin-kapt")
                 plugin("dagger.hilt.android.plugin")
+                plugin("com.github.ben-manes.versions")
             }
             applyAndroidConfig()
         }
@@ -143,6 +152,7 @@ fun Project.applyPlugin() {
                 plugin("com.android.library")
                 plugin("kotlin-android")
                 plugin("kotlin-kapt")
+                plugin("com.github.ben-manes.versions")
 
                 when (this@applyPlugin.path) {
                     ":presentation", ":download:feature", ":widget" -> {

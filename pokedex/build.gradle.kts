@@ -10,6 +10,7 @@ android {
             isShrinkResources = true
         }
     }
+    namespace = "com.doool.pokedex"
 
     hilt { enableAggregatingTask = true }
 

@@ -1,7 +1,6 @@
 package com.doool.pokedex.pokemon.feature.info
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -31,13 +30,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.doool.pokedex.core.LocalPokemonColor
 import com.doool.pokedex.core.components.Move
 import com.doool.pokedex.core.components.MoveHeaders
@@ -281,7 +282,11 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
     val pageOffset = (1 - abs(pageOffset)).coerceIn(0f, 1f)
     val sizePercent = 0.5f + pageOffset / 2f
 
-    Image(
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .placeholder(R.drawable.ic_pokeball)
+            .build(),
         modifier = Modifier
             .fillMaxSize(sizePercent)
             .alpha((pageOffset).coerceIn(0.1f, 1f)),
@@ -289,10 +294,6 @@ private fun PokemonImage(imageUrl: String, pageOffset: Float) {
             Color.Black.copy(alpha = 1f - pageOffset),
             blendMode = BlendMode.SrcAtop
         ),
-        painter = rememberImagePainter(imageUrl) {
-            placeholder(R.drawable.ic_pokeball)
-            error(R.drawable.ic_pokeball)
-        },
         contentDescription = null
     )
 }

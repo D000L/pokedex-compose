@@ -11,3 +11,6 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
+android {
+    namespace = "com.doool.pokedex.download.feature"
+}
