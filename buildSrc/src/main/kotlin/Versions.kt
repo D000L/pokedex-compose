@@ -1,0 +1,7 @@
+const val compose_version = "1.2.0-alpha06"
+const val kotlin_version = "1.6.10"
+const val hilt_version = "2.41"
+const val room_version = "2.4.2"
+const val paging_version = "3.1.1"
+const val accompanist_version = "0.24.5-alpha"
+const val retrofit_version = "2.9.0"

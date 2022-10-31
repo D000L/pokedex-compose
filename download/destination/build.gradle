@@ -1,5 +1,0 @@
-applyAndroidConfig(this)
-
-dependencies {
-    implementation project(path: ':download:feature')
-}
