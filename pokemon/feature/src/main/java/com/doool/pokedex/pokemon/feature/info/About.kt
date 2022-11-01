@@ -68,7 +68,9 @@ private fun PokedexData(aboutUIModel: AboutUIModel) {
         content = aboutUIModel.abilities
             .sortedBy { it.id }
             .fold("") { acc, ability ->
-                "$acc, ${ability.names.localized.capitalizeAndRemoveHyphen()}"
+                val localName = ability.names.localized.capitalizeAndRemoveHyphen()
+                if (acc.isNotEmpty()) "$acc, $localName"
+                else localName
             }
     )
 }
