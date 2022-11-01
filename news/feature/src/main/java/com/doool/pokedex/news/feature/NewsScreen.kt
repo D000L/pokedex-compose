@@ -1,7 +1,6 @@
 package com.doool.pokedex.news.feature
 
 import android.widget.TextView
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,8 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.doool.pokedex.core.widget.Space
 import com.doool.pokedex.core.widget.stickyAppBar
 import com.doool.pokedex.domain.model.PokemonNews
@@ -59,14 +57,13 @@ private fun News(news: PokemonNews) {
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun NewsThumbnail(imageUrl: String) {
-    Image(
+    AsyncImage(
         modifier = Modifier
             .fillMaxWidth()
             .height(400.dp),
-        painter = rememberImagePainter(imageUrl),
+        model = imageUrl,
         contentDescription = null
     )
 }

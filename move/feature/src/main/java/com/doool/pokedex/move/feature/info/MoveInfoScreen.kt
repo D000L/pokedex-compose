@@ -1,6 +1,5 @@
 package com.doool.pokedex.move.feature.info
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,7 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.doool.pokedex.core.common.PokemonType
 import com.doool.pokedex.core.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.core.utils.localized
@@ -125,9 +124,9 @@ private fun RelationPokemonGrid(learnedPokemon: List<Pokemon>) {
                         size = 80.dp,
                         rotate = 0f
                     )
-                    Image(
+                    AsyncImage(
                         modifier = Modifier.size(60.dp),
-                        painter = rememberImagePainter(it.imageUrl),
+                        model = it.imageUrl,
                         contentDescription = null
                     )
                 }

@@ -59,7 +59,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
 import coil.Coil
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.doool.pokedex.core.Process
 import com.doool.pokedex.core.common.MoveCategoryColor
@@ -310,11 +310,11 @@ private fun PokemonSummary(
             color = Color.White
         )
         Space(height = 4.dp)
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .size(120.dp),
-            painter = rememberImagePainter(pokemon.image),
+            model = pokemon.image,
             contentDescription = null
         )
         Space(height = 4.dp)

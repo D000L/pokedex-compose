@@ -1,6 +1,5 @@
 package com.doool.pokedex.pokemon.feature.list
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,7 +37,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.doool.pokedex.core.Process
 import com.doool.pokedex.core.extensions.getBackgroundColor
 import com.doool.pokedex.core.utils.capitalizeAndRemoveHyphen
@@ -167,12 +166,12 @@ private fun Pokemon(
             )
             PokemonSummary(Modifier.padding(top = 6.dp, start = 16.dp), item)
         }
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 10.dp)
                 .requiredSize(120.dp),
-            painter = rememberImagePainter(item.image),
+            model = item.image,
             contentDescription = null
         )
     }

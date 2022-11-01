@@ -1,6 +1,5 @@
 package com.doool.pokedex.pokemon.feature.info
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.doool.pokedex.core.common.EvolutionType
 import com.doool.pokedex.core.utils.capitalizeAndRemoveHyphen
 import com.doool.pokedex.core.utils.localized
@@ -111,9 +110,9 @@ private fun PokemonBackground(modifier: Modifier = Modifier) {
 @Composable
 private fun PokemonThumbnailAndName(imageUrl: String, name: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
+        AsyncImage(
             modifier = Modifier.size(76.dp),
-            painter = rememberImagePainter(imageUrl),
+            model = imageUrl,
             contentDescription = null
         )
         Space(height = 4.dp)
