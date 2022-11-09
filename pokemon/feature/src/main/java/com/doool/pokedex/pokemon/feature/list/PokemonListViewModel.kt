@@ -9,7 +9,7 @@ import com.doool.pokedex.domain.usecase.GetForm
 import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import com.doool.pokedex.pokemon.destination.QUERY_PARAM
+import com.doool.pokedex.pokemon.destination.PARAM_SEARCH_QUERY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
@@ -30,7 +30,7 @@ class PokemonListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private var searchQuery: String? = savedStateHandle.get<String?>(QUERY_PARAM)
+    private var searchQuery: String? = savedStateHandle.get<String?>(PARAM_SEARCH_QUERY)
 
     val pokemonList = savedStateHandle.getLiveData<List<Pokemon>>("POKEMON_LIST", emptyList())
 

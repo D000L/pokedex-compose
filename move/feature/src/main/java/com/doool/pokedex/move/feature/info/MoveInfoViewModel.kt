@@ -6,7 +6,7 @@ import com.doool.pokedex.core.base.BaseViewModel
 import com.doool.pokedex.domain.LoadState
 import com.doool.pokedex.domain.model.PokemonMove
 import com.doool.pokedex.domain.usecase.GetMove
-import com.doool.pokedex.move.destination.NAME_PARAM
+import com.doool.pokedex.move.destination.PARAM_MOVE_NAME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterIsInstance
@@ -21,7 +21,7 @@ class MoveInfoViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    val move = savedStateHandle.getLiveData<String>(NAME_PARAM)
+    val move = savedStateHandle.getLiveData<String>(PARAM_MOVE_NAME)
         .asFlow()
         .onStart { delay(100) }
         .flatMapLatest { getMove(it) }

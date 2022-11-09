@@ -3,17 +3,18 @@ package com.doool.pokedex.pokemon.destination
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.doool.pokedex.navigation.NavDestination
 import com.doool.pokedex.navigation.nullableType
 
-const val QUERY_PARAM = "query"
+const val PARAM_SEARCH_QUERY = "query"
 
-object PokemonListDestination : com.doool.pokedex.navigation.NavDestination() {
-    override val route: String = "pokemon?$QUERY_PARAM={$QUERY_PARAM}"
+object PokemonListDestination : NavDestination() {
+    override val route: String = "pokemon?$PARAM_SEARCH_QUERY={$PARAM_SEARCH_QUERY}"
     override val arguments: List<NamedNavArgument> = listOf(
-        navArgument(QUERY_PARAM) { nullableType(NavType.StringType) }
+        navArgument(PARAM_SEARCH_QUERY) { nullableType(NavType.StringType) }
     )
 
     fun getRouteWithQuery(query: String? = null): String {
-        return route.replace("{$QUERY_PARAM}", query ?: "")
+        return route.replace("{$PARAM_SEARCH_QUERY}", query ?: "")
     }
 }

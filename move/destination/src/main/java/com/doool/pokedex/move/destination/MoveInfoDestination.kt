@@ -5,16 +5,16 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.doool.pokedex.navigation.NavDestination
 
-const val NAME_PARAM = "query"
+const val PARAM_MOVE_NAME = "name"
 
 object MoveInfoDestination : NavDestination() {
 
-    override val route: String = "move/{$NAME_PARAM}"
+    override val route: String = "move/{$PARAM_MOVE_NAME}"
     override val arguments: List<NamedNavArgument> = listOf(
-        navArgument(NAME_PARAM) { type = NavType.StringType }
+        navArgument(PARAM_MOVE_NAME) { type = NavType.StringType }
     )
 
     fun getRouteByName(query: String): String {
-        return route.replace("{$NAME_PARAM}", query)
+        return route.replace("{$PARAM_MOVE_NAME}", query)
     }
 }

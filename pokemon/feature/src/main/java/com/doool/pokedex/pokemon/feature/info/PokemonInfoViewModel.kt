@@ -19,7 +19,7 @@ import com.doool.pokedex.domain.usecase.GetPokemon
 import com.doool.pokedex.domain.usecase.GetPokemonEvolutionChain
 import com.doool.pokedex.domain.usecase.GetPokemonList
 import com.doool.pokedex.domain.usecase.GetPokemonSpecies
-import com.doool.pokedex.move.destination.NAME_PARAM
+import com.doool.pokedex.pokemon.destination.PARAM_POKEMON_NAME
 import com.doool.pokedex.pokemon.feature.info.model.AboutUIModel
 import com.doool.pokedex.pokemon.feature.info.model.EvolutionListUIModel
 import com.doool.pokedex.pokemon.feature.info.model.HeaderUIModel
@@ -51,7 +51,7 @@ class PokemonInfoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val _currentPokemon = savedStateHandle.getLiveData<String>(NAME_PARAM)
+    private val _currentPokemon = savedStateHandle.getLiveData<String>(PARAM_POKEMON_NAME)
     val currentPokemon = _currentPokemon.asFlow().distinctUntilChanged()
 
     var initIndex = 0
