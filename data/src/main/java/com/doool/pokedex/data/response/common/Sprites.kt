@@ -1,22 +1,22 @@
 package com.doool.pokedex.data.response.common
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class Sprites(
     val default: String = "",
-    @SerializedName("front_default") val frontDefault: String = "",
-    @SerializedName("back_default") val backDefault: String = "",
+    @SerialName("front_default") val frontDefault: String = "",
+    @SerialName("back_default") val backDefault: String = "",
     val other: SpritesOthers = SpritesOthers()
 )
 
-@Keep
+@Serializable
 data class SpritesOthers(
-    @SerializedName("official-artwork") val artwork: Artwork = Artwork(),
+    @SerialName("official-artwork") val artwork: Artwork = Artwork(),
 ) {
-    @Keep
+    @Serializable
     data class Artwork(
-        @SerializedName("front_default") val frontDefault: String? = null,
+        @SerialName("front_default") val frontDefault: String? = null,
     )
 }

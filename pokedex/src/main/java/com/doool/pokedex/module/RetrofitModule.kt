@@ -1,14 +1,17 @@
 package com.doool.pokedex.module
 
 import android.util.Log
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Qualifier
 
 @Module
@@ -40,7 +43,7 @@ class RetrofitModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://pokeapi.co/api/v2/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(JsonConverter)
             .build()
     }
 
@@ -50,7 +53,19 @@ class RetrofitModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://api.pokemon.com/us/api/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(JsonConverter)
             .build()
+    }
+
+    companion object {
+        private val Json = Json {
+            encodeDefaults = true
+            isLenient = true
+            ignoreUnknownKeys = true
+            this.coerceInputValues = true
+        }
+
+        @OptIn(ExperimentalSerializationApi::class)
+        private val JsonConverter = Json.asConverterFactory("application/json".toMediaType())
     }
 }

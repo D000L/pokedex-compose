@@ -1,11 +1,11 @@
 package com.doool.pokedex.data.response.common
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class EffectResponse(
     val effect: String = "",
     val language: InfoResponse = InfoResponse(),
-    @SerializedName("short_effect") val shortEffect: String = ""
+    @SerialName("short_effect") val shortEffect: String = ""
 )

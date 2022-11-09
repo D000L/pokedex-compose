@@ -1,14 +1,15 @@
 package com.doool.pokedex.data
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 inline fun <reified T> T.toJson(): String {
-    return Gson().toJson(this, object : TypeToken<T>() {}.type)
+    return Json.encodeToString(this)
 }
 
 inline fun <reified T> String.toResponse(): T {
-    return Gson().fromJson(this, object : TypeToken<T>() {}.type)
+    return Json.decodeFromString(this)
 }
 
 fun String.parseId() = this.trimEnd('/').split("/").last().toInt()

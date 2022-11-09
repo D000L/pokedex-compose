@@ -1,8 +1,5 @@
 package com.doool.pokedex.domain.model
 
-import androidx.annotation.Keep
-
-@Keep
 data class Form(
     val name: String = "",
     val formName: String = "",

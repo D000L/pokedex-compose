@@ -1,29 +1,29 @@
 package com.doool.pokedex.data.response
 
-import androidx.annotation.Keep
 import com.doool.pokedex.data.response.common.EffectResponse
 import com.doool.pokedex.data.response.common.GameIndice
 import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.data.response.common.Names
 import com.doool.pokedex.data.response.common.Sprites
+import com.doool.pokedex.data.response.common.UnusedField
 import com.doool.pokedex.data.response.common.VersionGroupFlavorText
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class ItemResponse(
     val attributes: List<InfoResponse> = listOf(),
-    @SerializedName("baby_trigger_for") val babyTriggerFor: Any = Any(),
+    @SerialName("baby_trigger_for") val babyTriggerFor: UnusedField = UnusedField(),
     val category: InfoResponse = InfoResponse(),
     val cost: Int = 0,
-    @SerializedName("effect_entries") val effectEntries: List<EffectResponse> = listOf(),
-    @SerializedName("flavor_text_entries") val flavorTextEntries: List<VersionGroupFlavorText> = listOf(),
-    @SerializedName("fling_effect") val flingEffect: Any = Any(),
-    @SerializedName("fling_power") val flingPower: Any = Any(),
-    @SerializedName("game_indices") val gameIndices: List<GameIndice> = listOf(),
-    @SerializedName("held_by_pokemon")
-    val heldByPokemon: List<Any> = listOf(),
+    @SerialName("effect_entries") val effectEntries: List<EffectResponse> = listOf(),
+    @SerialName("flavor_text_entries") val flavorTextEntries: List<VersionGroupFlavorText> = listOf(),
+    @SerialName("fling_effect") val flingEffect: UnusedField = UnusedField(),
+    @SerialName("fling_power") val flingPower: UnusedField = UnusedField(),
+    @SerialName("game_indices") val gameIndices: List<GameIndice> = listOf(),
+    @SerialName("held_by_pokemon") val heldByPokemon: List<UnusedField> = listOf(),
     val id: Int = 0,
-    val machines: List<Any> = listOf(),
+    val machines: List<UnusedField> = listOf(),
     val name: String = "",
     val names: List<Names> = listOf(),
     val sprites: Sprites = Sprites()

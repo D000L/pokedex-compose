@@ -104,7 +104,7 @@ fun Project.applyRoomDependencies() {
 fun Project.applyRetrofitDependencies() {
     project.dependencies {
         implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-        implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
+        implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
         add("implementation", platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
         implementation(

@@ -1,3 +1,7 @@
+plugins {
+    kotlin("plugin.serialization") version "1.7.21"
+}
+
 android {
     defaultConfig {
         applicationId = "com.doool.pokedex"
@@ -27,6 +31,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":presentation"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
 }

@@ -1,50 +1,51 @@
 package com.doool.pokedex.data.response
 
-import androidx.annotation.Keep
 import com.doool.pokedex.data.response.common.InfoResponse
-import com.google.gson.annotations.SerializedName
+import com.doool.pokedex.data.response.common.UnusedField
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class PokemonEvolutionChainResponse(
-    @SerializedName("baby_trigger_item") val babyTriggerItem: Any? = null,
+    @SerialName("baby_trigger_item") val babyTriggerItem: UnusedField? = null,
     val chain: Chain = Chain(),
     val id: Int = 0
 )
 
-@Keep
+@Serializable
 data class Chain(
-    @SerializedName("evolution_details") val evolutionDetails: List<Any> = listOf(),
-    @SerializedName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
-    @SerializedName("is_baby") val isBaby: Boolean = false,
+    @SerialName("evolution_details") val evolutionDetails: List<UnusedField> = listOf(),
+    @SerialName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
+    @SerialName("is_baby") val isBaby: Boolean = false,
     val species: InfoResponse = InfoResponse()
 )
 
-@Keep
+@Serializable
 data class EvolvesTo(
-    @SerializedName("evolution_details") val evolutionDetails: List<EvolutionDetail> = listOf(),
-    @SerializedName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
-    @SerializedName("is_baby") val isBaby: Boolean = false,
+    @SerialName("evolution_details") val evolutionDetails: List<EvolutionDetail> = listOf(),
+    @SerialName("evolves_to") val evolvesTo: List<EvolvesTo> = listOf(),
+    @SerialName("is_baby") val isBaby: Boolean = false,
     val species: InfoResponse = InfoResponse()
 )
 
-@Keep
+@Serializable
 data class EvolutionDetail(
-    val gender: Any? = null,
-    @SerializedName("held_item") val heldItem: Any? = null,
+    val gender: UnusedField? = null,
+    @SerialName("held_item") val heldItem: UnusedField? = null,
     val item: InfoResponse? = null,
-    @SerializedName("known_move") val knownMove: Any? = null,
-    @SerializedName("known_move_type") val knownMoveType: Any? = null,
-    val location: Any? = null,
-    @SerializedName("min_affection") val minAffection: Any? = null,
-    @SerializedName("min_beauty") val minBeauty: Any? = null,
-    @SerializedName("min_happiness") val minHappiness: Any? = null,
-    @SerializedName("min_level") val minLevel: Int = 0,
-    @SerializedName("needs_overworld_rain") val needsOverworldRain: Boolean = false,
-    @SerializedName("party_species") val partySpecies: Any? = null,
-    @SerializedName("party_type") val partyType: Any? = null,
-    @SerializedName("relative_physical_stats") val relativePhysicalStats: Int = 0,
-    @SerializedName("time_of_day") val timeOfDay: String = "",
-    @SerializedName("trade_species") val tradeSpecies: Any? = null,
+    @SerialName("known_move") val knownMove: UnusedField? = null,
+    @SerialName("known_move_type") val knownMoveType: UnusedField? = null,
+    val location: UnusedField? = null,
+    @SerialName("min_affection") val minAffection: UnusedField? = null,
+    @SerialName("min_beauty") val minBeauty: UnusedField? = null,
+    @SerialName("min_happiness") val minHappiness: UnusedField? = null,
+    @SerialName("min_level") val minLevel: Int = 0,
+    @SerialName("needs_overworld_rain") val needsOverworldRain: Boolean = false,
+    @SerialName("party_species") val partySpecies: UnusedField? = null,
+    @SerialName("party_type") val partyType: UnusedField? = null,
+    @SerialName("relative_physical_stats") val relativePhysicalStats: Int = 0,
+    @SerialName("time_of_day") val timeOfDay: String = "",
+    @SerialName("trade_species") val tradeSpecies: UnusedField? = null,
     val trigger: InfoResponse = InfoResponse(),
-    @SerializedName("turn_upside_down") val turnUpsideDown: Boolean = false
+    @SerialName("turn_upside_down") val turnUpsideDown: Boolean = false
 )

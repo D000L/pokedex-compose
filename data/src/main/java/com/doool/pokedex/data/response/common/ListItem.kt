@@ -1,11 +1,11 @@
 package com.doool.pokedex.data.response.common
 
-import androidx.annotation.Keep
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class ListItem<T>(
-    val count: Int,
-    val next: String,
-    val previous: String?,
-    val results: List<T>
+    val count: Int = 0,
+    val next: String? = null,
+    val previous: String? = null,
+    val results: List<T> = emptyList()
 )

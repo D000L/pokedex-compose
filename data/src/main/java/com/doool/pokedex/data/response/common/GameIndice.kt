@@ -1,10 +1,10 @@
 package com.doool.pokedex.data.response.common
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class GameIndice(
-    @SerializedName("game_index") val gameIndex: Int = 0,
+    @SerialName("game_index") val gameIndex: Int = 0,
     val version: InfoResponse = InfoResponse()
 )

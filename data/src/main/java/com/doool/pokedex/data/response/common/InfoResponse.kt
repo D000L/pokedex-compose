@@ -1,8 +1,8 @@
 package com.doool.pokedex.data.response.common
 
-import androidx.annotation.Keep
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class InfoResponse(
     val name: String = "",
     val url: String = ""

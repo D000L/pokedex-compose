@@ -1,26 +1,27 @@
 package com.doool.pokedex.data.response
 
-import androidx.annotation.Keep
 import com.doool.pokedex.data.response.common.GameIndice
 import com.doool.pokedex.data.response.common.InfoResponse
 import com.doool.pokedex.data.response.common.Sprites
-import com.google.gson.annotations.SerializedName
+import com.doool.pokedex.data.response.common.UnusedField
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class PokemonDetailResponse(
     val abilities: List<AbilityInfoResponse> = listOf(),
-    @SerializedName("base_experience") val baseExperience: Int = 0,
+    @SerialName("base_experience") val baseExperience: Int = 0,
     val forms: List<InfoResponse> = listOf(),
-    @SerializedName("game_indices") val gameIndices: List<GameIndice> = listOf(),
+    @SerialName("game_indices") val gameIndices: List<GameIndice> = listOf(),
     val height: Int = 0,
-    @SerializedName("held_items") val heldItems: List<Any> = listOf(),
+    @SerialName("held_items") val heldItems: List<UnusedField> = listOf(),
     val id: Int = 0,
-    @SerializedName("is_default") val isDefault: Boolean = false,
-    @SerializedName("location_area_encounters") val locationAreaEncounters: String = "",
+    @SerialName("is_default") val isDefault: Boolean = false,
+    @SerialName("location_area_encounters") val locationAreaEncounters: String = "",
     val moves: List<MoveResponse> = listOf(),
     val name: String = "",
     val order: Int = 0,
-    @SerializedName("past_types") val pastTypes: List<Any> = listOf(),
+    @SerialName("past_types") val pastTypes: List<UnusedField> = listOf(),
     val species: InfoResponse = InfoResponse(),
     val sprites: Sprites = Sprites(),
     val stats: List<StatResponse> = listOf(),
@@ -28,34 +29,34 @@ data class PokemonDetailResponse(
     val weight: Int = 0
 )
 
-@Keep
+@Serializable
 data class AbilityInfoResponse(
     val ability: InfoResponse = InfoResponse(),
-    @SerializedName("is_hidden") val isHidden: Boolean = false,
+    @SerialName("is_hidden") val isHidden: Boolean = false,
     val slot: Int = 0
 )
 
-@Keep
+@Serializable
 data class MoveResponse(
     val move: InfoResponse = InfoResponse(),
-    @SerializedName("version_group_details") val versionGroupDetails: List<VersionGroupDetailResponse> = listOf()
+    @SerialName("version_group_details") val versionGroupDetails: List<VersionGroupDetailResponse> = listOf()
 )
 
-@Keep
+@Serializable
 data class VersionGroupDetailResponse(
-    @SerializedName("level_learned_at") val levelLearnedAt: Int = 0,
-    @SerializedName("move_learn_method") val moveLearnMethod: InfoResponse = InfoResponse(),
-    @SerializedName("version_group") val versionGroup: InfoResponse = InfoResponse()
+    @SerialName("level_learned_at") val levelLearnedAt: Int = 0,
+    @SerialName("move_learn_method") val moveLearnMethod: InfoResponse = InfoResponse(),
+    @SerialName("version_group") val versionGroup: InfoResponse = InfoResponse()
 )
 
-@Keep
+@Serializable
 data class StatResponse(
-    @SerializedName("base_stat") val baseStat: Int = 0,
+    @SerialName("base_stat") val baseStat: Int = 0,
     val effort: Int = 0,
     val stat: InfoResponse = InfoResponse()
 )
 
-@Keep
+@Serializable
 data class TypeResponse(
     val slot: Int = 0,
     val type: InfoResponse = InfoResponse()
