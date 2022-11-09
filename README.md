@@ -14,8 +14,9 @@ Using MVVM + Clean architecture
 * [Kotlin](https://kotlinlang.org/)
 * [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/) for aynsc
 * [Hilt](https://dagger.dev/hilt/) for dependency injection.
-* [Retrofit2 & OkHttp3](https://github.com/square/retrofit) - for rest api
-* [Coil](https://github.com/coil-kt/coil) - for load image
+* [Retrofit2 & OkHttp3](https://github.com/square/retrofit) for rest api
+* [Serialization](https://kotlinlang.org/docs/serialization.html) for Parse Api Response
+* [Coil](https://github.com/coil-kt/coil) for load image
 * [JetPack](https://developer.android.com/jetpack)
   - compose, lifecycle, hilt, navigation, room, paging, dataStore, palette
 * [Accompanist](https://github.com/google/accompanist)
