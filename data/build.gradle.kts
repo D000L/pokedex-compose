@@ -15,6 +15,8 @@ android {
     namespace = "com.doool.pokedex.data"
 }
 
+applyRoomDependencies()
+applyHiltDependencies()
 applyRetrofitDependencies()
 
 dependencies {
@@ -28,10 +30,6 @@ dependencies {
     implementation("javax.inject:javax.inject:1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-
-    implementation("androidx.room:room-ktx:$room_version")
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 

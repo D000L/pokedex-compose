@@ -1,4 +1,4 @@
-package com.doool.pokedex.module
+package com.doool.pokedex.data.module
 
 import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory

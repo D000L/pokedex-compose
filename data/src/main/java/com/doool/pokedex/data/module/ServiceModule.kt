@@ -1,4 +1,4 @@
-package com.doool.pokedex.module
+package com.doool.pokedex.data.module
 
 import com.doool.pokedex.data.service.NewsService
 import com.doool.pokedex.data.service.PokeApiService
