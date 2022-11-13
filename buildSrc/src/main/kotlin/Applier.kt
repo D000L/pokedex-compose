@@ -1,9 +1,11 @@
 import com.android.build.gradle.BaseExtension
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -51,19 +53,21 @@ fun Project.applyComposeConfig() {
     }
 }
 
-private fun DependencyHandlerScope.implementation(vararg list: String) {
+val Project.libs get() = the<LibrariesForLibs>()
+
+private fun DependencyHandlerScope.implementation(vararg list: Any) {
     list.forEach {
         add("implementation", it)
     }
 }
 
-private fun DependencyHandlerScope.kapt(vararg list: String) {
+private fun DependencyHandlerScope.kapt(vararg list: Any) {
     list.forEach {
         add("kapt", it)
     }
 }
 
-private fun DependencyHandlerScope.androidTestImplementation(vararg list: String) {
+private fun DependencyHandlerScope.androidTestImplementation(vararg list: Any) {
     list.forEach {
         add("androidTestImplementation", it)
     }
@@ -71,64 +75,41 @@ private fun DependencyHandlerScope.androidTestImplementation(vararg list: String
 
 fun Project.applyComposeDependencies() {
     applyComposeConfig()
-
     project.dependencies {
-        implementation(
-            "androidx.compose.ui:ui:$compose_version",
-            "androidx.compose.animation:animation:$compose_version",
-            "androidx.compose.material:material:$compose_version",
-            "androidx.compose.ui:ui-tooling:$compose_version",
-            "androidx.compose.runtime:runtime:$compose_version",
-            "androidx.compose.runtime:runtime-livedata:$compose_version"
-        )
-
-        androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+        implementation(libs.bundles.compose)
+        androidTestImplementation(libs.compose.ui.test)
     }
 }
 
 fun Project.applyHiltDependencies() {
     project.dependencies {
-        implementation("com.google.dagger:hilt-android:$hilt_version")
-        kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+        implementation(libs.hilt.android)
+        kapt(libs.hilt.compiler)
     }
 }
 
 fun Project.applyRoomDependencies() {
     project.dependencies {
-        implementation("androidx.room:room-ktx:$room_version")
-        implementation("androidx.room:room-runtime:$room_version")
-        kapt("androidx.room:room-compiler:$room_version")
+        implementation(libs.bundles.room)
+        kapt(libs.room.compiler)
     }
 }
 
 fun Project.applyRetrofitDependencies() {
     project.dependencies {
-        implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-        implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
-        add("implementation", platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
-        implementation(
-            "com.squareup.okhttp3:okhttp",
-            "com.squareup.okhttp3:logging-interceptor"
-        )
+        implementation(libs.bundles.retrofit)
     }
 }
 
 fun Project.applyLifecycleDependencies() {
     project.dependencies {
-        implementation(
-            "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1",
-            "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1",
-            "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-alpha06"
-        )
+        implementation(libs.bundles.lifecycle)
     }
 }
 
 fun Project.applyCoil() {
     project.dependencies {
-        implementation(
-            "io.coil-kt:coil-compose:$coil_version"
-        )
+        implementation(libs.coil)
     }
 }
 
@@ -146,6 +127,7 @@ fun Project.applyPlugin() {
             }
             applyAndroidConfig()
         }
+
         !hasBuildGradle -> {}
         else -> {
             apply {

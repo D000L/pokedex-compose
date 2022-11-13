@@ -11,9 +11,9 @@ dependencies {
     implementation(project(":move:destination"))
     implementation(project(":navigation"))
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.hilt.navigation)
 }
 android {
     namespace = "com.doool.pokedex.move.feature"

@@ -16,21 +16,21 @@ dependencies {
     implementation(project(":move:destination"))
     implementation(project(":download:destination"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.material)
 
-    testImplementation("junit:junit:4.13.2")
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    testImplementation(libs.junit)
+    implementation(libs.splashscreen)
 
-    implementation("androidx.activity:activity-compose:$compose_version")
+    implementation(libs.compose.activity)
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("androidx.navigation:navigation-compose:2.6.0-alpha03")
+    implementation(libs.hilt.navigation)
+    implementation(libs.compose.navigation)
 
-    implementation("androidx.palette:palette-ktx:1.0.0")
+    implementation(libs.palette)
 
-    implementation("com.google.accompanist:accompanist-navigation-material:$accompanist_version")
+    implementation(libs.accompanist.navigation)
 }
 android {
     namespace = "com.doool.pokedex.presentation"

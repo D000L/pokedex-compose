@@ -4,9 +4,9 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":navigation"))
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
-    implementation("com.google.accompanist:accompanist-placeholder:$accompanist_version")
+    implementation(libs.accompanist.placeholder)
 }
 android {
     namespace = "com.doool.pokedex.core"

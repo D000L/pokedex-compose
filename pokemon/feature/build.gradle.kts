@@ -11,12 +11,12 @@ dependencies {
     implementation(project(":move:destination"))
     implementation(project(":navigation"))
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.hilt.navigation)
 
-    implementation("com.google.accompanist:accompanist-flowlayout:$accompanist_version")
-    implementation("com.google.accompanist:accompanist-pager:$accompanist_version")
+    implementation(libs.accompanist.flowlayout)
+    implementation(libs.accompanist.pager)
 }
 android {
     namespace = "com.doool.pokedex.pokemon.feature"
