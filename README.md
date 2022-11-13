@@ -42,6 +42,11 @@ Using MVVM + Clean architecture
   <img src="previews/pokemon_widget.png" width="200">
 </p>
 
+## Module Dependency Graph
+<p align="center">
+  <img src="previews/dependency-graph.png" width="60%">
+</p>
+
 # License
 ```xml
 Copyright 2021 D000L (SeokHo Im)
