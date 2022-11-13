@@ -114,10 +114,12 @@ fun PokemonInfo(
     val lazyListState = rememberLazyListState()
     var tabState by remember { mutableStateOf(TabState.About) }
 
-    val offset by derivedStateOf {
-        val topOffset = lazyListState.getItemTopOffset(1)
-        val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
-        (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
+    val offset by remember {
+        derivedStateOf {
+            val topOffset = lazyListState.getItemTopOffset(1)
+            val height = density.run { (topOffset.toDp() - HEADER_HEIGHT_EXCLUDE_PAGER) }
+            (height / THUMBNAIL_VIEWPAGER_HEIGHT).coerceIn(0f, 1f)
+        }
     }
 
     val dragged by lazyListState.interactionSource.collectIsDraggedAsState()
