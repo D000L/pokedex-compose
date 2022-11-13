@@ -48,12 +48,12 @@ fun Project.applyComposeConfig() {
         buildFeatures.compose = true
 
         composeOptions {
-            kotlinCompilerExtensionVersion = compose_compiler_version
+            kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
         }
     }
 }
 
-val Project.libs get() = the<LibrariesForLibs>()
+private val Project.libs get() = the<LibrariesForLibs>()
 
 private fun DependencyHandlerScope.implementation(vararg list: Any) {
     list.forEach {
@@ -115,7 +115,6 @@ fun Project.applyCoil() {
 
 fun Project.applyPlugin() {
     val hasBuildGradle = buildFile.isFile
-
     when {
         name == "pokedex" -> {
             apply {
@@ -123,7 +122,6 @@ fun Project.applyPlugin() {
                 plugin("kotlin-android")
                 plugin("kotlin-kapt")
                 plugin("dagger.hilt.android.plugin")
-                plugin("com.github.ben-manes.versions")
             }
             applyAndroidConfig()
         }
@@ -134,7 +132,6 @@ fun Project.applyPlugin() {
                 plugin("com.android.library")
                 plugin("kotlin-android")
                 plugin("kotlin-kapt")
-                plugin("com.github.ben-manes.versions")
 
                 when (this@applyPlugin.path) {
                     ":presentation", ":download:feature", ":widget" -> {
