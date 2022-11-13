@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":pokemon:destination"))
     implementation(project(":move:feature"))
     implementation(project(":move:destination"))
-    implementation(project(":download:feature"))
     implementation(project(":download:destination"))
 
     implementation("androidx.core:core-ktx:1.9.0")
