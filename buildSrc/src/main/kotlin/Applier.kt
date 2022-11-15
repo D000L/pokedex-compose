@@ -38,6 +38,7 @@ fun Project.applyAndroidConfig() {
         tasks.withType<KotlinCompile>().configureEach {
             kotlinOptions {
                 jvmTarget = "11"
+                languageVersion = "1.8"
             }
         }
     }
