@@ -21,7 +21,7 @@ room = "2.4.3"
 datastore = "1.0.0"
 
 retrofit = "2.9.0"
-okhttp = "4.9.0"
+okhttp = "4.10.0"
 
 coil = "2.2.2"
 paging = "3.1.1"
