@@ -6,7 +6,7 @@ serialization = "1.4.1"
 compose = "1.3.0"
 compose_compiler = "1.3.2"
 accompanist = "0.27.0"
-compose-navigation = "2.6.0-alpha03"
+compose-navigation = "2.6.0-alpha04"
 compose-paging = "1.0.0-alpha17"
 
 core-ktx = "1.9.0"
