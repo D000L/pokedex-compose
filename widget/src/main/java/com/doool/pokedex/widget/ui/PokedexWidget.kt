@@ -21,7 +21,17 @@ import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.background
 import androidx.glance.currentState
-import androidx.glance.layout.*
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
+import androidx.glance.layout.padding
+import androidx.glance.layout.size
+import androidx.glance.layout.width
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -186,10 +196,10 @@ private fun ControllerButton(index: Int) {
 }
 
 class ChangePokemon : ActionCallback {
-    override suspend fun onRun(
+    override suspend fun onAction(
         context: Context,
         glanceId: GlanceId,
-        parameters: ActionParameters,
+        parameters: ActionParameters
     ) {
         val pokemonId = parameters[PokemonIdParamKey] ?: 0
         widgetActions?.loadPokemon(context, pokemonId)
