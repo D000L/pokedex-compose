@@ -6,7 +6,7 @@ plugins {
     id(libs.plugins.kotlin.android.get().pluginId) apply false
     alias(libs.plugins.hilt) apply false
 
-    id("com.rickbusarow.module-check") version "0.12.3"
+    id("com.rickbusarow.module-check") version "0.12.5"
 }
 
 buildscript {
