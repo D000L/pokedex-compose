@@ -7,7 +7,7 @@ compose = "1.4.3"
 compose-activity = "1.6.1"
 compose-compiler = "1.4.7"
 accompanist = "0.30.1"
-compose-navigation = "2.6.0-alpha04"
+compose-navigation = "2.8.3"
 compose-paging = "1.0.0-alpha17"
 
 core-ktx = "1.9.0"
