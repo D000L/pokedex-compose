@@ -1,6 +1,6 @@
 dependencies {
     implementation("javax.inject:javax.inject:1")
-    implementation("androidx.paging:paging-common-ktx:3.1.1")
+    implementation("androidx.paging:paging-common-ktx:3.3.6")
     implementation(libs.coroutines)
 }
 android {
