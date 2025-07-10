@@ -16,7 +16,7 @@ lifecyle = "2.5.1"
 material = "1.7.0"
 
 hilt = "2.44.2"
-hilt-navigation = "1.0.0"
+hilt-navigation = "1.2.0"
 
 room = "2.4.3"
 datastore = "1.0.0"
