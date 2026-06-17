@@ -12,7 +12,7 @@ compose-paging = "1.0.0-alpha17"
 
 core-ktx = "1.9.0"
 appcompat = "1.5.1"
-lifecyle = "2.5.1"
+lifecyle = "2.11.0"
 material = "1.7.0"
 
 hilt = "2.44.2"
